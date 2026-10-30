@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bricks Twitch - protótipo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <main class="jogo">
+      <canvas id="tela" width="1200" height="680"></canvas>
+
+      <!-- Menu do streamer -->
+      <div id="menu" class="sobreposicao">
+        <div class="caixa">
+          <h2>Bricks Twitch</h2>
+
+          <div class="bloco-chat">
+            <h3>Chat da Twitch</h3>
+            <input id="canal" placeholder="nome do canal (ex: hercules_sc)">
+            <button id="btConectar">Conectar</button>
+            <p id="status">Não conectado. Conecte o canal para liberar o Iniciar.</p>
+          </div>
+
+          <div class="linha">
+            <button id="faseAnt">&lt;</button>
+            <div>
+              <img id="faseImg" alt="Miniatura da fase">
+              <div id="faseNome">Fase 1</div>
+            </div>
+            <button id="faseProx">&gt;</button>
+          </div>
+
+          <p>Quantidade de viewers: <span id="qtdTexto">5</span></p>
+          <input id="qtd" type="range" min="1" max="100" value="5">
+
+          <p><label><input type="checkbox" id="pontuaStreamer"> Streamer pontua no ranking</label></p>
+          <button id="btIniciar" disabled>Iniciar</button>
+          <button id="btInfo">Informações</button>
+        </div>
+      </div>
+
+      <!-- Informações e créditos -->
+      <div id="info" class="sobreposicao escondido">
+        <div class="caixa texto-info">
+          <h2>Bricks Twitch</h2>
+          <p><b>Desenvolvimento:</b> Clayton M.</p>
+          <p><b>Arte:</b> Daru</p>
+          <p>Bricks Twitch nasceu para deixar a live mais interativa. O streamer controla a raquete, e o chat entra no jogo com uma bola cada um. Juntos, precisam quebrar todos os tijolos, e quem quebrar mais tijolos ganha mais pontos. O objetivo é ver quem quebra mais tijolos.</p>
+          <button id="btFecharInfo">Voltar</button>
+        </div>
+      </div>
+
+      <!-- Ranking final -->
+      <div id="ranking" class="sobreposicao escondido">
+        <div class="caixa">
+          <h2>Ranking final</h2>
+          <ol id="rankingLista"></ol>
+          <button id="btVoltar">Voltar ao menu</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="rodape">Dev Clayton M. - Arte Daru</footer>
+
+  <!-- Ordem importa: cada arquivo usa o que os anteriores definiram -->
+  <script src="js/config.js"></script>
+  <script src="js/fases.js"></script>
+  <script src="js/estado.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/fisica.js"></script>
+  <script src="js/regras.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/twitch.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/entrada.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

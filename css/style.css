@@ -1,0 +1,138 @@
+/* ===== Estilo do Bricks Twitch ===== */
+
+body {
+  margin: 0;
+  background: #1b1b1f;
+  color: #eee;
+  font-family: sans-serif;
+}
+
+/* Centraliza o jogo na tela */
+.layout {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* Tamanho padrão 1200x680 (proporção do jogo), diminui para caber na tela */
+.jogo {
+  position: relative;
+  width: min(1200px, calc(100vw - 32px), calc((100vh - 32px) * 1200 / 680));
+}
+
+#tela {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #000;
+  border-radius: 8px;
+}
+
+/* Camadas sobre o jogo (menu, informações, ranking) */
+.sobreposicao {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+}
+
+/* Menu com o fundo do Bricks */
+#menu {
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+              url('../assets/Menu.png') center / cover no-repeat;
+}
+
+.caixa {
+  background: #2c2c34;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 320px;
+  text-align: center;
+}
+
+.escondido {
+  display: none !important;
+}
+
+/* Bloco do chat dentro do menu */
+.bloco-chat {
+  margin-bottom: 12px;
+}
+.bloco-chat input {
+  width: 100%;
+  padding: 6px;
+  margin: 4px 0;
+  box-sizing: border-box;
+}
+.bloco-chat h3 {
+  margin: 0 0 6px;
+}
+
+/* Seleção de fase */
+.linha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+#faseImg {
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Ranking final */
+#rankingLista {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  max-height: 320px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+#rankingLista li {
+  padding: 6px 8px;
+  border-bottom: 1px solid #3a3a44;
+}
+
+.top3 {
+  color: #facc15;
+  font-weight: bold;
+}
+
+.streamer {
+  color: #22d3ee;
+}
+
+/* Caixa de informações */
+.texto-info {
+  max-width: 460px;
+  text-align: left;
+  line-height: 1.5;
+}
+.texto-info h2 {
+  text-align: center;
+}
+
+/* Rodapé discreto */
+.rodape {
+  text-align: center;
+  font-size: 11px;
+  color: #777;
+  padding: 8px 16px 16px;
+}
+
+/* Tela pequena: o jogo fica na mesma linha, mas o layout encolhe sozinho */
+@media (max-width: 520px) {
+  .caixa {
+    min-width: 0;
+    width: 90vw;
+    box-sizing: border-box;
+  }
+}
