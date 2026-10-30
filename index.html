@@ -8,6 +8,7 @@
 </head>
 <body>
   <div class="layout">
+    <div class="coluna-jogo">
     <main class="jogo">
       <canvas id="tela" width="1200" height="680"></canvas>
 
@@ -61,15 +62,15 @@
         </div>
       </div>
     </main>
+    <footer class="rodape">Dev Clayton M. - Arte Daru</footer>
 
     <!-- Ranking ao lado do jogo (top 5, atualiza durante a partida) -->
     <aside id="rankingLateral" class="ranking-lateral">
       <h3>Ranking</h3>
       <ol id="rankingTopo"></ol>
     </aside>
+    </div>
   </div>
-
-  <footer class="rodape">Dev Clayton M. - Arte Daru</footer>
 
   <!-- Ordem importa: cada arquivo usa o que os anteriores definiram -->
   <script src="js/config.js"></script>

@@ -11,22 +11,30 @@ body {
 .layout {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  gap: 16px;
   padding: 16px;
 }
 
 /* Tamanho padrão 1200x680 (proporção do jogo), diminui para caber na tela.
-   Descontamos a largura do ranking lateral (190 px + 16 px de espaço). */
+   Reservamos espaço dos dois lados (ranking à direita) para o jogo continuar centralizado. */
 .jogo {
   position: relative;
-  width: min(1200px, calc(100vw - 32px - 206px), calc((100vh - 32px) * 1200 / 680));
+  width: min(1200px, calc(100vw - 480px), calc((100vh - 32px) * 1200 / 680));
 }
 
-/* Ranking ao lado do jogo */
+/* Coluna do jogo: o rodapé fica embaixo só do jogo, sem o ranking */
+.coluna-jogo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ranking ao lado do jogo, fora do centro (não empurra o jogo) */
 .ranking-lateral {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-left: 16px;
   width: 190px;
-  flex-shrink: 0;
   background: #2c2c34;
   border-radius: 10px;
   padding: 10px;
