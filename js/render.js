@@ -138,7 +138,13 @@ function desenhar(agora) {
   // bolas
   for (const b of viewers) {
     if (b.estado === 'caiu') continue;
+    // bola que acabou de usar !bomb brilha em vermelho
+    if (agora < b.brilhoBombaAte) {
+      ctx.shadowColor = '#ef4444';
+      ctx.shadowBlur = 18;
+    }
     ctx.drawImage(bolaColorida(b.cor), b.x - TAM_BOLA / 2, b.y - TAM_BOLA / 2, TAM_BOLA, TAM_BOLA);
+    ctx.shadowBlur = 0;
     // quantas bombas o viewer tem (aparece só durante a partida)
     if (estado === 'jogando' && b.bombas > 0) {
       ctx.fillStyle = '#facc15';

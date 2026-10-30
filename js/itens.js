@@ -33,6 +33,7 @@ function atualizarItens(dt, agora) {
 // (não afeta paredes, tijolos nem a raquete; a bola de quem deu o comando não se move)
 function explodirBomba(b, agora) {
   explosoes.push({ x: b.x, y: b.y, inicio: agora });
+  b.brilhoBombaAte = agora + 700; // a bola de quem explodiu brilha em vermelho
   for (const o of viewers) {
     if (o === b || o.estado !== 'jogando') continue;
     let dx = o.x - b.x;

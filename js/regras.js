@@ -75,7 +75,8 @@ function entrar(nome) {
     carga: 0,
     corAteT: 0,
     batidas: 0,     // vezes que a bola encostou em tijolo (a cada 10 ganha 1 bomba)
-    bombas: 0
+    bombas: 0,
+    brilhoBombaAte: 0 // brilho vermelho depois de usar !bomb
   });
   atualizarContador();
 }

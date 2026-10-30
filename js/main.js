@@ -2,6 +2,7 @@
 // Este arquivo é o último a carregar: liga as imagens e começa o jogo.
 
 let ultimoFrame = performance.now();
+let ultimoRanking = 0;          // última atualização do ranking lateral
 
 function loop() {
   const agora = performance.now();
@@ -18,6 +19,12 @@ function loop() {
   if (estado === 'jogando') atualizarJogo(dt, agora);
 
   desenhar(agora);
+
+  // ranking lateral: atualiza no máximo 4 vezes por segundo
+  if (agora - ultimoRanking > 250) {
+    atualizarRankingLateral();
+    ultimoRanking = agora;
+  }
   requestAnimationFrame(loop);
 }
 

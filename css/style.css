@@ -7,17 +7,56 @@ body {
   font-family: sans-serif;
 }
 
-/* Centraliza o jogo na tela */
+/* Centraliza o jogo e o ranking lateral na tela */
 .layout {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
   padding: 16px;
 }
 
-/* Tamanho padrão 1200x680 (proporção do jogo), diminui para caber na tela */
+/* Tamanho padrão 1200x680 (proporção do jogo), diminui para caber na tela.
+   Descontamos a largura do ranking lateral (170 px + 16 px de espaço). */
 .jogo {
   position: relative;
-  width: min(1200px, calc(100vw - 32px), calc((100vh - 32px) * 1200 / 680));
+  width: min(1200px, calc(100vw - 32px - 186px), calc((100vh - 32px) * 1200 / 680));
+}
+
+/* Ranking ao lado do jogo */
+.ranking-lateral {
+  width: 170px;
+  flex-shrink: 0;
+  background: #2c2c34;
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.ranking-lateral h3 {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 15px;
+}
+.ranking-lateral ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ranking-lateral li {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 5px 0;
+  border-bottom: 1px solid #3a3a44;
+  font-size: 14px;
+}
+.ranking-lateral li span:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ranking-lateral li.streamer span {
+  color: #22d3ee;
 }
 
 #tela {
@@ -134,5 +173,15 @@ body {
     min-width: 0;
     width: 90vw;
     box-sizing: border-box;
+  }
+}
+
+/* Tela estreita: some o ranking lateral e o jogo ocupa a largura toda */
+@media (max-width: 900px) {
+  .ranking-lateral {
+    display: none;
+  }
+  .jogo {
+    width: min(1200px, calc(100vw - 32px), calc((100vh - 32px) * 1200 / 680));
   }
 }

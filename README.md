@@ -28,6 +28,8 @@ Não precisa de login na Twitch. O jogo só lê o chat.
 - Cada tijolo quebrado dá 1 ponto para a bola que quebrou.
 - O streamer pode marcar "Streamer pontua no ranking". Nesse caso, a cada 3 s ganha 1 ponto se mais de 50% das bolas estiverem no ar.
 - A raquete brilha quando o streamer ganha ponto.
+- Um ranking com os 5 primeiros aparece ao lado do jogo durante a partida. No fim, o ranking completo aparece no centro.
+- A bola que usa `!bomb` brilha em vermelho por um instante.
 - Só com "Streamer pontua" marcado: até 15 tijolos são sorteados a cada partida e soltam um item ao quebrar. Se a raquete pegar o item, o streamer ganha 2 pontos. Se o item passar da raquete, some.
 - A cada 10 vezes que a bola encosta em tijolos (quebrando ou não), o viewer ganha 1 bomba. O `!bomb` usa a bomba e empurra as bolas num raio de 20 px. Não causa dano nem mexe nos tijolos, paredes ou raquete.
 - A partida acaba quando todos os tijolos forem quebrados.
@@ -49,6 +51,7 @@ BricksTwitch/
 │   ├── render.js     desenho na tela
 │   ├── twitch.js     conexão com o chat
 │   ├── menu.js       menu, fases e informações
+│   ├── ranking.js    ranking lateral (top 5)
 │   ├── entrada.js    teclado e mouse
 │   └── main.js       loop principal
 └── assets/           imagens e música
