@@ -17,15 +17,15 @@ body {
 }
 
 /* Tamanho padrão 1200x680 (proporção do jogo), diminui para caber na tela.
-   Descontamos a largura do ranking lateral (170 px + 16 px de espaço). */
+   Descontamos a largura do ranking lateral (190 px + 16 px de espaço). */
 .jogo {
   position: relative;
-  width: min(1200px, calc(100vw - 32px - 186px), calc((100vh - 32px) * 1200 / 680));
+  width: min(1200px, calc(100vw - 32px - 206px), calc((100vh - 32px) * 1200 / 680));
 }
 
 /* Ranking ao lado do jogo */
 .ranking-lateral {
-  width: 170px;
+  width: 190px;
   flex-shrink: 0;
   background: #2c2c34;
   border-radius: 10px;
@@ -51,12 +51,31 @@ body {
   font-size: 14px;
 }
 .ranking-lateral li span:first-child {
+  min-width: 0;            /* deixa o nome encolher e aparecer "..." */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.ranking-lateral li span:last-child {
+  flex-shrink: 0;          /* os pontos nunca são cortados */
+  min-width: 18px;
+  text-align: right;
+}
 .ranking-lateral li.streamer span {
   color: #22d3ee;
+}
+/* Lista de todos os jogadores: rola quando passa da altura do jogo */
+#rankingTopo {
+  max-height: 520px;
+  overflow-y: auto;
+}
+/* Jogador novo aparece com um pequeno efeito */
+.ranking-lateral li.entrou {
+  animation: entrou 0.4s ease;
+}
+@keyframes entrou {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: none; }
 }
 
 #tela {
