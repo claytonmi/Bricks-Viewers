@@ -4,6 +4,8 @@
 // Monta os tijolos da fase atual (sem os que encostam nas paredes)
 function montarFase() {
   tijolos = [];
+  itensCaindo = [];
+  explosoes = [];
   paredesAtuais = FASES[faseIndex].paredes || [];
   FASES[faseIndex].padrao.forEach((linha, r) => {
     [...linha].forEach((c, col) => {
@@ -15,6 +17,7 @@ function montarFase() {
         h: TIJOLO_H,
         vida: Number(c),
         vivo: true,
+        item: ITENS_PADRAO.some(([lr, lc]) => lr === r && lc === col), // solta item ao quebrar
         cor: FASES[faseIndex].cores ? FASES[faseIndex].cores[r % FASES[faseIndex].cores.length] : null
       };
       // Tijolo que encosta na parede não nasce (deixa espaço para a bola passar)
@@ -61,7 +64,9 @@ function entrar(nome) {
     velExtraAte: 0,
     pontos: 0,
     carga: 0,
-    corAteT: 0
+    corAteT: 0,
+    quebrados: 0,   // tijolos quebrados por este viewer (a cada 10 ganha 1 bomba)
+    bombas: 0
   });
   atualizarContador();
 }
@@ -89,6 +94,13 @@ function processarComando(usuario, mensagem) {
       b.velExtraAte = agora + DURACAO_SPEED;
       b.carga = 0;
     }
+  } else if (cmd === '!bomb') {
+    // Gasta 1 bomba (ganha 1 a cada 10 tijolos) e empurra as bolas perto
+    if (estado !== 'jogando') return;
+    const b = viewers.find(v => v.nome === usuario);
+    if (!b || b.estado !== 'jogando' || b.bombas <= 0) return;
+    b.bombas--;
+    explodirBomba(b, agora);
   }
 }
 
@@ -109,6 +121,8 @@ function atualizarJogo(dt, agora) {
       paddleBrilhoAte = agora + 600; // raquete brilha quando o streamer ganha ponto
     }
   }
+
+  atualizarItens(dt, agora);
 
   if (tijolosVivos === 0) finalizar();
 }

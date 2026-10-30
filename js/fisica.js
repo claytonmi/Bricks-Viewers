@@ -56,6 +56,9 @@ function baterNosTijolos(b) {
         t.vivo = false;
         tijolosVivos--;
         b.pontos++; // 1 ponto só quando o tijolo quebra
+        b.quebrados++;
+        if (b.quebrados % BOMBA_CADA === 0) b.bombas++; // a cada 10 tijolos, 1 bomba
+        if (t.item) soltarItem(t);
       }
       return; // um tijolo por frame
     }

@@ -19,6 +19,12 @@ const DURACAO_SPEED = 5000;      // !speed dura 5 s
 const CARGA_SPEED = 5;           // batidas necessárias para usar !speed de novo
 const COOLDOWN_COR = 5000;       // 5 s entre uma troca de cor e a próxima do mesmo viewer
 const MULT_SPEED = 2;            // !speed: 100% mais rápido (dobro)
+const BOMBA_CADA = 10;           // a cada 10 tijolos quebrados, o viewer ganha 1 bomba
+const BOMBA_RAIO = 15;           // raio da explosão (px) a partir da bola que deu !bomb
+const BOMBA_TEMPO = 350;         // tempo da animação da explosão (ms)
+const ITEM_VEL = 160;            // velocidade de queda do item (px por segundo)
+const ITEM_TAM = 16;             // tamanho do item na tela
+const ITEM_PONTOS = 2;           // pontos do streamer ao pegar um item com a raquete
 
 const CELULA_W = W / 16;         // 16 colunas de tijolos
 const TIJOLO_W = 70;

@@ -139,6 +139,39 @@ function desenhar(agora) {
   for (const b of viewers) {
     if (b.estado === 'caiu') continue;
     ctx.drawImage(bolaColorida(b.cor), b.x - TAM_BOLA / 2, b.y - TAM_BOLA / 2, TAM_BOLA, TAM_BOLA);
+    // quantas bombas o viewer tem (aparece só durante a partida)
+    if (estado === 'jogando' && b.bombas > 0) {
+      ctx.fillStyle = '#facc15';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('💣' + b.bombas, b.x, b.y - 12);
+      ctx.textAlign = 'left';
+    }
+  }
+
+  // itens caindo (a raquete pega)
+  for (const it of itensCaindo) {
+    ctx.fillStyle = '#facc15';
+    ctx.beginPath();
+    ctx.arc(it.x, it.y, ITEM_TAM / 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('+', it.x, it.y + 5);
+    ctx.textAlign = 'left';
+  }
+
+  // explosões das bombas (anel que some)
+  for (const e of explosoes) {
+    const f = (agora - e.inicio) / BOMBA_TEMPO;
+    ctx.globalAlpha = 1 - f;
+    ctx.strokeStyle = '#f97316';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, BOMBA_RAIO * (0.5 + f), 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
   }
 
   // nomes nas bolas (só antes do Pronto)

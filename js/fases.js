@@ -17,6 +17,9 @@ const PADRAO_TIJOLOS = [
   '1111111111111111'
 ];
 
+// Tijolos que soltam um item ao quebrar: [linha, coluna] do padrão (começa em 0)
+const ITENS_PADRAO = [[0, 4], [1, 11], [3, 6], [4, 8], [5, 2]];
+
 const FASES = [
   {
     nome: 'Fase 1',

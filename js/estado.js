@@ -24,6 +24,8 @@ let contagemTexto = '';
 let aviso = '';
 let avisoAte = 0;
 let paredesAtuais = [];
+let itensCaindo = [];         // itens soltos pelos tijolos marcados, caindo até a raquete
+let explosoes = [];           // explosões de !bomb (só para desenhar)
 
 const imgs = {};              // imagens carregadas
 const cacheCor = new Map();   // bolas e tijolos já pintados com cada cor
