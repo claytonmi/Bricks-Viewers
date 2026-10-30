@@ -20,6 +20,8 @@ document.addEventListener('keyup', e => {
   if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') teclas.dir = false;
 });
 
+let timerBarraVolume = null;   // esconde a barra de volume no celular depois de um tempo
+
 // Ponto dentro de um retângulo da tela
 function dentroDe(p, r) {
   return p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h;
@@ -43,7 +45,8 @@ canvas.addEventListener('pointermove', e => {
   paddleX = p.x;
 });
 
-canvas.addEventListener('pointerleave', () => {
+canvas.addEventListener('pointerleave', e => {
+  if (e.pointerType === 'touch') return; // no celular a barra some sozinha (ver abaixo)
   if (!arrastandoVolume) mostrarVolume = false;
 });
 
@@ -54,6 +57,14 @@ canvas.addEventListener('pointerdown', e => {
     arrastandoVolume = true;
     canvas.setPointerCapture(e.pointerId);
     volumePelaPosicao(p.x);
+  }
+  // no celular não existe "mouse em cima": toque no botão Som mostra a barra por 2,5 s
+  if (e.pointerType === 'touch' && estado !== 'menu' && dentroDe(p, BOTAO_SOM)) {
+    mostrarVolume = true;
+    clearTimeout(timerBarraVolume);
+    timerBarraVolume = setTimeout(() => {
+      if (!arrastandoVolume) mostrarVolume = false;
+    }, 2500);
   }
 });
 

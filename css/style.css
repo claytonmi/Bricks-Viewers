@@ -92,6 +92,9 @@ body {
   display: block;
   background: #000;
   border-radius: 8px;
+  touch-action: none;             /* o dedo move a raquete sem a página rolar */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Camadas sobre o jogo (menu, informações, ranking) */
@@ -200,6 +203,19 @@ body {
     min-width: 0;
     width: 90vw;
     box-sizing: border-box;
+  }
+}
+
+/* Celular em pé: o jogo fica pequeno, então o menu cobre a tela toda e rola se precisar */
+@media (max-width: 900px) and (orientation: portrait) {
+  .sobreposicao {
+    position: fixed;
+    overflow-y: auto;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  .caixa {
+    margin: auto;
   }
 }
 
