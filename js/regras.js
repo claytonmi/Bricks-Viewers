@@ -17,7 +17,7 @@ function montarFase() {
         h: TIJOLO_H,
         vida: Number(c),
         vivo: true,
-        item: ITENS_PADRAO.some(([lr, lc]) => lr === r && lc === col), // solta item ao quebrar
+        item: false,
         cor: FASES[faseIndex].cores ? FASES[faseIndex].cores[r % FASES[faseIndex].cores.length] : null
       };
       // Tijolo que encosta na parede não nasce (deixa espaço para a bola passar)
@@ -25,6 +25,15 @@ function montarFase() {
       tijolos.push(t);
     });
   });
+  // Itens: só com "Streamer pontua" marcado, sorteia até ITENS_MAX tijolos diferentes
+  if (streamerPontua) {
+    const ordem = tijolos.map((_, i) => i);
+    for (let i = ordem.length - 1; i > 0; i--) { // embaralha (Fisher-Yates)
+      const j = Math.floor(Math.random() * (i + 1));
+      [ordem[i], ordem[j]] = [ordem[j], ordem[i]];
+    }
+    ordem.slice(0, ITENS_MAX).forEach(i => { tijolos[i].item = true; });
+  }
   tijolosVivos = tijolos.length;
 }
 
@@ -65,7 +74,7 @@ function entrar(nome) {
     pontos: 0,
     carga: 0,
     corAteT: 0,
-    quebrados: 0,   // tijolos quebrados por este viewer (a cada 10 ganha 1 bomba)
+    batidas: 0,     // vezes que a bola encostou em tijolo (a cada 10 ganha 1 bomba)
     bombas: 0
   });
   atualizarContador();
@@ -130,10 +139,10 @@ function atualizarJogo(dt, agora) {
 // Vai da tela de menu para o lobby (viewers entram com !entrar)
 function iniciarPartida() {
   maxViewers = Number(document.getElementById('qtd').value);
+  streamerPontua = document.getElementById('pontuaStreamer').checked; // antes de montar, pois define os itens
   montarFase();
   viewers = [];
   streamerPts = 0;
-  streamerPontua = document.getElementById('pontuaStreamer').checked;
   paddleX = W / 2;
   estado = 'lobby';
   tocarMusica();

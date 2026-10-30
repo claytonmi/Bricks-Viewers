@@ -22,7 +22,8 @@ function atualizarItens(dt, agora) {
       }
       return false;
     }
-    return it.y < H + ITEM_TAM; // some quando sai da tela
+    // passou da raquete sem pegar: já era, o item some
+    return it.y - ITEM_TAM / 2 <= PADDLE_Y + PADDLE_H;
   });
 
   explosoes = explosoes.filter(e => agora - e.inicio < BOMBA_TEMPO);

@@ -28,8 +28,8 @@ Não precisa de login na Twitch. O jogo só lê o chat.
 - Cada tijolo quebrado dá 1 ponto para a bola que quebrou.
 - O streamer pode marcar "Streamer pontua no ranking". Nesse caso, a cada 3 s ganha 1 ponto se mais de 50% das bolas estiverem no ar.
 - A raquete brilha quando o streamer ganha ponto.
-- Alguns tijolos soltam um item ao quebrar. Se a raquete pegar, o streamer ganha 2 pontos (só com "Streamer pontua" marcado).
-- A cada 10 tijolos quebrados, o viewer ganha 1 bomba. O `!bomb` usa a bomba e empurra as bolas num raio de 15 px. Não causa dano nem mexe nos tijolos.
+- Só com "Streamer pontua" marcado: até 15 tijolos são sorteados a cada partida e soltam um item ao quebrar. Se a raquete pegar o item, o streamer ganha 2 pontos. Se o item passar da raquete, some.
+- A cada 10 vezes que a bola encosta em tijolos (quebrando ou não), o viewer ganha 1 bomba. O `!bomb` usa a bomba e empurra as bolas num raio de 20 px. Não causa dano nem mexe nos tijolos, paredes ou raquete.
 - A partida acaba quando todos os tijolos forem quebrados.
 
 ## Estrutura do projeto
