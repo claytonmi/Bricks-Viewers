@@ -3,6 +3,43 @@
 // suavemente para a nova posição (técnica FLIP). Só mexe na tela quando a lista muda.
 
 const MEDALHAS = ['🥇', '🥈', '🥉'];   // ouro, prata, bronze
+// Texto do top 3 para o streamer colar no chat (viewers e, se marcado, o streamer)
+function textoTop3() {
+  const itens = viewers.map(b => ({ nome: b.nome, pontos: b.pontos }));
+  if (streamerPontua) itens.push({ nome: 'Streamer', pontos: streamerPts });
+  itens.sort((a, b) => b.pontos - a.pontos);
+  const linhas = itens.slice(0, 3).map((j, i) => `${MEDALHAS[i]} ${j.nome} - ${j.pontos} pts`);
+  return ['🏆 Bricks Twitch - Top 3', ...linhas].join('\n');
+}
+
+// Copia o top 3 para a área de transferência
+function copiarTop3() {
+  const texto = textoTop3();
+  const botao = document.getElementById('btCopiar');
+  const feedback = () => {
+    botao.textContent = 'Copiado!';
+    setTimeout(() => { botao.textContent = 'Copiar top 3'; }, 2000);
+  };
+  // navigator.clipboard só funciona em https; se falhar, usa o método antigo
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(texto).then(feedback).catch(() => copiarAntigo(texto, feedback));
+  } else {
+    copiarAntigo(texto, feedback);
+  }
+}
+
+function copiarAntigo(texto, feedback) {
+  const area = document.createElement('textarea');
+  area.value = texto;
+  document.body.appendChild(area);
+  area.select();
+  document.execCommand('copy');
+  area.remove();
+  feedback();
+}
+
+document.getElementById('btCopiar').addEventListener('click', copiarTop3);
+
 let chaveRankingLateral = '';          // guarda a última lista desenhada
 const linhasRanking = new Map();       // chave (nome) -> <li> já criado, para reaproveitar
 
