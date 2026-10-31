@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bricks Twitch - protótipo</title>
+  <title>Bricks Viewers</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
       <!-- Menu do streamer -->
       <div id="menu" class="sobreposicao">
         <div class="caixa">
-          <h2>Bricks Twitch</h2>
+          <h2>Bricks Viewers</h2>
 
           <div class="bloco-chat">
             <h3>Chat da Twitch</h3>
@@ -45,7 +45,7 @@
       <!-- Informações e créditos -->
       <div id="info" class="sobreposicao escondido">
         <div class="caixa texto-info">
-          <h2>Bricks Twitch</h2>
+          <h2>Bricks Viewers</h2>
           <p><b>Desenvolvimento:</b> Clayton M.</p>
           <p><b>Arte:</b> Daru</p>
           <p><b>Como funciona:</b> o streamer controla a raquete. Cada viewer entra no jogo com uma bola pelo chat e tenta quebrar os tijolos. Quem quebrar mais tijolos fica no topo do ranking.</p>
@@ -56,7 +56,12 @@
             <li><b>!speed</b>: bola mais rápida por 5 segundos</li>
             <li><b>!bomb</b>: empurra as bolas perto da sua</li>
           </ul>
-          <p><b>Extras:</b> alguns tijolos soltam itens. Se a raquete pegar, o streamer ganha pontos (quando a opção está marcada). A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba.</p>
+          <p><b>Extras:</b></p>
+          <ul>
+            <li>20% dos tijolos soltam itens. Se a raquete pegar, o streamer ganha 5 pontos (quando a opção está marcada).</li>
+            <li>A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba (use com <b>!bomb</b>).</li>
+            <li>A cada 5 vezes que a sua bola bate em tijolos, você ganha uma carga de velocidade (use com <b>!speed</b>).</li>
+          </ul>
           <button id="btFecharInfo">Voltar</button>
         </div>
       </div>

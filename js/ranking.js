@@ -9,7 +9,7 @@ function textoTop3() {
   if (streamerPontua) itens.push({ nome: 'Streamer', pontos: streamerPts });
   itens.sort((a, b) => b.pontos - a.pontos);
   const linhas = itens.slice(0, 3).map((j, i) => `${MEDALHAS[i]} ${j.nome} - ${j.pontos} pts`);
-  return ['🏆 Bricks Twitch - Top 3', ...linhas].join('\n');
+  return ['🏆 Bricks Viewers - Top 3', ...linhas].join('\n');
 }
 
 // Copia o top 3 para a área de transferência

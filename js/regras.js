@@ -25,14 +25,14 @@ function montarFase() {
       tijolos.push(t);
     });
   });
-  // Itens: só com "Streamer pontua" marcado, sorteia até ITENS_MAX tijolos diferentes
+  // Itens: só com "Streamer pontua" marcado, sorteia 20% dos tijolos da fase
   if (streamerPontua) {
     const ordem = tijolos.map((_, i) => i);
     for (let i = ordem.length - 1; i > 0; i--) { // embaralha (Fisher-Yates)
       const j = Math.floor(Math.random() * (i + 1));
       [ordem[i], ordem[j]] = [ordem[j], ordem[i]];
     }
-    ordem.slice(0, ITENS_MAX).forEach(i => { tijolos[i].item = true; });
+    ordem.slice(0, Math.floor(tijolos.length * ITENS_PORCENTO)).forEach(i => { tijolos[i].item = true; });
   }
   tijolosVivos = tijolos.length;
 }
@@ -120,7 +120,7 @@ function atualizarJogo(dt, agora) {
     if (b.estado !== 'lobby') atualizarBola(b, dt, agora);
   }
 
-  // Streamer: a cada 3 s, +1 ponto se mais de 50% das bolas estiverem no ar
+  // Streamer: a cada 5 s, +1 ponto se mais de 50% das bolas estiverem no ar
   // (os viewers não perdem ponto quando o streamer falha)
   if (agora - ultimoCheckT >= INTERVALO_STREAMER) {
     ultimoCheckT = agora;
