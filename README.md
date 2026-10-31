@@ -76,4 +76,3 @@ O jogo é só HTML, CSS, JS e imagens. Pode ser publicado no GitHub Pages sem se
 
 - Arte: Daru
 - Desenvolvimento: Clayton M.
-- Música: Menu.mp3 do jogo Bricks

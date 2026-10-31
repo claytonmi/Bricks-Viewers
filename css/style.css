@@ -106,6 +106,10 @@ body {
   justify-content: center;
   background: rgba(0, 0, 0, 0.6);
   border-radius: 8px;
+  overflow-y: auto;   /* se a caixa for maior que o jogo, rola em vez de cortar */
+}
+.sobreposicao > .caixa {
+  margin: auto;       /* centraliza sem cortar o topo quando rola */
 }
 
 /* Menu com o fundo do Bricks */
@@ -183,7 +187,15 @@ body {
 .texto-info {
   max-width: 460px;
   text-align: left;
-  line-height: 1.5;
+  line-height: 1.4;
+  font-size: 14px;
+}
+.texto-info p {
+  margin: 6px 0;
+}
+.texto-info ul {
+  margin: 4px 0 6px;
+  padding-left: 20px;
 }
 .texto-info h2 {
   text-align: center;
