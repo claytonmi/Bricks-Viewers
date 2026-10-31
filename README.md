@@ -23,6 +23,8 @@ Não precisa de login na Twitch. O jogo só lê o chat.
 | `!speed` | durante a partida | bola fica 100% mais rápida por 5 s (precisa de 5 batidas em tijolos) |
 | `!bomb` | durante a partida | explosão pequena que empurra as bolas perto da sua (precisa de 1 bomba) |
 
+Para testes sem a Twitch: no campo do canal, digite `simulador` (ou `simulacao`, ou `dev`) e clique em **Conectar**. O jogo não conecta no chat, mostra o painel do simulador (viewers falsos e comandos) e libera o **Iniciar**.
+
 ## Regras
 
 - Cada tijolo quebrado dá 1 ponto para a bola que quebrou.

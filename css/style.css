@@ -77,6 +77,23 @@ body {
   max-height: 520px;
   overflow-y: auto;
 }
+/* Simulador (só para testes) */
+.simulador {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #3a3a44;
+}
+.simulador h4 {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 14px;
+}
+.simulador button {
+  display: block;
+  width: 100%;
+  margin: 4px 0;
+}
+
 /* Jogador novo aparece com um pequeno efeito */
 .ranking-lateral li.entrou {
   animation: entrou 0.4s ease;

@@ -10,6 +10,11 @@ function conectarChat() {
     status.textContent = 'Digite o nome do canal (ex: hercules_sc).';
     return;
   }
+  // Nome especial para testes: não conecta na Twitch, entra no modo simulação
+  if (MODOS_SIMULACAO.includes(canal)) {
+    ativarModoSimulacao();
+    return;
+  }
   if (clienteTwitch) clienteTwitch.close();
   btIniciar.disabled = true; // só libera depois de conectar
   status.textContent = 'Conectando no chat de ' + canal + '...';
