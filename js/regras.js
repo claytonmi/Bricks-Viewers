@@ -91,12 +91,12 @@ function processarComando(usuario, mensagem) {
 
   if (cmd === '!entrar') {
     if (estado === 'lobby') entrar(usuario);
-  } else if (cmd.startsWith('!') && CORES[cmd.slice(1)]) {
-    // Cor da bola: !azul, !vermelho, !amarelo... (pode trocar durante a partida)
+  } else if (corDoComando(partes)) {
+    // Cor da bola: !azul, !#ff8800, !cor 255 136 0... (pode trocar durante a partida)
     if (estado === 'menu' || estado === 'fim') return;
     const b = viewers.find(v => v.nome === usuario);
     if (!b || agora < b.corAteT) return; // cooldown de 5 s entre trocas
-    b.cor = CORES[cmd.slice(1)];
+    b.cor = corDoComando(partes);
     b.corAteT = agora + COOLDOWN_COR;
   } else if (cmd === '!speed') {
     if (estado !== 'jogando') return;
@@ -116,6 +116,30 @@ function processarComando(usuario, mensagem) {
     explodirBomba(b, agora);
     mostrarAviso(b, '!bomb', agora);
   }
+}
+
+// Cor pedida no chat: !azul, !#ff8800, !#f80, !cor #ff8800, !cor 255 136 0 (null se não for cor)
+function corDoComando(partes) {
+  const cmd = (partes[0] || '').toLowerCase();
+  if (!cmd.startsWith('!')) return null;
+  if (CORES[cmd.slice(1)]) return CORES[cmd.slice(1)];
+  if (cmd.startsWith('!#')) return corHex(cmd.slice(1)); // atalho exige o # (senão !bad viraria cor)
+  if (cmd !== '!cor') return null;
+  const resto = partes.slice(1).map(p => p.toLowerCase());
+  if (CORES[resto[0]]) return CORES[resto[0]];
+  if (resto.length === 1 && !resto[0].includes(',')) return corHex(resto[0]);
+  // !cor 255 136 0 (também aceita 255,136,0)
+  const n = resto.join(' ').split(/[\s,]+/).filter(Boolean);
+  if (n.length !== 3 || !n.every(v => /^\d{1,3}$/.test(v) && Number(v) <= 255)) return null;
+  return `rgb(${n.join(', ')})`;
+}
+
+// "#ff8800", "ff8800" ou "#f80" → "#ff8800" (null se não for hex)
+function corHex(txt) {
+  const h = String(txt || '').replace(/^#/, '');
+  if (/^[0-9a-f]{6}$/.test(h)) return '#' + h;
+  if (/^[0-9a-f]{3}$/.test(h)) return '#' + [...h].map(c => c + c).join('');
+  return null;
 }
 
 // Texto "Fulano usou !comando" que sobe e some em cima da bola

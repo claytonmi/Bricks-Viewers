@@ -20,6 +20,7 @@ Não precisa de login na Twitch. O jogo só lê o chat.
 |---|---|---|
 | `!entrar` | antes do Pronto | entra no jogo com uma bola |
 | `!azul`, `!vermelho`, `!amarelo`, `!verde`, `!branco`, `!roxo`, `!laranja`, `!rosa`, `!ciano` | a qualquer momento da partida | troca a cor da bola (intervalo de 5 s) |
+| `!#ff8800`, `!#f80`, `!cor #ff8800`, `!cor 255 136 0` | a qualquer momento da partida | troca a cor da bola por um código RGB (hex ou 3 números de 0 a 255) |
 | `!speed` | durante a partida | bola fica 100% mais rápida por 5 s (precisa de 5 batidas em tijolos) |
 | `!bomb` | durante a partida | explosão pequena que empurra as bolas perto da sua (precisa de 1 bomba) |
 
