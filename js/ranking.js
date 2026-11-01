@@ -1,5 +1,5 @@
 // ===== Ranking ao lado do jogo =====
-// Mostra os 5 primeiros durante a partida. Quando a ordem muda, as linhas deslizam
+// Mostra todos os jogadores durante a partida (a lista rola se for grande). Quando a ordem muda, as linhas deslizam
 // suavemente para a nova posição (técnica FLIP). Só mexe na tela quando a lista muda.
 
 const MEDALHAS = ['🥇', '🥈', '🥉'];   // ouro, prata, bronze
@@ -87,7 +87,7 @@ function atualizarRankingLateral() {
   for (const li of [...lista.children]) if (!novas.includes(li)) li.remove();
   novas.forEach(li => lista.appendChild(li));
 
-  // quem saiu do top 5 é esquecido
+  // quem saiu do jogo é esquecido
   for (const [k, li] of linhasRanking) if (!top.some(j => j.chave === k)) linhasRanking.delete(k);
 
   // 3) desliza cada linha da posição antiga para a nova

@@ -1,23 +1,46 @@
 // ===== Chat da Twitch =====
 // Conexão direta com o chat (leitura anônima, sem login).
 // Cada mensagem vira um comando no jogo (ver processarComando em regras.js).
+// Se a conexão cair (a Twitch derruba de vez em quando), reconecta sozinho.
 
+let timerReconexao = null;     // próxima tentativa de reconectar
+let tentativasReconexao = 0;   // cada tentativa seguida espera um pouco mais (até 30 s)
+
+// Botão Conectar
 function conectarChat() {
   const canal = document.getElementById('canal').value.trim().toLowerCase();
   const status = document.getElementById('status');
-  const btIniciar = document.getElementById('btIniciar');
   if (!canal) {
     status.textContent = 'Digite o nome do canal (ex: hercules_sc).';
     return;
   }
   // Nome especial para testes: não conecta na Twitch, entra no modo simulação
-  if (MODOS_SIMULACAO.includes(canal)) {
-    ativarModoSimulacao();
+  // (o que vem depois, ex: "simulador Hercules_SC", vira o nome dos viewers falsos)
+  const [primeira, ...resto] = document.getElementById('canal').value.trim().split(/\s+/);
+  if (MODOS_SIMULACAO.includes(primeira.toLowerCase())) {
+    pararReconexao();
+    ativarModoSimulacao(resto.join(' '));
     return;
   }
-  if (clienteTwitch) clienteTwitch.close();
-  btIniciar.disabled = true; // só libera depois de conectar
+  desativarModoSimulacao();
+  pararReconexao();
+  document.getElementById('btIniciar').disabled = true; // só libera depois de conectar
   status.textContent = 'Conectando no chat de ' + canal + '...';
+  abrirConexao(canal);
+}
+
+// Cancela uma reconexão agendada (o streamer conectou outro canal ou entrou no simulador)
+function pararReconexao() {
+  clearTimeout(timerReconexao);
+  timerReconexao = null;
+  tentativasReconexao = 0;
+  chatReconectando = false;
+}
+
+function abrirConexao(canal) {
+  const status = document.getElementById('status');
+  const btIniciar = document.getElementById('btIniciar');
+  if (clienteTwitch) clienteTwitch.close();
 
   const ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
   clienteTwitch = ws;
@@ -34,34 +57,47 @@ function conectarChat() {
         ws.send('PONG :tmi.twitch.tv');
         continue;
       }
+      // Mensagem de chat: @tags :login!login@login.tmi.twitch.tv PRIVMSG #canal :texto
+      // (vem antes das outras checagens: o texto do viewer pode ter qualquer coisa)
+      const m = linha.match(/^@(\S+) :([^!\s]+)!\S* PRIVMSG #\S+ :(.*)$/);
+      if (m) {
+        const tags = {};
+        m[1].split(';').forEach(p => {
+          const i = p.indexOf('=');
+          if (i > 0) tags[p.slice(0, i)] = p.slice(i + 1);
+        });
+        // nome de exibição; se vier vazio, usa o login (que sempre existe)
+        processarComando(tags['display-name'] || m[2], m[3]);
+        continue;
+      }
       if (linha.includes(' JOIN #') || linha.includes(' 366 ')) {
         status.textContent = 'Conectado no chat de ' + canal + '. Pode digitar !entrar.';
         btIniciar.disabled = false;
+        tentativasReconexao = 0;
+        chatReconectando = false;
+        continue;
+      }
+      // A Twitch avisa antes de derrubar a conexão: fecha e reconecta logo
+      if (/^(:\S+ )?RECONNECT/.test(linha)) {
+        ws.close();
         continue;
       }
       if (linha.includes('NOTICE') && linha.includes('Login authentication failed')) {
         status.textContent = 'Não consegui entrar no chat. Tente de novo.';
-        continue;
       }
-      // Mensagem de chat: @tags :usuario PRIVMSG #canal :texto
-      const m = linha.match(/^@(\S+) :\S+ PRIVMSG #\S+ :(.*)$/);
-      if (!m) continue;
-      const tags = {};
-      m[1].split(';').forEach(p => {
-        const i = p.indexOf('=');
-        if (i > 0) tags[p.slice(0, i)] = p.slice(i + 1);
-      });
-      processarComando(tags['display-name'] || 'anonimo', m[2]);
     }
   };
   ws.onerror = () => {
-    btIniciar.disabled = true;
-    status.textContent = 'Erro de conexão com a Twitch. Verifique a internet e tente de novo.';
+    status.textContent = 'Erro de conexão com a Twitch. Tentando de novo...';
   };
   ws.onclose = () => {
-    if (clienteTwitch === ws) {
-      btIniciar.disabled = true;
-      status.textContent = 'Chat desconectado. Clique em Conectar para tentar de novo.';
-    }
+    // conexão antiga fechada de propósito (outro canal ou simulador): não faz nada
+    if (clienteTwitch !== ws) return;
+    clienteTwitch = null;
+    chatReconectando = true;
+    tentativasReconexao++;
+    const espera = Math.min(3000 * tentativasReconexao, 30000);
+    status.textContent = 'Chat desconectado. Reconectando em ' + Math.round(espera / 1000) + ' s...';
+    timerReconexao = setTimeout(() => abrirConexao(canal), espera);
   };
 }

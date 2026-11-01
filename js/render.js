@@ -215,6 +215,15 @@ function desenhar(agora) {
     ctx.textAlign = 'left';
   }
 
+  // chat caiu: avisa na tela (o status do menu fica escondido durante a partida)
+  if (chatReconectando && estado !== 'menu') {
+    ctx.fillStyle = '#f97316';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Chat da Twitch caiu, reconectando...', W / 2, 62);
+    ctx.textAlign = 'left';
+  }
+
   // botão de som (topo direito, ao lado das bolas)
   if (estado !== 'menu') {
     const m = BOTAO_SOM;

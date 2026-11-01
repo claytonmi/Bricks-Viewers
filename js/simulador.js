@@ -1,36 +1,48 @@
 // ===== Simulador (para testes) =====
 // Modo simulação: o streamer digita um destes nomes no campo do canal (em vez de um canal da Twitch).
+// Pode vir seguido do nome do streamer (ex: "simulador Hercules_SC"): os viewers falsos viram
+// "Hercules_SC 1", "Hercules_SC 2"... Sem nome, ficam "Streamer 1", "Streamer 2"...
 // Não conecta no chat, mostra o painel e cria viewers falsos com o mesmo processarComando.
 
 const MODOS_SIMULACAO = ['simulador', 'simulacao', 'simulação', 'dev'];
 let intervaloAuto = null;          // roda os comandos sozinho quando o automático está ligado
 let contadorSimulado = 0;
+let nomeSimulado = 'Streamer';     // base dos nomes dos viewers falsos
 
-const NOMES_SIMULADOS = ['Ana', 'Bruno', 'Carla', 'Davi', 'Eva', 'Fábio', 'Gabi', 'Hugo', 'Iara', 'João',
-                         'Kaio', 'Lara', 'Mário', 'Nina', 'Otávio', 'Paula', 'Rafael', 'Sofia', 'Tiago', 'Vera'];
 const COMANDOS_SIMULADOS = ['!azul', '!vermelho', '!amarelo', '!verde', '!branco', '!roxo',
                             '!laranja', '!rosa', '!ciano', '!speed', '!bomb'];
 
 // Liga o modo simulação: fecha o chat (se estiver aberto), mostra o painel e libera o Iniciar
-function ativarModoSimulacao() {
+// (o painel fica no ranking lateral, que só aparece depois do Iniciar)
+function ativarModoSimulacao(nome) {
+  nomeSimulado = nome || 'Streamer';
   if (clienteTwitch) {
     clienteTwitch.close();
     clienteTwitch = null;
   }
   document.getElementById('simulador').classList.remove('escondido');
-  document.getElementById('status').textContent = 'Modo simulação ligado (sem chat da Twitch). Pode clicar em Iniciar.';
+  document.getElementById('status').textContent =
+    'Modo simulação ligado (sem chat da Twitch). Clique em Iniciar: o painel do simulador aparece ao lado do jogo.';
   document.getElementById('btIniciar').disabled = false;
+}
+
+// Desliga o modo simulação ao conectar num canal de verdade: esconde o painel e para o automático
+function desativarModoSimulacao() {
+  pararAutoSimulador();
+  document.getElementById('simulador').classList.add('escondido');
 }
 
 // Cria viewers falsos com !entrar (só funciona no lobby, como no chat)
 function simularEntradas(qtd) {
+  // partida nova (ou depois do Limpar): a numeração volta para 1
+  if (!viewers.some(v => v.simulado)) contadorSimulado = 0;
   for (let i = 0; i < qtd; i++) {
-    contadorSimulado++;
-    const base = NOMES_SIMULADOS[Math.floor(Math.random() * NOMES_SIMULADOS.length)];
-    const nome = `${base} ${contadorSimulado}`;
+    const nome = `${nomeSimulado} ${contadorSimulado + 1}`;
     processarComando(nome, '!entrar');
     const novo = viewers.find(v => v.nome === nome);
-    if (novo) novo.simulado = true; // marca para o botão Limpar tirar só os falsos
+    if (!novo) break; // lobby cheio (ou fora do lobby): não pula número
+    novo.simulado = true; // marca para o botão Limpar tirar só os falsos
+    contadorSimulado++;
   }
 }
 

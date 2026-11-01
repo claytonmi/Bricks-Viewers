@@ -30,3 +30,4 @@ let explosoes = [];           // explosões de !bomb (só para desenhar)
 const imgs = {};              // imagens carregadas
 const cacheCor = new Map();   // bolas e tijolos já pintados com cada cor
 let clienteTwitch = null;     // conexão com o chat da Twitch
+let chatReconectando = false; // true quando o chat caiu e o jogo está reconectando (aviso na tela)
