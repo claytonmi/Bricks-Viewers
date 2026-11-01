@@ -76,7 +76,9 @@ function entrar(nome) {
     corAteT: 0,
     batidas: 0,     // vezes que a bola encostou em tijolo (a cada 10 ganha 1 bomba)
     bombas: 0,
-    brilhoBombaAte: 0 // brilho vermelho depois de usar !bomb
+    brilhoBombaAte: 0, // brilho vermelho depois de usar !bomb
+    aviso: '',         // "Fulano usou !bomb" em cima da bola (o chat aprende vendo os outros)
+    avisoAte: 0
   });
   atualizarContador();
 }
@@ -103,6 +105,7 @@ function processarComando(usuario, mensagem) {
     if (b.carga >= CARGA_SPEED && agora >= b.velExtraAte) {
       b.velExtraAte = agora + DURACAO_SPEED;
       b.carga = 0;
+      mostrarAviso(b, '!speed', agora);
     }
   } else if (cmd === '!bomb') {
     // Gasta 1 bomba (ganha 1 a cada 10 tijolos) e empurra as bolas perto
@@ -111,7 +114,14 @@ function processarComando(usuario, mensagem) {
     if (!b || b.estado !== 'jogando' || b.bombas <= 0) return;
     b.bombas--;
     explodirBomba(b, agora);
+    mostrarAviso(b, '!bomb', agora);
   }
+}
+
+// Texto "Fulano usou !comando" que sobe e some em cima da bola
+function mostrarAviso(b, cmd, agora) {
+  b.aviso = `${b.nome} usou ${cmd}`;
+  b.avisoAte = agora + DURACAO_AVISO;
 }
 
 // Regras a cada quadro: move as bolas e checa o ponto do streamer

@@ -77,6 +77,59 @@ body {
   max-height: 520px;
   overflow-y: auto;
 }
+/* Como jogar e comandos, do lado esquerdo do jogo (espelho do ranking) */
+.painel-comandos {
+  position: absolute;
+  top: 0;
+  right: 100%;
+  margin-right: 16px;
+  width: 190px;
+  background: #2c2c34;
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.painel-comandos h3 {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 15px;
+}
+.painel-comandos h4 {
+  margin: 10px 0 4px;
+  padding-top: 8px;
+  border-top: 1px solid #3a3a44;
+  font-size: 14px;
+  text-align: center;
+}
+.painel-comandos p {
+  margin: 0;
+}
+.painel-comandos ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.painel-comandos li {
+  padding: 5px 0;
+  border-bottom: 1px solid #3a3a44;
+}
+.painel-comandos li:last-child {
+  border-bottom: none;
+}
+.painel-comandos b {
+  color: #facc15;
+}
+.painel-comandos .obs {
+  color: #999;
+  font-size: 12px;
+}
+/* Depois do Pronto não dá mais para entrar: o !entrar fica apagado */
+.painel-comandos li.fechado {
+  opacity: 0.4;
+}
+
 /* Simulador (só para testes) */
 .simulador {
   margin-top: 12px;
@@ -248,9 +301,10 @@ body {
   }
 }
 
-/* Tela estreita: some o ranking lateral e o jogo ocupa a largura toda */
+/* Tela estreita: somem os painéis laterais e o jogo ocupa a largura toda */
 @media (max-width: 900px) {
-  .ranking-lateral {
+  .ranking-lateral,
+  .painel-comandos {
     display: none;
   }
   .jogo {

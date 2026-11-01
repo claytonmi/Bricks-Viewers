@@ -22,6 +22,7 @@ const MULT_SPEED = 2;            // !speed: 100% mais rápido (dobro)
 const BOMBA_CADA = 10;           // a cada 10 encostos em tijolos, o viewer ganha 1 bomba
 const BOMBA_RAIO = 35;           // raio da explosão (px) a partir da bola que deu !bomb
 const ITENS_PORCENTO = 0.2;       // 20% dos tijolos da fase (sorteados) soltam item
+const DURACAO_AVISO = 1800;      // tempo do texto "Fulano usou !bomb" em cima da bola (ms)
 const BOMBA_TEMPO = 350;         // tempo da animação da explosão (ms)
 const ITEM_VEL = 160;            // velocidade de queda do item (px por segundo)
 const ITEM_TAM = 16;             // tamanho do item na tela

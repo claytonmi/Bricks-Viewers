@@ -145,14 +145,36 @@ function desenhar(agora) {
     }
     ctx.drawImage(bolaColorida(b.cor), b.x - TAM_BOLA / 2, b.y - TAM_BOLA / 2, TAM_BOLA, TAM_BOLA);
     ctx.shadowBlur = 0;
-    // quantas bombas o viewer tem (aparece só durante a partida)
-    if (estado === 'jogando' && b.bombas > 0) {
-      ctx.fillStyle = '#facc15';
-      ctx.font = 'bold 11px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('💣' + b.bombas, b.x, b.y - 12);
-      ctx.textAlign = 'left';
+    // o que o viewer pode usar (só durante a partida): ⚡ = !speed pronto, 💣N = bombas
+    if (estado === 'jogando') {
+      const speedPronto = b.carga >= CARGA_SPEED && agora >= b.velExtraAte;
+      const marcas = (speedPronto ? '⚡' : '') + (b.bombas > 0 ? '💣' + b.bombas : '');
+      if (marcas) {
+        ctx.fillStyle = '#facc15';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(marcas, b.x, b.y - 12);
+        ctx.textAlign = 'left';
+      }
     }
+  }
+
+  // "Fulano usou !bomb": sobe e some em cima da bola (por cima das outras bolas)
+  for (const b of viewers) {
+    if (agora >= b.avisoAte || b.estado === 'caiu') continue;
+    const f = 1 - (b.avisoAte - agora) / DURACAO_AVISO; // 0 → 1
+    const y = b.y - 26 - f * 18;
+    ctx.globalAlpha = f < 0.7 ? 1 : (1 - f) / 0.3;
+    ctx.font = 'bold 13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.lineWidth = 3;
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#000';
+    ctx.strokeText(b.aviso, b.x, y);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(b.aviso, b.x, y);
+    ctx.textAlign = 'left';
+    ctx.globalAlpha = 1;
   }
 
   // itens caindo (a raquete pega)

@@ -23,6 +23,7 @@ function loop() {
   // ranking lateral: atualiza no máximo 4 vezes por segundo
   if (agora - ultimoRanking > 250) {
     atualizarRankingLateral();
+    atualizarPainelComandos();
     ultimoRanking = agora;
   }
   requestAnimationFrame(loop);

@@ -32,6 +32,8 @@ Para testes sem a Twitch: no campo do canal, digite `simulador` (ou `simulacao`,
 - A raquete brilha quando o streamer ganha ponto.
 - Um ranking com todos os jogadores aparece ao lado do jogo durante a partida (🥇🥈🥉 para os 3 primeiros que já têm ponto). No fim, o ranking completo aparece no centro.
 - A bola que usa `!bomb` brilha em vermelho por um instante.
+- Quando alguém usa `!speed` ou `!bomb`, aparece "Fulano usou !bomb" em cima da bola. Em cima de cada bola, ⚡ mostra que o `!speed` está pronto e 💣 mostra quantas bombas o viewer tem.
+- Do lado esquerdo do jogo fica um painel com um texto curto de apresentação e os comandos do chat.
 - Só com "Streamer pontua" marcado: 20% dos tijolos da fase são sorteados a cada partida e soltam um item ao quebrar. Se a raquete pegar o item, o streamer ganha 5 pontos. Se o item passar da raquete, some.
 - A cada 10 vezes que a bola encosta em tijolos (quebrando ou não), o viewer ganha 1 bomba. O `!bomb` usa a bomba e empurra as bolas num raio de 35 px. Não causa dano nem mexe nos tijolos, paredes ou raquete.
 - A partida acaba quando todos os tijolos forem quebrados.

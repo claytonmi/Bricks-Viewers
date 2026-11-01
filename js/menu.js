@@ -1,6 +1,12 @@
 // ===== Menu do streamer =====
 // Escolha de fase, quantidade de viewers, chat, informações e botões.
 
+// Painel de comandos (lado esquerdo): o !entrar fica apagado quando não dá mais para entrar
+function atualizarPainelComandos() {
+  const fechado = estado === 'contagem' || estado === 'jogando' || estado === 'fim';
+  document.getElementById('cmdEntrar').classList.toggle('fechado', fechado);
+}
+
 function mostrarFase() {
   const f = FASES[indiceFase];
   document.getElementById('faseNome').textContent = f.nome;
