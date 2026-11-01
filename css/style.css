@@ -257,3 +257,11 @@ body {
     width: min(1200px, calc(100vw - 32px), calc((100vh - 32px) * 1200 / 680));
   }
 }
+
+/* Botão discreto para enviar feedback ou reportar bug (abre o formulário em nova aba) */
+.btn-feedback {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #22d3ee;
+}
