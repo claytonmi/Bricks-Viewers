@@ -5,7 +5,7 @@ const W = 1200;
 const H = 680;
 const RAIO = 8;                  // raio da bola (colisão)
 const TAM_BOLA = 16;             // tamanho desenhado da bola
-const VEL_BASE = 300;            // pixels por segundo
+const VEL_BASE = 240;            // pixels por segundo
 const VEL_PADDLE = 520;          // velocidade da raquete com teclado
 const PADDLE_W = 150;
 const PADDLE_H = 16;
@@ -20,13 +20,47 @@ const CARGA_SPEED = 5;           // batidas necessárias para usar !speed de nov
 const COOLDOWN_COR = 5000;       // 5 s entre uma troca de cor e a próxima do mesmo viewer
 const MULT_SPEED = 2;            // !speed: 100% mais rápido (dobro)
 const BOMBA_CADA = 10;           // a cada 10 encostos em tijolos, o viewer ganha 1 bomba
-const BOMBA_RAIO = 35;           // raio da explosão (px) a partir da bola que deu !bomb
+const BOMBA_MAX = 2;             // máximo de bombas guardadas por viewer
+const BOMBA_RAIO = 45;           // raio da explosão (px) a partir da bola que deu !bomb
+const GRAV_CADA = 12;            // encostos em tijolos para ganhar o !gravity (só 1 guardado)
+const GRAV_RAIO = 60;            // raio do campo gravitacional (px)
+const GRAV_TEMPO = 2000;         // tempo puxando as bolas até a explosão (ms)
+const GRAV_PUXAO = 90;           // velocidade com que as bolas presas vão para o centro (px por segundo)
+const GRAV_PERTO = 18;           // distância do centro onde as bolas presas ficam girando (px)
+const GRAV_GIRO = 3;             // giro das bolas presas em volta do centro (radianos por segundo)
+const GRAV_ANEL = 450;           // tempo do anel azul da explosão gravitacional (ms)
+const CHOQUE_CADA = 13;          // encostos em tijolos para ganhar o !shock (só 1 guardado)
+const CHOQUE_RAIO = 30;          // distância (px) em que a bola eletrizada atordoa as outras
+const CHOQUE_TEMPO = 1500;       // tempo que a bola fica eletrizada (ms)
+const ATORDOADA_TEMPO = 2000;    // tempo que a bola atingida fica atordoada (ms)
+const ATORDOADA_VEL = 0.01;      // velocidade da bola atordoada (1% da normal)
+const IMUNE_CHOQUE = 3000;       // depois do atordoamento, imune a outro !shock por 3 s
 const ITENS_PORCENTO = 0.2;       // 20% dos tijolos da fase (sorteados) soltam item
-const DURACAO_AVISO = 1800;      // tempo do texto "Fulano usou !bomb" em cima da bola (ms)
+const DURACAO_AVISO = 2000;      // tempo do texto "Fulano usou !bomb" parado em cima da bola (ms)
+const AVISO_SOME = 300;          // depois disso, o texto some aos poucos (ms)
 const BOMBA_TEMPO = 350;         // tempo da animação da explosão (ms)
 const ITEM_VEL = 160;            // velocidade de queda do item (px por segundo)
 const ITEM_TAM = 16;             // tamanho do item na tela
 const ITEM_PONTOS = 5;           // pontos do streamer ao pegar um item com a raquete
+const MULTIBOLA_CHANCE = 0.25;   // dos itens que caem, 1 em 4 é multibola (os outros dão pontos ao streamer)
+const MULTIBOLA_TEMPO = 8000;    // multibola: cada bola ganha uma cópia por 8 s (os pontos da cópia vão para o dono)
+
+// Poucos jogadores: poderes saem mais rápido (5→3, 10→6, 12→7, 13→8 batidas)
+const POUCOS_JOGADORES = 15;     // abaixo disso, as batidas para ganhar poder diminuem
+const POUCOS_FATOR = 7 / 12;     // 12 batidas viram 7; os outros poderes na mesma proporção
+
+// Chuva de tijolos (fase 1)
+const CHUVA_LINHAS = 6;          // altura máxima da pilha em cada coluna
+const CHUVA_VEL = 150;           // velocidade de queda dos tijolos (px por segundo)
+const CHUVA_RAPIDA = 80;         // intervalo entre tijolos com a tela vazia (ms)
+const CHUVA_LENTA = 1200;        // intervalo com a tela quase cheia (ms): quanto mais tijolos, mais devagar
+const CHUVA_MIN = 120;           // total da chuva com até 10 jogadores (com 100, é o total da fase)
+
+// Tijolo chefão (fase com chuva): cai quando a chuva acabou e sobram poucos tijolos
+const CHEFAO_QUANDO = 5;         // cai quando restam 5 tijolos ou menos na tela
+const CHEFAO_VIDA = 20;
+const CHEFAO_PONTOS = 5;         // pontos para quem der a última batida
+const CHEFAO_H = 54;             // altura de 2 linhas de tijolos (largura de 2 colunas)
 
 const CELULA_W = W / 16;         // 16 colunas de tijolos
 const TIJOLO_W = 70;

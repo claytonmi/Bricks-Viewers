@@ -34,6 +34,11 @@ function rebaterNaRaquete(b) {
   b.y = PADDLE_Y - RAIO;
 }
 
+// Batidas para ganhar um poder: com poucos jogadores, diminui (12 → 7 e os outros na mesma proporção)
+function batidasPara(base) {
+  return viewers.length < POUCOS_JOGADORES ? Math.round(base * POUCOS_FATOR) : base;
+}
+
 // Bola x tijolos: quebra um tijolo por frame e dá ponto ao viewer
 function baterNosTijolos(b) {
   for (const t of tijolos) {
@@ -50,14 +55,31 @@ function baterNosTijolos(b) {
         b.vy = -b.vy;
         b.y = cy + Math.sign(dy || -1) * RAIO;
       }
-      b.carga++;
-      b.batidas++;
-      if (b.batidas % BOMBA_CADA === 0) b.bombas++; // a cada 10 encostos, 1 bomba
+      // cópia do multibola não carrega poderes (só os pontos vão para o dono)
+      if (!b.dono) {
+        b.carga++;
+        // a cada 10 encostos, 1 bomba (no máximo 2 guardadas; cheio, não conta)
+        if (b.bombas < BOMBA_MAX && ++b.batidas >= batidasPara(BOMBA_CADA)) {
+          b.bombas++;
+          b.batidas = 0;
+        }
+        // a cada 12 encostos, o !gravity (só 1; com ele pronto, não conta)
+        if (!b.gravidade && ++b.batidasGrav >= batidasPara(GRAV_CADA)) {
+          b.gravidade = true;
+          b.batidasGrav = 0;
+        }
+        // a cada 13 encostos, o !shock (só 1; com ele pronto, não conta)
+        if (!b.choque && ++b.batidasChoque >= batidasPara(CHOQUE_CADA)) {
+          b.choque = true;
+          b.batidasChoque = 0;
+        }
+      }
       t.vida--;
       if (t.vida <= 0) {
         t.vivo = false;
         tijolosVivos--;
-        b.pontos++; // 1 ponto só quando o tijolo quebra
+        // 1 ponto só quando o tijolo quebra (chefão: 5 para quem deu a última batida)
+        (b.dono || b).pontos += t.chefao ? CHEFAO_PONTOS : 1;
         if (t.item) soltarItem(t);
       }
       return; // um tijolo por frame
@@ -113,6 +135,24 @@ function batidaSegmento(b, s) {
   return true;
 }
 
+// A bola na posição (x, y) ficaria fora da tela ou dentro de um tijolo ou parede?
+function posicaoBloqueada(x, y) {
+  if (x < RAIO || x > W - RAIO || y < RAIO || y > H - RAIO) return true;
+  const dentroRet = r => {
+    const dx = x - Math.max(r.x, Math.min(x, r.x + r.w));
+    const dy = y - Math.max(r.y, Math.min(y, r.y + r.h));
+    return dx * dx + dy * dy < RAIO * RAIO;
+  };
+  if (tijolos.some(t => t.vivo && dentroRet(t))) return true;
+  return paredesAtuais.some(p => {
+    if (p.x1 === undefined) return dentroRet(p);
+    const dx = p.x2 - p.x1;
+    const dy = p.y2 - p.y1;
+    const t = Math.max(0, Math.min(1, ((x - p.x1) * dx + (y - p.y1) * dy) / (dx * dx + dy * dy)));
+    return Math.hypot(x - (p.x1 + t * dx), y - (p.y1 + t * dy)) < RAIO + p.espessura / 2;
+  });
+}
+
 // Escolhe o tipo de colisão da parede (retângulo ou segmento)
 function colidirParede(b, p) {
   return p.x1 !== undefined ? batidaSegmento(b, p) : batidaRetangulo(b, p);
@@ -136,12 +176,14 @@ function atualizarBola(b, dt, agora) {
       b.x = W / 2;
       b.y = alturaLinha(0);
       b.estado = 'jogando';
+      b.atordoadaAte = 0; // volta da queda já sem o atordoamento
       lancar(b);
     }
     return;
   }
 
-  const mult = agora < b.velExtraAte ? MULT_SPEED : 1;
+  // !speed dobra a velocidade; atordoada pelo !shock anda a 1%
+  const mult = (agora < b.velExtraAte ? MULT_SPEED : 1) * (agora < b.atordoadaAte ? ATORDOADA_VEL : 1);
   b.x += b.vx * mult * dt;
   b.y += b.vy * mult * dt;
 

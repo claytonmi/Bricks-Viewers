@@ -8,7 +8,9 @@ let tentativasReconexao = 0;   // cada tentativa seguida espera um pouco mais (a
 
 // Botão Conectar
 function conectarChat() {
-  const canal = document.getElementById('canal').value.trim().toLowerCase();
+  // aceita "#canal" e links como "twitch.tv/canal": fica só com o nome
+  const canal = document.getElementById('canal').value.trim().toLowerCase()
+    .split('?')[0].split('/').filter(Boolean).pop()?.replace(/^#+/, '') || '';
   const status = document.getElementById('status');
   if (!canal) {
     status.textContent = 'Digite o nome do canal (ex: hercules_sc).';

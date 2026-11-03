@@ -56,12 +56,24 @@
             <li><b>!azul, !vermelho, !amarelo...</b>: muda a cor da sua bola</li>
             <li><b>!speed</b>: bola mais rápida por 5 segundos</li>
             <li><b>!bomb</b>: empurra as bolas perto da sua</li>
+            <li><b>!gravity</b>: puxa as bolas perto da sua por 2 segundos e depois lança todas para longe</li>
+            <li><b>!shock</b>: sua bola fica elétrica por 1,5 segundo e atordoa (deixa quase paradas por 2 segundos) as bolas que passar perto</li>
           </ul>
           <p><b>Extras:</b></p>
           <ul>
-            <li>20% dos tijolos soltam itens. Se a raquete pegar, o streamer ganha 5 pontos (quando a opção está marcada).</li>
-            <li>A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba (use com <b>!bomb</b>).</li>
+            <li>Na Fase 1, os tijolos caem do céu como chuva e se empilham: 120 na partida com até 10 jogadores, aumentando até 200 com 100 jogadores. Quanto mais tijolos na tela, mais devagar a chuva.</li>
+            <li><b>Tijolo chefão:</b> na Fase 1, quando a chuva acaba e sobram 5 tijolos ou menos, cai um tijolo grande e dourado com 20 de vida. Quem der a última batida ganha 5 pontos. A partida só acaba depois que ele quebra.</li>
+            <li>Com menos de 15 jogadores, os poderes saem mais rápido: !speed com 3 batidas, bomba com 6, !gravity com 7 e !shock com 8.</li>
+            <li>A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba (use com <b>!bomb</b>). Dá para guardar no máximo 2.</li>
             <li>A cada 5 vezes que a sua bola bate em tijolos, você ganha uma carga de velocidade (use com <b>!speed</b>).</li>
+            <li>A cada 12 vezes que a sua bola bate em tijolos, você ganha o campo gravitacional (use com <b>!gravity</b>). Não acumula: depois de usar, precisa de mais 12 batidas.</li>
+            <li>A cada 13 vezes que a sua bola bate em tijolos, você ganha o choque (use com <b>!shock</b>). Também não acumula.</li>
+            <li>Enquanto um poder seu está ativo, os poderes dos outros não pegam na sua bola. Se mandar outro poder nesse tempo, ele espera na fila e sai quando o primeiro acabar.</li>
+          </ul>
+          <p><b>Itens para o streamer</b> (20% dos tijolos soltam um item ao quebrar; pegue com a raquete antes que passe dela):</p>
+          <ul class="lista-itens">
+            <li><span class="icone-item multibola">×2</span><b>Multibola</b>: cada bola do chat ganha uma cópia por 8 segundos. Os pontos da cópia vão para o dono. Pegar outro enquanto as cópias estão na tela renova o tempo.</li>
+            <li><span class="icone-item pontos">+</span><b>Pontos</b>: o streamer ganha 5 pontos. Só cai com "Streamer pontua no ranking" marcado.</li>
           </ul>
           <a class="btn-feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSd-vS0iptBB_gezDnBC4j9xURUAn8eALuvJGB8ZbTT05ws64w/viewform" target="_blank" rel="noopener">Enviar feedback ou bug</a>
           <button id="btFecharInfo">Voltar</button>
@@ -89,7 +101,9 @@
         <li id="cmdEntrar"><b>!entrar</b> entra no jogo <span class="obs">(antes de começar)</span></li>
         <li><b>!azul</b> <b>!vermelho</b> <b>!amarelo</b> <b>!verde</b> <b>!roxo</b> <b>!laranja</b> <b>!rosa</b> <b>!ciano</b> <b>!branco</b> muda a cor da bola <span class="obs">(ou código RGB: <b>!#ff8800</b> ou <b>!cor 255 136 0</b>)</span></li>
         <li><b>!speed</b> bola 2× mais rápida por 5 s <span class="obs">(a cada 5 batidas em tijolos)</span></li>
-        <li><b>!bomb</b> empurra as bolas perto da sua <span class="obs">(1 bomba a cada 10 batidas)</span></li>
+        <li><b>!bomb</b> empurra as bolas perto da sua <span class="obs">(1 bomba a cada 10 batidas, até 2)</span></li>
+        <li><b>!gravity</b> puxa as bolas perto da sua por 2 s e lança todas para longe <span class="obs">(a cada 12 batidas, só 1)</span></li>
+        <li><b>!shock</b> sua bola fica elétrica por 1,5 s e deixa lentas as bolas que encostar <span class="obs">(a cada 13 batidas, só 1)</span></li>
       </ul>
     </aside>
 
@@ -106,6 +120,27 @@
         <button id="btSimComando">Comando aleatório</button>
         <button id="btSimAuto">Automático: desligado</button>
         <button id="btSimLimpar">Limpar viewers</button>
+
+        <!-- Bola de teste: adiciona com um nome e manda comandos só para ela -->
+        <h5>Bola de teste</h5>
+        <div class="sim-linha">
+          <input id="simNome" type="text" placeholder="Nome (vazio = automático)" maxlength="25">
+          <button id="btSimAdicionar" title="Adicionar bola">+</button>
+        </div>
+        <select id="simBola" title="Bola que recebe os comandos"></select>
+        <p id="simInfo" class="sim-info"></p>
+        <div class="sim-linha">
+          <input id="simComando" type="text" placeholder="Comando (ex: !cor #ff8800)">
+          <button id="btSimEnviar" title="Enviar comando">➤</button>
+        </div>
+        <div class="sim-rapidos">
+          <button data-cmd="!speed">!speed</button>
+          <button data-cmd="!bomb">!bomb</button>
+          <button data-cmd="!gravity">!gravity</button>
+          <button data-cmd="!shock">!shock</button>
+        </div>
+        <button id="btSimPoderes">Carregar poderes</button>
+        <button id="btSimMultibola">Soltar multibola</button>
       </div>
     </aside>
     </div>

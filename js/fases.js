@@ -6,6 +6,9 @@
 //          Colidem com a bola, não quebram e não dão ponto.
 // fundo:   imagem de fundo da fase (também aparece na miniatura do menu).
 // cores:   cores dos tijolos, em ciclo por linha. null = tijolos cinza.
+// chuva:   (opcional) os tijolos caem do céu em vez de começarem prontos. total = quantos caem
+//          na partida; eles se empilham nas 16 colunas, até 6 de altura. A vida de cada tijolo
+//          é sorteada entre os números do padrao.
 
 // Padrão de tijolos usado pelas fases 2 em diante
 const PADRAO_TIJOLOS = [
@@ -23,7 +26,8 @@ const FASES = [
     fundo: 'assets/Fase1.png',
     cores: null,
     paredes: [],
-    padrao: PADRAO_TIJOLOS
+    padrao: PADRAO_TIJOLOS,
+    chuva: { total: 200 }
   },
   {
     nome: 'Fase 2',

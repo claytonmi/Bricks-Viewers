@@ -15,6 +15,8 @@ function loop() {
     if (teclas.dir) paddleX += VEL_PADDLE * dt;
     paddleX = Math.max(PADDLE_W / 2, Math.min(W - PADDLE_W / 2, paddleX));
   }
+  // chuva de tijolos (fase 1): já cai no lobby, enquanto os viewers entram
+  if (estado === 'lobby' || estado === 'contagem' || estado === 'jogando') atualizarChuva(dt, agora);
   if (estado === 'contagem') atualizarContagem(agora);
   if (estado === 'jogando') atualizarJogo(dt, agora);
 
@@ -24,6 +26,7 @@ function loop() {
   if (agora - ultimoRanking > 250) {
     atualizarRankingLateral();
     atualizarPainelComandos();
+    atualizarListaSimulador();
     ultimoRanking = agora;
   }
   requestAnimationFrame(loop);

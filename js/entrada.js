@@ -11,8 +11,8 @@ function pontoNoCanvas(e) {
 
 // Setas e A/D movem a raquete
 document.addEventListener('keydown', e => {
-  // digitando num campo (ex: nome do canal): deixa as teclas funcionarem normalmente
-  if (e.target.matches('input:not([type]), input[type="text"], textarea')) return;
+  // digitando num campo (ex: nome do canal) ou escolhendo numa lista: deixa as teclas funcionarem normalmente
+  if (e.target.matches('input:not([type]), input[type="text"], textarea, select')) return;
   if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') teclas.esq = true;
   if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') teclas.dir = true;
   if (e.key.startsWith('Arrow')) e.preventDefault();
@@ -20,6 +20,11 @@ document.addEventListener('keydown', e => {
 document.addEventListener('keyup', e => {
   if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') teclas.esq = false;
   if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') teclas.dir = false;
+});
+// Trocou de janela (ex: Alt+Tab para o OBS) com a tecla apertada: o keyup não chega, então solta aqui
+window.addEventListener('blur', () => {
+  teclas.esq = false;
+  teclas.dir = false;
 });
 
 let timerBarraVolume = null;   // esconde a barra de volume no celular depois de um tempo
