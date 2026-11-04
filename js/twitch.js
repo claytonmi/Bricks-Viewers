@@ -69,8 +69,10 @@ function abrirConexao(canal) {
           const i = p.indexOf('=');
           if (i > 0) tags[p.slice(0, i)] = p.slice(i + 1);
         });
+        // streamer ou moderador (as tags vêm da Twitch, o viewer não consegue falsificar)
+        const autoridade = tags.mod === '1' || /(^|,)broadcaster\//.test(tags.badges || '');
         // nome de exibição; se vier vazio, usa o login (que sempre existe)
-        processarComando(tags['display-name'] || m[2], m[3]);
+        processarComando(tags['display-name'] || m[2], m[3], autoridade);
         continue;
       }
       if (linha.includes(' JOIN #') || linha.includes(' 366 ')) {
@@ -78,6 +80,11 @@ function abrirConexao(canal) {
         btIniciar.disabled = false;
         tentativasReconexao = 0;
         chatReconectando = false;
+        // link do OBS: conectou, já começa
+        if (iniciarAoConectar && estado === 'menu') {
+          iniciarAoConectar = false;
+          iniciarPartida();
+        }
         continue;
       }
       // A Twitch avisa antes de derrubar a conexão: fecha e reconecta logo

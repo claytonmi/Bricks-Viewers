@@ -157,6 +157,20 @@ document.getElementById('btSimMultibola').addEventListener('click', () => {
   if (estado === 'jogando' && !modoIntervalo) itensCaindo.push({ x: paddleX, y: PADDLE_Y - 120, tipo: 'multibola' });
 });
 
+// Acaba a fase na hora, para testar o que vem depois (ranking, carrossel, regra do ausente)
+document.getElementById('btSimAcabarFase').addEventListener('click', () => {
+  if (estado !== 'jogando') return;
+  tijolos = [];
+  tijolosVivos = 0;
+  chuvaRestante = 0;
+  chefaoCaiu = true;
+  presentinhos = [];
+});
+// Mês de teste: muda quais fases de evento o carrossel usa
+document.getElementById('simMes').addEventListener('change', e => {
+  mesSimulado = Number(e.target.value);
+});
+
 document.getElementById('btSimMais5').addEventListener('click', () => simularEntradas(5));
 document.getElementById('btSimMais20').addEventListener('click', () => simularEntradas(20));
 document.getElementById('btSimComando').addEventListener('click', simularComandoAleatorio);

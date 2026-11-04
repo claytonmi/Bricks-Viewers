@@ -297,6 +297,65 @@ function desenharSaco(t, agora) {
   ctx.textAlign = 'left';
 }
 
+// Raquete da fase de Natal: bengala doce listrada. A parte reta tem o tamanho da raquete normal e fica
+// no mesmo lugar (é ela que rebate a bola); a voltinha desce na ponta esquerda, para não ficar no caminho das bolas.
+const BENGALA_GROSSURA = 14;
+const BENGALA_RAIO = 12;         // raio da curva da voltinha (cabe no espaço embaixo da raquete)
+const BENGALA_MARGEM = 4;        // sobra em volta do desenho, para o contorno
+let spriteBengala = null;
+
+function criarSpriteBengala() {
+  const g = BENGALA_GROSSURA, r = BENGALA_RAIO, m = BENGALA_MARGEM;
+  const c = document.createElement('canvas');
+  c.width = PADDLE_W + m * 2;
+  c.height = r * 2 + g + m * 2;
+  const cx = c.getContext('2d');
+  const yReta = m + g / 2;
+  const xCurva = m + r + g / 2;
+  const caminho = () => {
+    cx.beginPath();
+    cx.moveTo(m + PADDLE_W - g / 2, yReta);          // ponta direita da parte reta
+    cx.lineTo(xCurva, yReta);
+    cx.arc(xCurva, yReta + r, r, -Math.PI / 2, Math.PI / 2, true); // a voltinha, descendo pela esquerda
+    cx.lineTo(xCurva + 12, yReta + r * 2);           // pontinha que volta para a direita
+  };
+  cx.lineJoin = 'round';
+  // contorno escuro, para aparecer em cima da neve
+  cx.lineCap = 'round';
+  cx.strokeStyle = '#7f1d1d';
+  cx.lineWidth = g + 3;
+  caminho();
+  cx.stroke();
+  // corpo branco
+  cx.strokeStyle = '#fff7ed';
+  cx.lineWidth = g;
+  caminho();
+  cx.stroke();
+  // listras vermelhas acompanhando a curva
+  cx.lineCap = 'butt';
+  cx.strokeStyle = '#dc2626';
+  cx.setLineDash([9, 9]);
+  caminho();
+  cx.stroke();
+  cx.setLineDash([]);
+  // brilho em cima da parte reta
+  cx.lineCap = 'round';
+  cx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+  cx.lineWidth = 2;
+  cx.beginPath();
+  cx.moveTo(m + PADDLE_W - g, yReta - g / 4);
+  cx.lineTo(xCurva + 4, yReta - g / 4);
+  cx.stroke();
+  return c;
+}
+
+// x e y são os mesmos da raquete normal (canto de cima da parte que rebate)
+function desenharBengala(x, y) {
+  if (!spriteBengala) spriteBengala = criarSpriteBengala();
+  const m = BENGALA_MARGEM;
+  ctx.drawImage(spriteBengala, x - m, y + PADDLE_H / 2 - (m + BENGALA_GROSSURA / 2));
+}
+
 // Presentinhos caindo e os "+1" subindo
 function desenharPresentinhos(agora) {
   for (const p of presentinhos) {

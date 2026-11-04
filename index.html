@@ -40,6 +40,7 @@
           <p><label title="Sem raquete: só o chat joga, as fases seguem em carrossel a partir da escolhida até você clicar em Voltei"><input type="checkbox" id="modoIntervalo"> Modo intervalo (só o chat joga)</label></p>
           <button id="btIniciar" disabled>Iniciar</button>
           <button id="btInfo">Informações</button>
+          <button id="btLinkObs" title="Copia um link que já conecta no chat. Com Modo intervalo marcado, o jogo também começa sozinho.">Copiar link para o OBS</button>
           <a class="btn-feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSd-vS0iptBB_gezDnBC4j9xURUAn8eALuvJGB8ZbTT05ws64w/viewform" target="_blank" rel="noopener">Enviar feedback ou bug</a>
         </div>
       </div>
@@ -56,7 +57,7 @@
             <li><b>!entrar</b>: entra no jogo (antes de começar)</li>
             <li><b>!azul, !vermelho, !amarelo...</b>: muda a cor da sua bola</li>
             <li><b>!speed</b>: bola mais rápida por 5 segundos</li>
-            <li><b>!bomb</b>: empurra as bolas perto da sua</li>
+            <li><b>!bomb</b>: empurra as bolas perto da sua e deixa elas mais rápidas por 1,5 segundo</li>
             <li><b>!gravity</b>: puxa as bolas perto da sua por 2 segundos e depois lança todas para longe</li>
             <li><b>!shock</b>: sua bola fica elétrica por 1,5 segundo e atordoa (deixa quase paradas por 2 segundos) as bolas que passar perto</li>
           </ul>
@@ -66,13 +67,13 @@
             <li><b>Tijolo chefão:</b> na Fase 1, quando a chuva acaba e sobram 5 tijolos ou menos, cai um tijolo grande e dourado com 20 de vida. Quem der a última batida ganha 5 pontos. A partida só acaba depois que ele quebra.</li>
             <li><b>Fase 5 (fábrica):</b> as linhas de tijolos andam como esteiras, cada uma para um lado, e o tijolo que sai por uma borda volta pela outra. Durante a partida, entram mais tijolos pela borda: 100 no total com até 15 jogadores, até 150 com 100 jogadores. Quando sobram 5 tijolos ou menos, o chefão desce e fica indo e voltando, cada vez mais rápido conforme perde vida.</li>
             <li data-evento="Fase Natalina" class="escondido"><b>Fase Natalina:</b> os tijolos são presentes e a neve cai. Quando sobram 5 tijolos ou menos, desce o saco do Papai Noel (20 de vida, balançando de um lado para o outro): quem der a última batida ganha 5 pontos e ele solta presentinhos que valem 1 ponto para a bola que pegar. De vez em quando passa uma rena voando lá em cima: acertar vale 10 pontos.</li>
-            <li><b>Modo intervalo:</b> para quando você sai da live. Sem raquete, o chão vira parede e as bolas nunca caem. Você entra como uma bola (fora do ranking), a partida começa sozinha em 20 s e o chat entra com !entrar a qualquer momento. Não cai item nenhum. As fases seguem em carrossel a partir da escolhida, com o ranking (top 10) por 15 s entre elas; os pontos somam. Na Fase 3, no fim cai um chefão com 30 de vida na parede do meio. Quem tinha poder pronto e não usou nenhum na fase perde os pontos daquela fase. Clique em <b>Voltei!</b> (embaixo do jogo) para parar e ver o ranking.</li>
-            <li>Com menos de 15 jogadores, os poderes saem mais rápido: !speed com 3 batidas, bomba com 6, !gravity com 7 e !shock com 8.</li>
+            <li><b>Modo intervalo:</b> para quando você sai da live. Sem raquete, o chão vira parede e as bolas nunca caem. Você entra como uma bola (fora do ranking), a partida começa sozinha em 20 s e o chat entra com !entrar a qualquer momento. Não cai item nenhum. As fases seguem em carrossel a partir da escolhida, com o ranking (top 10) por 15 s entre elas; os pontos somam, mas os poderes zeram a cada fase. Na Fase 3, no fim cai um chefão com 30 de vida na parede do meio. Quem tinha poder pronto e não usou nenhum na fase perde os pontos daquela fase. Clique em <b>Voltei!</b> (embaixo do jogo) ou digite <b>!voltei</b> no chat (só você e os moderadores) para parar e ver o ranking.</li>
+            <li>Quanto mais jogadores, mais rápido saem os poderes: até 15 jogadores, os números abaixo; com 50 ou mais, !speed com 3 batidas, bomba com 6, !gravity com 7 e !shock com 8.</li>
             <li>A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba (use com <b>!bomb</b>). Dá para guardar no máximo 2.</li>
             <li>A cada 5 vezes que a sua bola bate em tijolos, você ganha uma carga de velocidade (use com <b>!speed</b>).</li>
             <li>A cada 12 vezes que a sua bola bate em tijolos, você ganha o campo gravitacional (use com <b>!gravity</b>). Não acumula: depois de usar, precisa de mais 12 batidas.</li>
             <li>A cada 13 vezes que a sua bola bate em tijolos, você ganha o choque (use com <b>!shock</b>). Também não acumula.</li>
-            <li>Enquanto um poder seu está ativo, os poderes dos outros não pegam na sua bola. Se mandar outro poder nesse tempo, ele espera na fila e sai quando o primeiro acabar.</li>
+            <li>Enquanto um poder seu está ativo, os poderes dos outros não pegam na sua bola. Se mandar outro poder nesse tempo, ele espera na fila e sai quando o primeiro acabar. Se a sua bola estiver sob o poder de outra (presa, atordoada ou empurrada), o seu comando também espera e sai 1,5 segundo depois que o efeito acabar.</li>
           </ul>
           <p><b>Itens para o streamer</b> (20% dos tijolos soltam um item ao quebrar; pegue com a raquete antes que passe dela):</p>
           <ul class="lista-itens">
@@ -94,9 +95,6 @@
         </div>
       </div>
     </main>
-    <!-- Modo intervalo: o streamer voltou, para o jogo e mostra o ranking -->
-    <button id="btVoltei" class="btn-voltei escondido">Voltei! Parar o intervalo</button>
-    <footer class="rodape">Dev Clayton M. - Arte Daru</footer>
 
     <!-- Como jogar: texto para o streamer apresentar e comandos do chat (lado esquerdo do jogo) -->
     <aside id="painelComandos" class="painel-comandos">
@@ -110,10 +108,11 @@
         <li><b>!bomb</b> empurra as bolas perto da sua <span class="obs" id="obsBomb">(1 bomba a cada 10 batidas, até 2)</span></li>
         <li><b>!gravity</b> puxa as bolas perto da sua por 2 s e lança todas para longe <span class="obs" id="obsGrav">(a cada 12 batidas, só 1)</span></li>
         <li><b>!shock</b> sua bola fica elétrica por 1,5 s e deixa lentas as bolas que encostar <span class="obs" id="obsShock">(a cada 13 batidas, só 1)</span></li>
+        <li id="cmdAusente" class="aviso-ausente escondido"><b>Use seus poderes!</b> Quem tem poder e não usa nenhum perde os pontos da fase.</li>
       </ul>
     </aside>
 
-    <!-- Ranking ao lado do jogo (todos os jogadores, atualiza durante a partida) -->
+    <!-- Ranking ao lado direito do jogo (todos os jogadores, atualiza durante a partida; rola se for grande) -->
     <aside id="rankingLateral" class="ranking-lateral">
       <h3>Ranking</h3>
       <ol id="rankingTopo"></ol>
@@ -147,8 +146,21 @@
         </div>
         <button id="btSimPoderes">Carregar poderes</button>
         <button id="btSimMultibola">Soltar multibola</button>
+        <button id="btSimAcabarFase">Acabar fase</button>
+        <select id="simMes" title="Mês usado para as fases de evento">
+          <option value="0">Fases de evento: liberadas</option>
+          <option value="11">Como em novembro</option>
+          <option value="12">Como em dezembro</option>
+        </select>
       </div>
     </aside>
+
+    <!-- Embaixo do jogo: botão do modo intervalo e créditos -->
+    <div class="rodape-jogo">
+      <!-- Modo intervalo: o streamer voltou, para o jogo e mostra o ranking -->
+      <button id="btVoltei" class="btn-voltei escondido">Voltei! Parar o intervalo</button>
+      <footer class="rodape">Dev Clayton M. - Arte Daru</footer>
+    </div>
     </div>
   </div>
 

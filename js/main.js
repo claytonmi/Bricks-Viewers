@@ -45,6 +45,7 @@ function loop() {
 carregarImagens()
   .then(() => {
     mostrarFase();
+    inicioPeloLink(); // link do OBS: já conecta e começa sozinho
     requestAnimationFrame(loop);
   })
   .catch(err => {

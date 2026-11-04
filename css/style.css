@@ -7,43 +7,75 @@ body {
   font-family: sans-serif;
 }
 
-/* Centraliza o jogo e o ranking lateral na tela */
+/* Layout que cabe na tela toda (feito para 1920x1080 no OBS):
+     [ Como jogar ] [   jogo grande    ] [ Ranking ]
+                    [ Voltei · créditos ]
+   O jogo cresce até onde der, mantendo a proporção 1200x680; os painéis têm a altura do jogo. */
+:root {
+  --lateral: 200px;   /* largura de cada painel (Como jogar e Ranking) */
+  --rodape: 40px;     /* altura da linha embaixo do jogo (Voltei e créditos) */
+  --vao: 16px;        /* espaço entre os blocos e as bordas */
+  /* largura do jogo: o maior possível que caiba na largura e na altura da tela */
+  --jogo: min(calc(100vw - 2 * var(--lateral) - 4 * var(--vao)),
+              calc((100vh - var(--rodape) - 3 * var(--vao)) * 1200 / 680));
+}
+
 .layout {
   display: flex;
   justify-content: center;
-  padding: 16px;
+  padding: var(--vao);
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* Tamanho padrão 1200x680 (proporção do jogo), diminui para caber na tela.
-   Reservamos espaço dos dois lados (ranking à direita) para o jogo continuar centralizado. */
+.coluna-jogo {
+  display: grid;
+  grid-template-columns: var(--lateral) var(--jogo) var(--lateral);
+  grid-template-rows: auto var(--rodape);
+  gap: var(--vao);
+  align-self: center;
+}
+
 .jogo {
   position: relative;
-  width: min(1200px, calc(100vw - 480px), calc((100vh - 32px) * 1200 / 680));
+  grid-column: 2;
+  grid-row: 1;
+  width: var(--jogo);
 }
 
-/* Coluna do jogo: o rodapé fica embaixo só do jogo, sem o ranking */
-.coluna-jogo {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Ranking ao lado do jogo, fora do centro (não empurra o jogo) */
+/* Painéis dos lados: mesma altura do jogo (rolam se o conteúdo passar) */
+.painel-comandos,
 .ranking-lateral {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  margin-left: 16px;
-  width: 190px;
+  grid-row: 1;
+  contain: size;            /* não aumenta a altura da linha: acompanha a altura do jogo */
+  overflow-x: hidden;       /* o efeito de entrada das linhas do ranking não cria barra para o lado */
+  overflow-y: auto;
   background: #2c2c34;
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 12px;
   box-sizing: border-box;
+}
+
+/* Embaixo do jogo: botão Voltei (modo intervalo) e créditos */
+.rodape-jogo {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ----- Ranking (direita) ----- */
+.ranking-lateral {
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
 }
 .ranking-lateral h3 {
   margin: 0 0 6px;
   text-align: center;
-  font-size: 15px;
+  font-size: 17px;
 }
 .ranking-lateral ol {
   list-style: none;
@@ -54,9 +86,9 @@ body {
   display: flex;
   justify-content: space-between;
   gap: 6px;
-  padding: 5px 0;
+  padding: 6px 0;
   border-bottom: 1px solid #3a3a44;
-  font-size: 14px;
+  font-size: 15px;
 }
 .ranking-lateral li span:first-child {
   min-width: 0;            /* deixa o nome encolher e aparecer "..." */
@@ -72,39 +104,35 @@ body {
 .ranking-lateral li.streamer span {
   color: #22d3ee;
 }
-/* Lista de todos os jogadores: rola quando passa da altura do jogo */
+/* Lista de todos os jogadores: ocupa o espaço do painel e rola quando passa */
 #rankingTopo {
-  max-height: 520px;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
 }
-/* Com o simulador aberto, a lista encolhe para o painel caber ao lado do jogo */
+/* Com o simulador aberto, a lista fica com altura fixa e o simulador embaixo */
 .ranking-lateral:has(.simulador:not(.escondido)) #rankingTopo {
+  flex: 0 0 auto;
   max-height: 200px;
 }
-/* Como jogar e comandos, do lado esquerdo do jogo (espelho do ranking) */
+
+/* ----- Como jogar e comandos do chat (esquerda) ----- */
 .painel-comandos {
-  position: absolute;
-  top: 0;
-  right: 100%;
-  margin-right: 16px;
-  width: 190px;
-  background: #2c2c34;
-  border-radius: 10px;
-  padding: 10px;
-  box-sizing: border-box;
+  grid-column: 1;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 .painel-comandos h3 {
   margin: 0 0 6px;
   text-align: center;
-  font-size: 15px;
+  font-size: 17px;
 }
 .painel-comandos h4 {
   margin: 10px 0 4px;
   padding-top: 8px;
   border-top: 1px solid #3a3a44;
-  font-size: 14px;
+  font-size: 15px;
   text-align: center;
 }
 .painel-comandos p {
@@ -132,6 +160,14 @@ body {
 /* Depois do Pronto não dá mais para entrar: o !entrar fica apagado */
 .painel-comandos li.fechado {
   opacity: 0.4;
+}
+
+/* Modo intervalo: aviso da regra do ausente */
+.painel-comandos li.aviso-ausente {
+  color: #fdba74;
+}
+.painel-comandos li.aviso-ausente b {
+  color: #f97316;
 }
 
 /* Simulador (só para testes) */
@@ -341,7 +377,6 @@ body {
 /* Modo intervalo: botão do streamer para parar o jogo (fora da tela do jogo) */
 .btn-voltei {
   display: block;
-  margin: 10px auto 0;
   padding: 8px 22px;
   font-size: 15px;
   font-weight: bold;
@@ -360,7 +395,7 @@ body {
   text-align: center;
   font-size: 11px;
   color: #777;
-  padding: 8px 16px 16px;
+  padding: 0;
 }
 
 /* Tela pequena: o jogo fica na mesma linha, mas o layout encolhe sozinho */
@@ -385,14 +420,22 @@ body {
   }
 }
 
-/* Tela estreita: somem os painéis laterais e o jogo ocupa a largura toda */
+/* Tela estreita: somem os painéis e o jogo ocupa a largura toda */
 @media (max-width: 900px) {
-  .ranking-lateral,
-  .painel-comandos {
+  .painel-comandos,
+  .ranking-lateral {
     display: none;
   }
-  .jogo {
-    width: min(1200px, calc(100vw - 32px), calc((100vh - 32px) * 1200 / 680));
+  :root {
+    --jogo: min(calc(100vw - 32px), calc((100vh - 80px) * 1200 / 680));
+  }
+  .coluna-jogo {
+    grid-template-columns: var(--jogo);
+    grid-template-rows: auto auto;
+  }
+  .jogo,
+  .rodape-jogo {
+    grid-column: 1;
   }
 }
 

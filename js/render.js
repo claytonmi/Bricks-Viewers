@@ -199,7 +199,8 @@ function desenhar(agora) {
       ctx.shadowColor = '#facc15';
       ctx.shadowBlur = 30;
     }
-    ctx.drawImage(imgs.paddle, paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H);
+    if (faseNatal()) desenharBengala(paddleX - PADDLE_W / 2, PADDLE_Y); // Natal: a raquete vira bengala doce
+    else ctx.drawImage(imgs.paddle, paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H);
     ctx.shadowBlur = 0;
   }
 
@@ -328,7 +329,8 @@ function desenhar(agora) {
     ctx.strokeStyle = e.cor || '#f97316';
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.arc(e.x, e.y, (e.raio || BOMBA_RAIO) * (0.5 + f), 0, Math.PI * 2);
+    // !bomb: o anel para exatamente no alcance da explosão, para o chat ver até onde pegou
+    ctx.arc(e.x, e.y, e.raio ? e.raio * (0.5 + f) : BOMBA_RAIO * (0.5 + 0.5 * f), 0, Math.PI * 2);
     ctx.stroke();
     ctx.globalAlpha = 1;
   }
@@ -381,8 +383,9 @@ function desenhar(agora) {
     const fase = modoIntervalo ? `${FASES[faseIndex].nome}   ` : '';
     ctx.fillText(`${fase}Tijolos: ${tijolosVivos + chuvaRestante + chefaoFalta}${extra}`, 20, 30);
     ctx.textAlign = 'right';
-    // no intervalo as bolas nunca caem: mostra só quantas estão jogando
-    ctx.fillText(modoIntervalo ? `Bolas: ${viewers.length}` : `Bolas no ar: ${noAr}/${viewers.length}`, W - 20, 30);
+    // no intervalo as bolas nunca caem: mostra as vagas, porque dá para entrar no meio da fase
+    const vagas = `Jogadores: ${viewers.filter(b => !b.streamer).length}/${maxViewers}`;
+    ctx.fillText(modoIntervalo ? vagas : `Bolas no ar: ${noAr}/${viewers.length}`, W - 20, 30);
     ctx.textAlign = 'left';
     // "Tijolo chefão!", "Multibola!": grande no meio da tela, some aos poucos
     if (agora < anuncioAte) {
@@ -457,7 +460,7 @@ function desenharRankingPausa(agora) {
 
   // contagem para a próxima fase (em cima do ranking)
   const falta = Math.max(0, Math.ceil((pausaAte - agora) / 1000));
-  const proxima = FASES[(faseIndex + 1) % FASES.length].nome;
+  const proxima = FASES[proximaFaseLiberada(faseIndex)].nome; // a mesma conta da troca de fase (pula as escondidas)
   ctx.textAlign = 'center';
   ctx.fillStyle = '#22d3ee';
   ctx.font = 'bold 22px sans-serif';

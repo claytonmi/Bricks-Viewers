@@ -21,7 +21,9 @@ const COOLDOWN_COR = 5000;       // 5 s entre uma troca de cor e a próxima do m
 const MULT_SPEED = 2;            // !speed: 100% mais rápido (dobro)
 const BOMBA_CADA = 10;           // a cada 10 encostos em tijolos, o viewer ganha 1 bomba
 const BOMBA_MAX = 2;             // máximo de bombas guardadas por viewer
-const BOMBA_RAIO = 45;           // raio da explosão (px) a partir da bola que deu !bomb
+const BOMBA_RAIO = 80;           // raio da explosão (px) a partir da bola que deu !bomb
+const BOMBA_IMPULSO = 1.5;       // as bolas atingidas ficam 1,5x mais rápidas...
+const BOMBA_IMPULSO_TEMPO = 1500; // ...por 1,5 s
 const GRAV_CADA = 12;            // encostos em tijolos para ganhar o !gravity (só 1 guardado)
 const GRAV_RAIO = 60;            // raio do campo gravitacional (px)
 const GRAV_TEMPO = 2000;         // tempo puxando as bolas até a explosão (ms)
@@ -35,6 +37,7 @@ const CHOQUE_TEMPO = 1500;       // tempo que a bola fica eletrizada (ms)
 const ATORDOADA_TEMPO = 2000;    // tempo que a bola atingida fica atordoada (ms)
 const ATORDOADA_VEL = 0.01;      // velocidade da bola atordoada (1% da normal)
 const IMUNE_CHOQUE = 3000;       // depois do atordoamento, imune a outro !shock por 3 s
+const PODER_APOS_EFEITO = 1500;  // saiu do efeito do poder de outra bola: só usa poder 1,5 s depois (o pedido espera na fila)
 const ITENS_PORCENTO = 0.2;       // 20% dos tijolos da fase (sorteados) soltam item
 const DURACAO_AVISO = 2000;      // tempo do texto "Fulano usou !bomb" parado em cima da bola (ms)
 const AVISO_SOME = 300;          // depois disso, o texto some aos poucos (ms)
@@ -45,9 +48,11 @@ const ITEM_PONTOS = 5;           // pontos do streamer ao pegar um item com a ra
 const MULTIBOLA_CHANCE = 0.25;   // dos itens que caem, 1 em 4 é multibola (os outros dão pontos ao streamer)
 const MULTIBOLA_TEMPO = 8000;    // multibola: cada bola ganha uma cópia por 8 s (os pontos da cópia vão para o dono)
 
-// Poucos jogadores: poderes saem mais rápido (5→3, 10→6, 12→7, 13→8 batidas)
-const POUCOS_JOGADORES = 15;     // abaixo disso, as batidas para ganhar poder diminuem
-const POUCOS_FATOR = 7 / 12;     // 12 batidas viram 7; os outros poderes na mesma proporção
+// Muitos jogadores: cada bola acerta menos tijolos, então os poderes saem com menos batidas
+// (com 50 ou mais: 5→3, 10→6, 12→7, 13→8). Entre os dois limites, vai diminuindo aos poucos.
+const BATIDAS_CHEIAS_ATE = 15;   // até 15 jogadores: número normal de batidas
+const BATIDAS_MENOS_COM = 50;    // com 50 ou mais: o menor número de batidas
+const BATIDAS_FATOR = 7 / 12;    // 12 batidas viram 7; os outros poderes na mesma proporção
 
 // Chuva de tijolos (fase 1)
 const CHUVA_LINHAS = 6;          // altura máxima da pilha em cada coluna
@@ -85,7 +90,7 @@ const NEVE_FLOCOS = 90;          // flocos de neve caindo na tela
 const PISO_Y = PADDLE_Y;         // chão-parede no lugar da raquete: as bolas quicam e nunca caem
 const INTERVALO_ESPERA = 20000;  // lobby: a partida começa sozinha 20 s depois do Iniciar
 const PAUSA_RANKING = 15000;     // entre as fases: ranking (top 10) por 15 s
-const AUSENTE_TOLERANCIA = 20000; // poder parado há mais de 20 s no fim da fase sem usar nenhum = ausente
+const AUSENTE_TOLERANCIA = 90000; // poder pronto há menos de 1 min 30 s no fim da fase não conta como ausente
 const CHEFAO_PAREDE_VIDA = 30;   // Fase 3 no intervalo: chefão que cai na parede do meio
 
 const CELULA_W = W / 16;        // 16 colunas de tijolos

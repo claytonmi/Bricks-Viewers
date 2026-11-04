@@ -401,6 +401,8 @@ function entrar(nome, streamer = false) {
     choqueAte: 0,     // até quando a bola está eletrizada (atordoa as bolas perto)
     atordoadaAte: 0,  // até quando a bola está atordoada (1% da velocidade)
     imuneChoqueAte: 0, // depois de atordoada, fica imune a outro !shock até aqui
+    efeitoAte: 0,     // sofreu o poder de outra bola: só usa poder de novo a partir daqui
+    impulsoAte: 0,    // empurrada por !bomb: fica mais rápida até aqui
     poderAte: 0,      // até quando o poder em uso está ativo (enquanto isso, os outros poderes não pegam nela)
     fila: [],         // poderes pedidos enquanto outro estava ativo (rodam um depois do outro)
     brilhoBombaAte: 0, // brilho vermelho depois de usar !bomb
@@ -432,20 +434,27 @@ function temAlgumPoder(b) {
   return PODERES.some(cmd => temPoder(b, cmd));
 }
 
-// Modo intervalo: anota quando o viewer ficou com um poder pronto nesta fase
+// Modo intervalo: anota desde quando o viewer tem um poder pronto nesta fase. Se ele perdeu o poder
+// (o !speed pede mais batidas quando entra gente e passa de 15 jogadores), a contagem recomeça do zero.
 function marcarPoderPronto(b, agora) {
-  if (modoIntervalo && !b.poderDesde && temAlgumPoder(b)) b.poderDesde = agora;
+  if (!modoIntervalo) return;
+  if (!temAlgumPoder(b)) b.poderDesde = 0;
+  else if (!b.poderDesde) b.poderDesde = agora;
 }
 
 // Recebe uma mensagem do chat (ou do teste) e age conforme o comando
-function processarComando(usuario, mensagem) {
+// (autoridade = quem mandou é o streamer ou um moderador)
+function processarComando(usuario, mensagem, autoridade = false) {
   // 7TV/Chatterino põem um caractere invisível no fim de mensagens repetidas: tira antes de ler
   const texto = String(mensagem || '').replace(/[\u{E0000}​-‍⁠﻿]/gu, ' ');
   const partes = texto.trim().split(/\s+/);
   const cmd = (partes[0] || '').toLowerCase();
   const agora = performance.now();
 
-  if (cmd === '!entrar') {
+  if (cmd === '!voltei') {
+    // o mesmo que o botão Voltei, para quando o jogo está no OBS e não dá para clicar
+    if (autoridade) pararIntervalo();
+  } else if (cmd === '!entrar') {
     // modo intervalo: entra a qualquer momento (no meio da fase, no ranking entre as fases...)
     if (estado === 'lobby' || (modoIntervalo && estado !== 'menu' && estado !== 'fim')) entrar(usuario);
   } else if (corDoComando(partes)) {
@@ -461,7 +470,10 @@ function processarComando(usuario, mensagem) {
     const b = viewers.find(v => v.nome === usuario);
     if (!b || !temPoder(b, cmd)) return;
     if (podeUsarAgora(b, agora)) usarPoder(b, cmd, agora);
-    else if (!b.fila.includes(cmd)) b.fila.push(cmd); // repetido na fila não entra
+    else {
+      if (!b.fila.includes(cmd)) b.fila.push(cmd); // repetido na fila não entra
+      b.usouNaFase = true; // pediu o poder: está presente, mesmo se a fase acabar antes de ele sair
+    }
   }
 }
 
@@ -481,9 +493,17 @@ function usandoPoder(b, agora) {
   return agora < b.poderAte;
 }
 
-// Pode soltar um poder agora? (bola em jogo, nenhum poder ativo, não presa num campo)
+// A bola sofreu o poder de outra (efeito acaba em fimDoEfeito): só usa poder 1,5 s depois disso.
+// Se pedir antes, o pedido espera na fila e sai sozinho quando liberar.
+function marcarEfeito(b, fimDoEfeito) {
+  b.efeitoAte = Math.max(b.efeitoAte, fimDoEfeito + PODER_APOS_EFEITO);
+}
+
+// Pode soltar um poder agora? (bola em jogo, nenhum poder ativo, não presa num campo nem atordoada,
+// e já passou a espera depois do efeito do poder de outra bola)
 function podeUsarAgora(b, agora) {
-  return b.estado === 'jogando' && !usandoPoder(b, agora) && !b.presoEm;
+  return b.estado === 'jogando' && !usandoPoder(b, agora) && !b.presoEm &&
+    agora >= b.atordoadaAte && agora >= b.efeitoAte;
 }
 
 // Gasta a carga e solta o poder
@@ -618,6 +638,7 @@ function voltarMenu() {
   document.getElementById('btVoltei').classList.add('escondido');
   document.getElementById('ranking').classList.add('escondido');
   document.getElementById('menu').classList.remove('escondido');
+  mostrarFase(); // a fase escolhida pode ter sido escondida nesse meio-tempo (mês mudou, simulador)
   atualizarContador();
 }
 
@@ -667,11 +688,12 @@ function iniciarJogo(agora) {
 // ----- Modo intervalo: fases em carrossel -----
 
 // Acabaram os tijolos: confere os ausentes e mostra o ranking (top 10) por 15 s
-// Ausente = tinha poder pronto há mais de 20 s e não usou nenhum na fase: perde os pontos da fase.
+// Ausente = tem um poder pronto há mais de 1 min 30 s e não usou nenhum na fase: perde os pontos da fase.
 function terminarFase(agora) {
   ausentesFase = [];
   for (const b of viewers) {
     if (b.streamer || b.usouNaFase || !b.poderDesde) continue;
+    if (!temAlgumPoder(b)) continue; // perdeu o poder no meio da fase: não tinha o que usar
     if (agora - b.poderDesde < AUSENTE_TOLERANCIA) continue; // ganhou o poder agora há pouco: não conta
     const perdeu = Math.min(b.pontos, b.pontosFase);
     b.pontos -= perdeu;
@@ -712,6 +734,16 @@ function proximaFase() {
     b.velExtraAte = 0;
     b.choqueAte = 0;
     b.atordoadaAte = 0;
+    b.efeitoAte = 0;
+    b.impulsoAte = 0;
+    // cada fase é uma partida nova: poderes e batidas zeram; só os pontos continuam somando
+    b.carga = 0;
+    b.batidas = 0;
+    b.bombas = 0;
+    b.batidasGrav = 0;
+    b.gravidade = false;
+    b.batidasChoque = 0;
+    b.choque = false;
   });
   iniciarContagem();
 }

@@ -41,9 +41,12 @@ function rebaterNaRaquete(b) {
   b.y = PADDLE_Y - RAIO;
 }
 
-// Batidas para ganhar um poder: com poucos jogadores, diminui (12 → 7 e os outros na mesma proporção)
+// Batidas para ganhar um poder: quanto mais jogadores, menos batidas (cada bola acerta menos tijolos).
+// A bola do streamer (só existe no modo intervalo) não conta como jogador.
 function batidasPara(base) {
-  return viewers.length < POUCOS_JOGADORES ? Math.round(base * POUCOS_FATOR) : base;
+  const jogadores = viewers.length - (modoIntervalo ? 1 : 0);
+  const f = Math.max(0, Math.min(1, (jogadores - BATIDAS_CHEIAS_ATE) / (BATIDAS_MENOS_COM - BATIDAS_CHEIAS_ATE)));
+  return Math.round(base * (1 - f * (1 - BATIDAS_FATOR)));
 }
 
 // Na esteira, o tijolo que passa da borda direita aparece pela esquerda: para uma bola no lado
@@ -192,13 +195,16 @@ function atualizarBola(b, dt, agora) {
       b.y = alturaLinha(0);
       b.estado = 'jogando';
       b.atordoadaAte = 0; // volta da queda já sem o atordoamento
+      b.efeitoAte = 0;    // e sem a espera para usar poder
+      b.impulsoAte = 0;
       lancar(b);
     }
     return;
   }
 
-  // !speed dobra a velocidade; atordoada pelo !shock anda a 1%
-  const mult = (agora < b.velExtraAte ? MULT_SPEED : 1) * (agora < b.atordoadaAte ? ATORDOADA_VEL : 1);
+  // !speed dobra a velocidade; empurrada por !bomb fica mais rápida; atordoada pelo !shock anda a 1%
+  const mult = (agora < b.velExtraAte ? MULT_SPEED : 1) * (agora < b.impulsoAte ? BOMBA_IMPULSO : 1) *
+    (agora < b.atordoadaAte ? ATORDOADA_VEL : 1);
   b.x += b.vx * mult * dt;
   b.y += b.vy * mult * dt;
 

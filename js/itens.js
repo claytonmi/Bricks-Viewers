@@ -73,6 +73,8 @@ function explodirBomba(b, agora) {
     o.vx = dx * vel;
     o.vy = dy * vel;
     garantirMovimento(o);
+    o.impulsoAte = agora + BOMBA_IMPULSO_TEMPO;
+    marcarEfeito(o, agora); // o empurrão acaba na hora: a espera de 1,5 s conta daqui
   }
 }
 
@@ -126,6 +128,7 @@ function explodirCampo(c, agora) {
     // direções espalhadas em volta do centro (com um pouco de sorteio)
     const ang = giro + (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
     p.b.presoEm = null; // sai de onde está (já fora de tijolos e paredes)
+    marcarEfeito(p.b, agora);
     p.b.vx = Math.cos(ang) * VEL_BASE;
     p.b.vy = Math.sin(ang) * VEL_BASE;
     garantirMovimento(p.b);
@@ -142,6 +145,7 @@ function atualizarChoques(agora) {
       if (Math.hypot(o.x - b.x, o.y - b.y) > CHOQUE_RAIO) continue;
       o.atordoadaAte = agora + ATORDOADA_TEMPO;
       o.imuneChoqueAte = o.atordoadaAte + IMUNE_CHOQUE; // 3 s de imunidade depois que passa
+      marcarEfeito(o, o.atordoadaAte);
       raiosChoque.push({ de: b, para: o, ate: agora + 250 }); // raio ligando as duas bolas
     }
   }

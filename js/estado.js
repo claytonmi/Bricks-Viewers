@@ -22,7 +22,9 @@ let nomeStreamer = 'Streamer'; // nome da bola do streamer no modo intervalo (ca
 let comecaEm = 0;             // intervalo: quando o lobby termina e a partida começa sozinha
 let pausaAte = 0;             // intervalo: fim do ranking entre as fases
 let ausentesFase = [];        // intervalo: quem ficou ausente na fase que acabou (perdeu os pontos dela)
-let inicioFase = 0;           // intervalo: quando a fase atual começou
+let iniciarAoConectar = false; // link do OBS: começa a partida sozinha assim que o chat conectar
+let mesSimulado = 0;         // simulador: mês para as fases de evento (0 = todas liberadas)
+let inicioFase = 0;          // intervalo: quando a fase atual começou
 let faseIndex = 0;            // fase que está sendo jogada
 let indiceFase = 0;           // fase escolhida no menu (setas < e >)
 let streamerPts = 0;

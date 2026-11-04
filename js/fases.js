@@ -103,12 +103,14 @@ const FASES = [
   }
 ];
 
-// A fase está liberada? (fase de evento só no mês dela; no simulador, sempre, para testar)
+// A fase está liberada? Fase de evento só no mês dela.
+// No simulador, vale o mês escolhido no painel (0 = todas liberadas, o padrão, para testar).
 function faseLiberada(i) {
   const f = FASES[i];
   if (!f.mes) return true;
   const simulador = !document.getElementById('simulador').classList.contains('escondido');
-  return simulador || new Date().getMonth() + 1 === f.mes;
+  if (simulador) return mesSimulado === 0 || mesSimulado === f.mes;
+  return new Date().getMonth() + 1 === f.mes;
 }
 
 // Imagens que o jogo carrega ao abrir (fundos entram pela fase)
