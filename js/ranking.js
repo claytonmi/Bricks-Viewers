@@ -5,7 +5,7 @@
 const MEDALHAS = ['🥇', '🥈', '🥉'];   // ouro, prata, bronze
 // Texto do top 3 para o streamer colar no chat (viewers e, se marcado, o streamer)
 function textoTop3() {
-  const itens = viewers.map(b => ({ nome: b.nome, pontos: b.pontos }));
+  const itens = viewers.filter(b => !b.streamer).map(b => ({ nome: b.nome, pontos: b.pontos }));
   if (streamerPontua) itens.push({ nome: 'Streamer', pontos: streamerPts });
   itens.sort((a, b) => b.pontos - a.pontos);
   const linhas = itens.slice(0, 3).map((j, i) => `${MEDALHAS[i]} ${j.nome} - ${j.pontos} pts`);
@@ -49,11 +49,12 @@ function atualizarRankingLateral() {
   if (!painel || !lista) return;
 
   // aparece na contagem e durante a partida; some no menu e no ranking final
-  const visivel = estado === 'lobby' || estado === 'contagem' || estado === 'jogando';
+  const visivel = estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa';
   painel.style.visibility = visivel ? 'visible' : 'hidden';
   if (!visivel) return;
 
-  const itens = viewers.map(b => ({ chave: b.nome, nome: b.nome, pontos: b.pontos, streamer: false }));
+  // modo intervalo: a bola do streamer não entra no ranking
+  const itens = viewers.filter(b => !b.streamer).map(b => ({ chave: b.nome, nome: b.nome, pontos: b.pontos, streamer: false }));
   if (streamerPontua) itens.push({ chave: '__streamer__', nome: 'Streamer', pontos: streamerPts, streamer: true });
   itens.sort((a, b) => b.pontos - a.pontos); // sort é estável: quem entrou antes fica na frente em empate
   const top = itens; // todos os jogadores (a lista rola se for grande)

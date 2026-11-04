@@ -7,9 +7,10 @@
 // Tijolo marcado quebrou: solta um item no centro dele.
 // 1 em 4 é multibola; os outros dão pontos ao streamer (só caem com "Streamer pontua" marcado).
 function soltarItem(t) {
+  if (modoIntervalo) return; // modo intervalo: sem raquete, não cai item nenhum
   const tipo = Math.random() < MULTIBOLA_CHANCE ? 'multibola' : 'pontos';
   if (tipo === 'pontos' && !streamerPontua) return;
-  itensCaindo.push({ x: t.x + t.w / 2, y: t.y + t.h, tipo });
+  itensCaindo.push({ x: (t.x + t.w / 2) % W, y: t.y + t.h, tipo }); // % W: tijolo da esteira passando da borda
 }
 
 // Multibola: cada bola em jogo ganha uma cópia (se já tem cópias na tela, só renova o tempo)

@@ -37,6 +37,7 @@
           <input id="qtd" type="range" min="1" max="100" value="5">
 
           <p><label><input type="checkbox" id="pontuaStreamer"> Streamer pontua no ranking</label></p>
+          <p><label title="Sem raquete: só o chat joga, as fases seguem em carrossel a partir da escolhida até você clicar em Voltei"><input type="checkbox" id="modoIntervalo"> Modo intervalo (só o chat joga)</label></p>
           <button id="btIniciar" disabled>Iniciar</button>
           <button id="btInfo">Informações</button>
           <a class="btn-feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSd-vS0iptBB_gezDnBC4j9xURUAn8eALuvJGB8ZbTT05ws64w/viewform" target="_blank" rel="noopener">Enviar feedback ou bug</a>
@@ -61,8 +62,11 @@
           </ul>
           <p><b>Extras:</b></p>
           <ul>
-            <li>Na Fase 1, os tijolos caem do céu como chuva e se empilham: 120 na partida com até 10 jogadores, aumentando até 200 com 100 jogadores. Quanto mais tijolos na tela, mais devagar a chuva.</li>
+            <li>Na Fase 1, os tijolos caem do céu como chuva e se empilham: 135 na partida com até 15 jogadores, aumentando até 250 com 100 jogadores. Quanto mais tijolos na tela, mais devagar a chuva.</li>
             <li><b>Tijolo chefão:</b> na Fase 1, quando a chuva acaba e sobram 5 tijolos ou menos, cai um tijolo grande e dourado com 20 de vida. Quem der a última batida ganha 5 pontos. A partida só acaba depois que ele quebra.</li>
+            <li><b>Fase 5 (fábrica):</b> as linhas de tijolos andam como esteiras, cada uma para um lado, e o tijolo que sai por uma borda volta pela outra. Durante a partida, entram mais tijolos pela borda: 100 no total com até 15 jogadores, até 150 com 100 jogadores. Quando sobram 5 tijolos ou menos, o chefão desce e fica indo e voltando, cada vez mais rápido conforme perde vida.</li>
+            <li data-evento="Fase Natalina" class="escondido"><b>Fase Natalina:</b> os tijolos são presentes e a neve cai. Quando sobram 5 tijolos ou menos, desce o saco do Papai Noel (20 de vida, balançando de um lado para o outro): quem der a última batida ganha 5 pontos e ele solta presentinhos que valem 1 ponto para a bola que pegar. De vez em quando passa uma rena voando lá em cima: acertar vale 10 pontos.</li>
+            <li><b>Modo intervalo:</b> para quando você sai da live. Sem raquete, o chão vira parede e as bolas nunca caem. Você entra como uma bola (fora do ranking), a partida começa sozinha em 20 s e o chat entra com !entrar a qualquer momento. Não cai item nenhum. As fases seguem em carrossel a partir da escolhida, com o ranking (top 10) por 15 s entre elas; os pontos somam. Na Fase 3, no fim cai um chefão com 30 de vida na parede do meio. Quem tinha poder pronto e não usou nenhum na fase perde os pontos daquela fase. Clique em <b>Voltei!</b> (embaixo do jogo) para parar e ver o ranking.</li>
             <li>Com menos de 15 jogadores, os poderes saem mais rápido: !speed com 3 batidas, bomba com 6, !gravity com 7 e !shock com 8.</li>
             <li>A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba (use com <b>!bomb</b>). Dá para guardar no máximo 2.</li>
             <li>A cada 5 vezes que a sua bola bate em tijolos, você ganha uma carga de velocidade (use com <b>!speed</b>).</li>
@@ -90,6 +94,8 @@
         </div>
       </div>
     </main>
+    <!-- Modo intervalo: o streamer voltou, para o jogo e mostra o ranking -->
+    <button id="btVoltei" class="btn-voltei escondido">Voltei! Parar o intervalo</button>
     <footer class="rodape">Dev Clayton M. - Arte Daru</footer>
 
     <!-- Como jogar: texto para o streamer apresentar e comandos do chat (lado esquerdo do jogo) -->
@@ -98,12 +104,12 @@
       <p>Entre no jogo pelo chat e ganhe uma bola para jogar com o streamer. Quebre os tijolos: cada tijolo quebrado vale 1 ponto. Quem tiver mais pontos no final vence!</p>
       <h4>Comandos do chat</h4>
       <ul>
-        <li id="cmdEntrar"><b>!entrar</b> entra no jogo <span class="obs">(antes de começar)</span></li>
+        <li id="cmdEntrar"><b>!entrar</b> entra no jogo <span class="obs" id="obsEntrar">(antes de começar)</span></li>
         <li><b>!azul</b> <b>!vermelho</b> <b>!amarelo</b> <b>!verde</b> <b>!roxo</b> <b>!laranja</b> <b>!rosa</b> <b>!ciano</b> <b>!branco</b> muda a cor da bola <span class="obs">(ou código RGB: <b>!#ff8800</b> ou <b>!cor 255 136 0</b>)</span></li>
-        <li><b>!speed</b> bola 2× mais rápida por 5 s <span class="obs">(a cada 5 batidas em tijolos)</span></li>
-        <li><b>!bomb</b> empurra as bolas perto da sua <span class="obs">(1 bomba a cada 10 batidas, até 2)</span></li>
-        <li><b>!gravity</b> puxa as bolas perto da sua por 2 s e lança todas para longe <span class="obs">(a cada 12 batidas, só 1)</span></li>
-        <li><b>!shock</b> sua bola fica elétrica por 1,5 s e deixa lentas as bolas que encostar <span class="obs">(a cada 13 batidas, só 1)</span></li>
+        <li><b>!speed</b> bola 2× mais rápida por 5 s <span class="obs" id="obsSpeed">(a cada 5 batidas em tijolos)</span></li>
+        <li><b>!bomb</b> empurra as bolas perto da sua <span class="obs" id="obsBomb">(1 bomba a cada 10 batidas, até 2)</span></li>
+        <li><b>!gravity</b> puxa as bolas perto da sua por 2 s e lança todas para longe <span class="obs" id="obsGrav">(a cada 12 batidas, só 1)</span></li>
+        <li><b>!shock</b> sua bola fica elétrica por 1,5 s e deixa lentas as bolas que encostar <span class="obs" id="obsShock">(a cada 13 batidas, só 1)</span></li>
       </ul>
     </aside>
 
@@ -154,6 +160,7 @@
   <script src="js/fisica.js"></script>
   <script src="js/itens.js"></script>
   <script src="js/regras.js"></script>
+  <script src="js/natal.js"></script>
   <script src="js/render.js"></script>
   <script src="js/twitch.js"></script>
   <script src="js/menu.js"></script>

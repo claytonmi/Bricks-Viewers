@@ -4,11 +4,12 @@
 const canvas = document.getElementById('tela');
 const ctx = canvas.getContext('2d');
 
-let estado = 'menu';          // 'menu' | 'lobby' | 'contagem' | 'jogando' | 'fim'
+let estado = 'menu';          // 'menu' | 'lobby' | 'contagem' | 'jogando' | 'pausa' (intervalo) | 'fim'
 let viewers = [];             // cada viewer é uma bola
 let tijolos = [];
 let tijolosVivos = 0;
-let chuvaRestante = 0;        // tijolos que ainda vão cair (fase com chuva)
+let chuvaRestante = 0;        // tijolos que ainda vão cair (chuva) ou entrar pela borda (esteira)
+let esteiraDesloc = [];       // esteira: quanto cada linha já andou (para achar os lugares vazios)
 let proximaGota = 0;          // quando cai o próximo tijolo da chuva
 let chuvaItens = 0;           // quantos dos tijolos que faltam cair ainda vão soltar item
 let chefaoCaiu = false;       // o tijolo chefão já caiu nesta partida (fase com chuva)
@@ -16,6 +17,12 @@ let copias = [];              // cópias das bolas do item multibola (pontos vã
 let anuncio = '';             // texto grande no meio da tela durante a partida ("Tijolo chefão!")
 let anuncioAte = 0;
 let maxViewers = 5;
+let modoIntervalo = false;    // modo intervalo: sem raquete, chão vira parede, fases em carrossel
+let nomeStreamer = 'Streamer'; // nome da bola do streamer no modo intervalo (canal conectado)
+let comecaEm = 0;             // intervalo: quando o lobby termina e a partida começa sozinha
+let pausaAte = 0;             // intervalo: fim do ranking entre as fases
+let ausentesFase = [];        // intervalo: quem ficou ausente na fase que acabou (perdeu os pontos dela)
+let inicioFase = 0;           // intervalo: quando a fase atual começou
 let faseIndex = 0;            // fase que está sendo jogada
 let indiceFase = 0;           // fase escolhida no menu (setas < e >)
 let streamerPts = 0;

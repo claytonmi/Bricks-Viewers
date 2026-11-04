@@ -127,7 +127,8 @@ function desenharBarraVolume() {
 // Desenha um quadro completo
 // Tijolo chefão: dourado e brilhando, com a vida que falta escrita no meio
 function desenharChefao(t, agora) {
-  const sprite = t.vida > CHEFAO_VIDA * 2 / 3 ? 'tijolo' : t.vida > CHEFAO_VIDA / 3 ? 'tijolo3' : 'tijolo4';
+  const max = t.vidaMax || CHEFAO_VIDA;
+  const sprite = t.vida > max * 2 / 3 ? 'tijolo' : t.vida > max / 3 ? 'tijolo3' : 'tijolo4';
   ctx.shadowColor = '#facc15';
   ctx.shadowBlur = 14 + Math.sin(agora / 150) * 6;
   const img = tijoloColorido(sprite, t.cor);
@@ -150,13 +151,22 @@ function desenhar(agora) {
   if (fundo) ctx.drawImage(fundo, 0, 0, W, H);
   ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
   ctx.fillRect(0, 0, W, H);
+  if (faseNatal()) desenharNeve(agora); // Natal: neve caindo atrás dos tijolos
 
   // tijolos
   for (const t of tijolos) {
     if (!t.vivo) continue;
+    if (t.saco) { desenharSaco(t, agora); continue; }
     if (t.chefao) { desenharChefao(t, agora); continue; }
     const img = tijoloColorido(SPRITE_TIJOLO[t.vida] || 'tijolo', t.cor);
-    if (img) ctx.drawImage(img, t.x, t.y, t.w, t.h);
+    if (!img) continue;
+    // esteira: tijolo novo entrando pela borda aparece aos poucos
+    if (t.surgiu && agora - t.surgiu < ESTEIRA_SURGE) ctx.globalAlpha = Math.max(0, (agora - t.surgiu) / ESTEIRA_SURGE);
+    ctx.drawImage(img, t.x, t.y, t.w, t.h);
+    // esteira: o pedaço que passou da borda direita aparece na esquerda
+    if (t.x + t.w > W) ctx.drawImage(img, t.x - W, t.y, t.w, t.h);
+    if (faseNatal()) desenharFitaPresente(t, t.x); // Natal: o tijolo vira presente
+    ctx.globalAlpha = 1;
   }
 
   // paredes da fase
@@ -175,8 +185,16 @@ function desenhar(agora) {
     }
   }
 
-  // raquete do streamer (brilha quando ele ganha ponto)
-  if (imgs.paddle) {
+  // modo intervalo: chão-parede no lugar da raquete (embaixo dele fica escuro)
+  if (modoIntervalo && estado !== 'menu') {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+    ctx.fillRect(0, PISO_Y, W, H - PISO_Y);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, PISO_Y, W, 6);
+  }
+
+  // raquete do streamer (brilha quando ele ganha ponto; no modo intervalo não tem)
+  if (imgs.paddle && !modoIntervalo) {
     if (agora < paddleBrilhoAte) {
       ctx.shadowColor = '#facc15';
       ctx.shadowBlur = 30;
@@ -255,6 +273,12 @@ function desenhar(agora) {
     }
   }
 
+  // Natal: rena voando, presentinhos do saco e os "+1"
+  if (faseNatal()) {
+    desenharRena(agora);
+    desenharPresentinhos(agora);
+  }
+
   // raios do !shock ligando a bola eletrizada às que ela atordoou
   for (const r of raiosChoque) {
     ctx.strokeStyle = '#fde047';
@@ -314,8 +338,8 @@ function desenhar(agora) {
     for (const b of viewers) etiqueta(b.nome, b.x, b.y);
   }
 
-  // botão Pronto
-  if (estado === 'lobby') {
+  // botão Pronto (no modo intervalo a partida começa sozinha)
+  if (estado === 'lobby' && !modoIntervalo) {
     ctx.fillStyle = '#22c55e';
     ctx.fillRect(BOTAO_PRONTO.x, BOTAO_PRONTO.y, BOTAO_PRONTO.w, BOTAO_PRONTO.h);
     ctx.fillStyle = '#000';
@@ -328,7 +352,21 @@ function desenhar(agora) {
   // textos de estado
   ctx.fillStyle = '#ffffff';
   ctx.font = '16px sans-serif';
-  if (estado === 'lobby') {
+  if (estado === 'lobby' && modoIntervalo) {
+    const jogadores = viewers.filter(b => !b.streamer).length;
+    const falta = Math.max(0, Math.ceil((comecaEm - agora) / 1000));
+    ctx.fillText(`Modo intervalo: digite !entrar  (${jogadores}/${maxViewers})`, 20, 30);
+    ctx.font = 'bold 28px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.lineWidth = 5;
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#000';
+    const txt = `${FASES[faseIndex].nome} começa em ${falta} s`;
+    ctx.strokeText(txt, W / 2, PISO_Y - 170);
+    ctx.fillText(txt, W / 2, PISO_Y - 170);
+    ctx.textAlign = 'left';
+    ctx.font = '16px sans-serif';
+  } else if (estado === 'lobby') {
     ctx.fillText(`Aguardando viewers: digite !entrar  (${viewers.length}/${maxViewers})`, 20, 30);
     if (agora < avisoAte) {
       ctx.fillStyle = '#facc15';
@@ -338,11 +376,13 @@ function desenhar(agora) {
   if (estado === 'jogando') {
     const noAr = viewers.filter(b => b.estado === 'jogando').length;
     const extra = streamerPontua ? `   Ponto do streamer: ${streamerPts}` : '';
-    // na chuva, conta os que ainda vão cair (e o chefão, até ele cair)
-    const chefaoFalta = FASES[faseIndex].chuva && !chefaoCaiu ? 1 : 0;
-    ctx.fillText(`Tijolos: ${tijolosVivos + chuvaRestante + chefaoFalta}${extra}`, 20, 30);
+    // na chuva e na esteira, conta os que ainda vão aparecer (e o chefão, até ele cair)
+    const chefaoFalta = faseTemChefao() && !chefaoCaiu ? 1 : 0;
+    const fase = modoIntervalo ? `${FASES[faseIndex].nome}   ` : '';
+    ctx.fillText(`${fase}Tijolos: ${tijolosVivos + chuvaRestante + chefaoFalta}${extra}`, 20, 30);
     ctx.textAlign = 'right';
-    ctx.fillText(`Bolas no ar: ${noAr}/${viewers.length}`, W - 20, 30);
+    // no intervalo as bolas nunca caem: mostra só quantas estão jogando
+    ctx.fillText(modoIntervalo ? `Bolas: ${viewers.length}` : `Bolas no ar: ${noAr}/${viewers.length}`, W - 20, 30);
     ctx.textAlign = 'left';
     // "Tijolo chefão!", "Multibola!": grande no meio da tela, some aos poucos
     if (agora < anuncioAte) {
@@ -391,4 +431,83 @@ function desenhar(agora) {
     ctx.fillText(contagemTexto, W / 2, H / 2);
     ctx.textAlign = 'left';
   }
+
+  if (estado === 'pausa') desenharRankingPausa(agora);
+}
+
+// Modo intervalo: ranking entre as fases (top 10, pontos de todas as fases) com a contagem em cima.
+// Cabe dentro da tela do jogo.
+function desenharRankingPausa(agora) {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+  ctx.fillRect(0, 0, W, H);
+
+  const lista = viewers.filter(b => !b.streamer).slice().sort((a, b) => b.pontos - a.pontos).slice(0, 10);
+  const cx = W / 2;
+  const caixaW = 560;
+  const linhaH = 38;
+  const caixaH = 150 + Math.max(1, lista.length) * linhaH + (ausentesFase.length ? 34 : 0);
+  const x = cx - caixaW / 2;
+  const y = Math.max(10, (H - caixaH) / 2);
+
+  ctx.fillStyle = 'rgba(28, 28, 34, 0.95)';
+  ctx.fillRect(x, y, caixaW, caixaH);
+  ctx.strokeStyle = '#facc15';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, caixaW, caixaH);
+
+  // contagem para a próxima fase (em cima do ranking)
+  const falta = Math.max(0, Math.ceil((pausaAte - agora) / 1000));
+  const proxima = FASES[(faseIndex + 1) % FASES.length].nome;
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#22d3ee';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText(`${proxima} em ${falta} s`, cx, y + 34);
+  // barrinha do tempo
+  const f = Math.max(0, Math.min(1, (pausaAte - agora) / PAUSA_RANKING));
+  ctx.fillStyle = '#3a3a44';
+  ctx.fillRect(x + 40, y + 46, caixaW - 80, 6);
+  ctx.fillStyle = '#22d3ee';
+  ctx.fillRect(x + 40, y + 46, (caixaW - 80) * f, 6);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillText(`${FASES[faseIndex].nome} concluída - Ranking`, cx, y + 88);
+
+  // top 10: 1º ouro, 2º prata, 3º bronze
+  const CORES_PODIO = ['#facc15', '#e2e8f0', '#f59e0b'];
+  ctx.font = '20px sans-serif';
+  if (lista.length === 0) {
+    ctx.fillStyle = '#aaa';
+    ctx.fillText('Ninguém entrou ainda: digite !entrar', cx, y + 130);
+  }
+  lista.forEach((b, i) => {
+    const ly = y + 128 + i * linhaH;
+    if (i < 3) {
+      ctx.fillStyle = 'rgba(250, 204, 21, 0.08)';
+      ctx.fillRect(x + 20, ly - 26, caixaW - 40, linhaH - 4);
+    }
+    ctx.fillStyle = i < 3 ? CORES_PODIO[i] : '#ffffff';
+    ctx.font = i < 3 ? 'bold 20px sans-serif' : '20px sans-serif';
+    ctx.textAlign = 'left';
+    const marca = i < 3 && b.pontos > 0 ? MEDALHAS[i] : `${i + 1}º`;
+    let nome = b.nome;
+    while (ctx.measureText(`${marca}  ${nome}`).width > caixaW - 160 && nome.length > 3) nome = nome.slice(0, -2);
+    if (nome !== b.nome) nome += '…';
+    ctx.fillText(`${marca}  ${nome}`, x + 36, ly);
+    ctx.textAlign = 'right';
+    ctx.fillText(`${b.pontos} pts`, x + caixaW - 36, ly);
+  });
+
+  // quem ficou ausente nesta fase (tinha poder e não usou nenhum): perdeu os pontos da fase
+  if (ausentesFase.length) {
+    const nomes = ausentesFase.map(a => a.perdeu ? `${a.nome} (-${a.perdeu})` : a.nome);
+    let texto = 'Ausentes: ' + nomes.join(', ');
+    ctx.font = '15px sans-serif';
+    ctx.textAlign = 'center';
+    while (ctx.measureText(texto).width > caixaW - 40 && texto.length > 20) texto = texto.slice(0, -2);
+    if (texto.length < ('Ausentes: ' + nomes.join(', ')).length) texto += '…';
+    ctx.fillStyle = '#f97316';
+    ctx.fillText(texto, cx, y + caixaH - 18);
+  }
+  ctx.textAlign = 'left';
 }

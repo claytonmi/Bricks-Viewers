@@ -16,9 +16,19 @@ function loop() {
     paddleX = Math.max(PADDLE_W / 2, Math.min(W - PADDLE_W / 2, paddleX));
   }
   // chuva de tijolos (fase 1): já cai no lobby, enquanto os viewers entram
-  if (estado === 'lobby' || estado === 'contagem' || estado === 'jogando') atualizarChuva(dt, agora);
+  if (estado === 'lobby' || estado === 'contagem' || estado === 'jogando') {
+    atualizarChuva(dt, agora);
+    atualizarEsteira(dt, agora); // esteira (fase 5): as linhas de tijolos andam
+    atualizarChefaoParede(dt, agora); // modo intervalo (fase 3): chefão cai na parede do meio
+  }
+  // modo intervalo: o lobby termina sozinho (sem botão Pronto)
+  if (estado === 'lobby' && modoIntervalo && agora >= comecaEm) iniciarContagem();
   if (estado === 'contagem') atualizarContagem(agora);
-  if (estado === 'jogando') atualizarJogo(dt, agora);
+  if (estado === 'jogando') {
+    atualizarNatal(dt, agora); // fase de Natal: saco do Papai Noel, presentinhos e rena
+    atualizarJogo(dt, agora);
+  }
+  if (estado === 'pausa') atualizarPausa(agora);
 
   desenhar(agora);
 

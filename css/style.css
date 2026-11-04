@@ -338,6 +338,23 @@ body {
 .icone-item.multibola { background: #22d3ee; }
 .icone-item.pontos { background: #facc15; font-size: 14px; }
 
+/* Modo intervalo: botão do streamer para parar o jogo (fora da tela do jogo) */
+.btn-voltei {
+  display: block;
+  margin: 10px auto 0;
+  padding: 8px 22px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #000;
+  background: #22d3ee;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-voltei:hover {
+  background: #67e8f9;
+}
+
 /* Rodapé discreto */
 .rodape {
   text-align: center;

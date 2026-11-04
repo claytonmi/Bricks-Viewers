@@ -2,8 +2,15 @@
 // Movimento, rebotes na raquete, nos tijolos e nas paredes.
 
 // Altura da linha de bolas no lobby e no respawn
+// (modo intervalo: as linhas sobem a partir do chão-parede, nunca abaixo dele)
 function alturaLinha(linha) {
+  if (modoIntervalo) return PISO_Y - RAIO - 6 - linha * 22;
   return H - 230 + linha * 22;
+}
+
+// Parte de baixo da área de jogo: no modo intervalo é o chão-parede (a bola quica nele)
+function fundoDoCampo() {
+  return modoIntervalo ? PISO_Y : H;
 }
 
 // Posição da bola número k: centro primeiro, depois direita/esquerda alternando
@@ -39,11 +46,18 @@ function batidasPara(base) {
   return viewers.length < POUCOS_JOGADORES ? Math.round(base * POUCOS_FATOR) : base;
 }
 
+// Na esteira, o tijolo que passa da borda direita aparece pela esquerda: para uma bola no lado
+// esquerdo da tela, a parte que já voltou fica em x - W
+function xDoTijolo(t, bx) {
+  return t.x + t.w > W && bx < W / 2 ? t.x - W : t.x;
+}
+
 // Bola x tijolos: quebra um tijolo por frame e dá ponto ao viewer
 function baterNosTijolos(b) {
   for (const t of tijolos) {
     if (!t.vivo) continue;
-    const cx = Math.max(t.x, Math.min(b.x, t.x + t.w));
+    const tx = xDoTijolo(t, b.x);
+    const cx = Math.max(tx, Math.min(b.x, tx + t.w));
     const cy = Math.max(t.y, Math.min(b.y, t.y + t.h));
     const dx = b.x - cx;
     const dy = b.y - cy;
@@ -55,8 +69,8 @@ function baterNosTijolos(b) {
         b.vy = -b.vy;
         b.y = cy + Math.sign(dy || -1) * RAIO;
       }
-      // cópia do multibola não carrega poderes (só os pontos vão para o dono)
-      if (!b.dono) {
+      // cópia do multibola não carrega poderes (só os pontos vão para o dono); a bola do streamer também não
+      if (!b.dono && !b.streamer) {
         b.carga++;
         // a cada 10 encostos, 1 bomba (no máximo 2 guardadas; cheio, não conta)
         if (b.bombas < BOMBA_MAX && ++b.batidas >= batidasPara(BOMBA_CADA)) {
@@ -73,13 +87,14 @@ function baterNosTijolos(b) {
           b.choque = true;
           b.batidasChoque = 0;
         }
+        marcarPoderPronto(b, performance.now()); // modo intervalo: regra do ausente
       }
       t.vida--;
       if (t.vida <= 0) {
         t.vivo = false;
         tijolosVivos--;
         // 1 ponto só quando o tijolo quebra (chefão: 5 para quem deu a última batida)
-        (b.dono || b).pontos += t.chefao ? CHEFAO_PONTOS : 1;
+        darPontos(b.dono || b, t.chefao ? CHEFAO_PONTOS : 1);
         if (t.item) soltarItem(t);
       }
       return; // um tijolo por frame
@@ -137,13 +152,13 @@ function batidaSegmento(b, s) {
 
 // A bola na posição (x, y) ficaria fora da tela ou dentro de um tijolo ou parede?
 function posicaoBloqueada(x, y) {
-  if (x < RAIO || x > W - RAIO || y < RAIO || y > H - RAIO) return true;
+  if (x < RAIO || x > W - RAIO || y < RAIO || y > fundoDoCampo() - RAIO) return true;
   const dentroRet = r => {
     const dx = x - Math.max(r.x, Math.min(x, r.x + r.w));
     const dy = y - Math.max(r.y, Math.min(y, r.y + r.h));
     return dx * dx + dy * dy < RAIO * RAIO;
   };
-  if (tijolos.some(t => t.vivo && dentroRet(t))) return true;
+  if (tijolos.some(t => t.vivo && dentroRet({ x: xDoTijolo(t, x), y: t.y, w: t.w, h: t.h }))) return true;
   return paredesAtuais.some(p => {
     if (p.x1 === undefined) return dentroRet(p);
     const dx = p.x2 - p.x1;
@@ -191,9 +206,11 @@ function atualizarBola(b, dt, agora) {
   if (b.x < RAIO) { b.x = RAIO; b.vx = Math.abs(b.vx); }
   if (b.x > W - RAIO) { b.x = W - RAIO; b.vx = -Math.abs(b.vx); }
   if (b.y < RAIO) { b.y = RAIO; b.vy = Math.abs(b.vy); }
+  // modo intervalo: o chão é parede, a bola quica e nunca cai
+  if (modoIntervalo && b.y > PISO_Y - RAIO) { b.y = PISO_Y - RAIO; b.vy = -Math.abs(b.vy); }
 
-  // raquete (só quando a bola desce)
-  if (b.vy > 0 &&
+  // raquete (só quando a bola desce; no modo intervalo não tem raquete)
+  if (!modoIntervalo && b.vy > 0 &&
       b.y + RAIO >= PADDLE_Y &&
       b.y - RAIO <= PADDLE_Y + PADDLE_H &&
       Math.abs(b.x - paddleX) <= PADDLE_W / 2 + RAIO) {

@@ -26,6 +26,7 @@ function conectarChat() {
   }
   desativarModoSimulacao();
   pararReconexao();
+  nomeStreamer = canal; // modo intervalo: a bola do streamer leva o nome do canal
   document.getElementById('btIniciar').disabled = true; // só libera depois de conectar
   status.textContent = 'Conectando no chat de ' + canal + '...';
   abrirConexao(canal);

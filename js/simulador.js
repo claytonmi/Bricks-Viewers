@@ -16,6 +16,7 @@ const COMANDOS_SIMULADOS = ['!azul', '!vermelho', '!amarelo', '!verde', '!branco
 // (o painel fica no ranking lateral, que só aparece depois do Iniciar)
 function ativarModoSimulacao(nome) {
   nomeSimulado = nome || 'Streamer';
+  nomeStreamer = nomeSimulado; // modo intervalo: nome da bola do streamer
   if (clienteTwitch) {
     clienteTwitch.close();
     clienteTwitch = null;
@@ -24,12 +25,14 @@ function ativarModoSimulacao(nome) {
   document.getElementById('status').textContent =
     'Modo simulação ligado (sem chat da Twitch). Clique em Iniciar: o painel do simulador aparece ao lado do jogo.';
   document.getElementById('btIniciar').disabled = false;
+  mostrarFase(); // no simulador, as fases de evento ficam liberadas para testar
 }
 
 // Desliga o modo simulação ao conectar num canal de verdade: esconde o painel e para o automático
 function desativarModoSimulacao() {
   pararAutoSimulador();
   document.getElementById('simulador').classList.add('escondido');
+  mostrarFase();
 }
 
 // Cria viewers falsos com !entrar (só funciona no lobby, como no chat)
@@ -151,7 +154,7 @@ document.querySelectorAll('.sim-rapidos button').forEach(bt => {
 document.getElementById('btSimPoderes').addEventListener('click', carregarPoderesTeste);
 // Item multibola caindo bem em cima da raquete (para testar sem esperar um tijolo soltar)
 document.getElementById('btSimMultibola').addEventListener('click', () => {
-  if (estado === 'jogando') itensCaindo.push({ x: paddleX, y: PADDLE_Y - 120, tipo: 'multibola' });
+  if (estado === 'jogando' && !modoIntervalo) itensCaindo.push({ x: paddleX, y: PADDLE_Y - 120, tipo: 'multibola' });
 });
 
 document.getElementById('btSimMais5').addEventListener('click', () => simularEntradas(5));
