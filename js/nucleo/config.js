@@ -100,6 +100,28 @@ const TELA_BASE_W = 1920;
 const TELA_BASE_H = 1080;
 const TELA_MIN_ESCALA = 900;     // até esta largura vale o layout de celular, sem escala
 
+// Fase 6: Espaço (ver js/jogo/espaco.js). Timers do buraco em milissegundos.
+const ESPACO_MIN = 100;             // meteoros com até 15 jogadores (com 100, é o total da fase)
+const ESPACO_INICIAL = 20;          // meteoros já na tela no começo
+const ESPACO_PEQ = [18, 28];        // raio do meteoro pequeno (px)
+const ESPACO_GRD = [38, 48];        // raio do meteoro grande (px)
+const ESPACO_CHANCE_GRANDE = 0.4;   // dos meteoros que chegam, quantos são grandes
+const ESPACO_VEL = 40;              // velocidade de um meteoro novo indo para o lugar (px por segundo)
+const ESPACO_REPOR = 700;           // intervalo entre meteoros novos entrando (ms)
+const ESPACO_MAX_VIAJANDO = 6;      // quantos meteoros podem estar viajando para o lugar ao mesmo tempo
+const ESPACO_AREA = { x0: 40, x1: 1160, y0: 70, y1: 400 }; // onde os meteoros e os buracos ficam
+const ESPACO_CORES = ['#7a5230', '#4f7fb0', '#d9a521'];   // marrom, azulado e dourado (por ordem de chegada)
+const BURACO_R = 24;                // raio da entrada e da saída (px)
+const BURACO_FOLGA = 60;            // espaço livre em volta do buraco para a bola passar (px)
+const BURACO_DIST_MIN = 300;        // entrada e saída sempre longe uma da outra (px)
+const BURACO_INICIO = 5000;         // o primeiro buraco aparece 5 s depois da partida começar
+const BURACO_ESPERA = 4000;         // depois de sumir, o próximo aparece em 4 s
+const BURACO_SURGE = 1000;          // entrada e saída aparecem aos poucos
+const BURACO_ABERTO = 8000;         // ficam abertas por 8 s
+const BURACO_SOME = 1500;           // somem devagar
+const BURACO_CAPTURA = 45;          // bola que chega a essa distância do centro da entrada é puxada (px)
+const BURACO_ESPIRAL = 800;         // tempo da espiral até o centro da entrada
+
 const CELULA_W = W / 16;        // 16 colunas de tijolos
 const TIJOLO_W = 70;
 const TIJOLO_H = 24;

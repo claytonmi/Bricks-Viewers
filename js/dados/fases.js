@@ -85,6 +85,15 @@ const FASES = [
     esteira: { vel: 40, total: 150 }
   },
   {
+    // Fase 6: meteoros redondos que se partem e um buraco de minhoca (ver espaco.js)
+    nome: 'Fase 6: Espaço',
+    fundo: 'assets/imagens/fases/fase-6.png',
+    cores: null,
+    paredes: [],
+    padrao: PADRAO_TIJOLOS,
+    espaco: { total: 150 } // meteoros com 100 jogadores; com até 15, são 100
+  },
+  {
     // Evento de Natal: só aparece liberada em dezembro (no simulador fica liberada para testar)
     nome: 'Fase Natalina',
     fundo: 'assets/imagens/fases/fase-natal.png',

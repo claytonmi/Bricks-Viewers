@@ -40,6 +40,37 @@ function copiarAntigo(texto, feedback) {
 
 document.getElementById('btCopiar').addEventListener('click', copiarTop3);
 
+// Ranking final (ao lado do jogo): a lista e os botões. Aberto pelo link do OBS, sem botões e com a dica do comando.
+function mostrarRankingFinal(lista) {
+  document.getElementById('btVoltei').classList.add('escondido');
+  document.getElementById('avisoVoltei').classList.add('escondido');
+  document.getElementById('btCopiar').classList.toggle('escondido', modoAutomatico);
+  document.getElementById('btVoltar').classList.toggle('escondido', modoAutomatico);
+  document.getElementById('rankingDica').classList.toggle('escondido', !modoAutomatico);
+  atualizarDicaRanking(performance.now());
+  document.querySelector('#ranking h2').textContent = modoIntervalo ? 'Ranking do intervalo' : 'Ranking final';
+
+  const ol = document.getElementById('rankingLista');
+  ol.innerHTML = '';
+  // sem clique também não dá para rolar a lista: mostra os 10 primeiros inteiros
+  ol.classList.toggle('completa', modoAutomatico);
+  const mostrados = modoAutomatico ? lista.slice(0, 10) : lista;
+  mostrados.forEach((j, i) => {
+    const li = document.createElement('li');
+    li.textContent = `${i + 1}º  ${j.nome}  -  ${j.pontos} pts`; // textContent: nome vem do chat
+    if (i < 3) li.classList.add('top3');
+    if (j.streamer) li.classList.add('streamer');
+    ol.appendChild(li);
+  });
+  if (lista.length > mostrados.length) {
+    const li = document.createElement('li');
+    li.classList.add('mais-jogadores');
+    li.textContent = `e mais ${lista.length - mostrados.length} jogadores`;
+    ol.appendChild(li);
+  }
+  document.getElementById('ranking').classList.remove('escondido');
+}
+
 let chaveRankingLateral = '';          // guarda a última lista desenhada
 const linhasRanking = new Map();       // chave (nome) -> <li> já criado, para reaproveitar
 

@@ -18,7 +18,7 @@ function ativarMultibola(agora) {
     return;
   }
   for (const b of viewers) {
-    if (b.estado !== 'jogando' || b.presoEm) continue;
+    if (b.estado !== 'jogando' || b.presoEm || b.buraco) continue;
     // sai do mesmo lugar, espelhada para o outro lado
     const c = { dono: b, cor: b.cor, x: b.x, y: b.y, vx: -b.vx || VEL_BASE * 0.5, vy: b.vy,
                 estado: 'jogando', velExtraAte: 0, atordoadaAte: 0, ate: agora + MULTIBOLA_TEMPO };

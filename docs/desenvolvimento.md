@@ -42,6 +42,7 @@ Bricks-Viewers/
     │   ├── chuva.js        fases com chuva de tijolos
     │   ├── chefao.js       tijolo chefão
     │   ├── esteira.js      fases com esteira
+    │   ├── espaco.js       fase 6: meteoros e buraco de minhoca
     │   ├── jogadores.js    entrada de viewers, pontos e avisos
     │   ├── comandos.js     comandos do chat
     │   ├── partida.js      ciclo da partida e ranking final

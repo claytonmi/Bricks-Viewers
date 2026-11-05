@@ -42,7 +42,7 @@ function marcarEfeito(b, fimDoEfeito) {
 // Pode soltar um poder agora? (bola em jogo, nenhum poder ativo, não presa num campo nem atordoada,
 // e já passou a espera depois do efeito do poder de outra bola)
 function podeUsarAgora(b, agora) {
-  return b.estado === 'jogando' && !usandoPoder(b, agora) && !b.presoEm &&
+  return b.estado === 'jogando' && !usandoPoder(b, agora) && !b.presoEm && !b.buraco &&
     agora >= b.atordoadaAte && agora >= b.efeitoAte;
 }
 
@@ -85,7 +85,7 @@ function explodirBomba(b, agora) {
   b.brilhoBombaAte = agora + 700; // a bola de quem explodiu brilha em vermelho
   for (const o of viewers) {
     // presa no !gravity: o campo segura; com poder ativo: não é afetada
-    if (o === b || o.estado !== 'jogando' || o.presoEm || usandoPoder(o, agora)) continue;
+    if (o === b || o.estado !== 'jogando' || o.presoEm || o.buraco || usandoPoder(o, agora)) continue;
     let dx = o.x - b.x;
     let dy = o.y - b.y;
     const d = Math.hypot(dx, dy);
@@ -112,7 +112,7 @@ function criarCampoGravidade(b, agora) {
 // Prende as bolas livres que estão dentro do raio do campo (menos as que estão usando poder)
 function capturarBolas(c, agora) {
   for (const o of viewers) {
-    if (o.presoEm || o.estado !== 'jogando' || usandoPoder(o, agora)) continue;
+    if (o.presoEm || o.buraco || o.estado !== 'jogando' || usandoPoder(o, agora)) continue;
     const dx = o.x - c.x;
     const dy = o.y - c.y;
     const d = Math.hypot(dx, dy);
@@ -161,9 +161,9 @@ function explodirCampo(c, agora) {
 // !shock: a bola eletrizada atordoa as bolas que chegam a até CHOQUE_RAIO dela
 function atualizarChoques(agora) {
   for (const b of viewers) {
-    if (agora >= b.choqueAte || b.estado !== 'jogando') continue;
+    if (agora >= b.choqueAte || b.estado !== 'jogando' || b.buraco) continue;
     for (const o of viewers) {
-      if (o === b || o.estado !== 'jogando' || o.presoEm) continue;
+      if (o === b || o.estado !== 'jogando' || o.presoEm || o.buraco) continue;
       if (agora < o.imuneChoqueAte || usandoPoder(o, agora)) continue;
       if (Math.hypot(o.x - b.x, o.y - b.y) > CHOQUE_RAIO) continue;
       o.atordoadaAte = agora + ATORDOADA_TEMPO;

@@ -52,6 +52,7 @@ function batidasPara(base) {
 // Na esteira, o tijolo que passa da borda direita aparece pela esquerda: para uma bola no lado
 // esquerdo da tela, a parte que já voltou fica em x - W
 function xDoTijolo(t, bx) {
+  if (t.circ) return t.x; // meteoro não dá a volta na tela
   return t.x + t.w > W && bx < W / 2 ? t.x - W : t.x;
 }
 
@@ -59,6 +60,7 @@ function xDoTijolo(t, bx) {
 function baterNosTijolos(b) {
   for (const t of tijolos) {
     if (!t.vivo) continue;
+    if (t.circ) { if (baterNoMeteoro(b, t)) return; continue; }
     const tx = xDoTijolo(t, b.x);
     const cx = Math.max(tx, Math.min(b.x, tx + t.w));
     const cy = Math.max(t.y, Math.min(b.y, t.y + t.h));
@@ -72,36 +74,59 @@ function baterNosTijolos(b) {
         b.vy = -b.vy;
         b.y = cy + Math.sign(dy || -1) * RAIO;
       }
-      // cópia do multibola não carrega poderes (só os pontos vão para o dono); a bola do streamer também não
-      if (!b.dono && !b.streamer) {
-        b.carga++;
-        // a cada 10 encostos, 1 bomba (no máximo 2 guardadas; cheio, não conta)
-        if (b.bombas < BOMBA_MAX && ++b.batidas >= batidasPara(BOMBA_CADA)) {
-          b.bombas++;
-          b.batidas = 0;
-        }
-        // a cada 12 encostos, o !gravity (só 1; com ele pronto, não conta)
-        if (!b.gravidade && ++b.batidasGrav >= batidasPara(GRAV_CADA)) {
-          b.gravidade = true;
-          b.batidasGrav = 0;
-        }
-        // a cada 13 encostos, o !shock (só 1; com ele pronto, não conta)
-        if (!b.choque && ++b.batidasChoque >= batidasPara(CHOQUE_CADA)) {
-          b.choque = true;
-          b.batidasChoque = 0;
-        }
-        marcarPoderPronto(b, performance.now()); // modo intervalo: regra do ausente
-      }
-      t.vida--;
-      if (t.vida <= 0) {
-        t.vivo = false;
-        tijolosVivos--;
-        // 1 ponto só quando o tijolo quebra (chefão: 5 para quem deu a última batida)
-        darPontos(b.dono || b, t.chefao ? CHEFAO_PONTOS : 1);
-        if (t.item) soltarItem(t);
-      }
+      registrarBatida(b, t);
       return; // um tijolo por frame
     }
+  }
+}
+
+// Bola x meteoro (círculo): rebate pela normal, como numa parede redonda
+function baterNoMeteoro(b, t) {
+  const dx = b.x - t.cx;
+  const dy = b.y - t.cy;
+  const d = Math.hypot(dx, dy);
+  const R = RAIO + t.r;
+  if (d >= R) return false;
+  const nx = d ? dx / d : 0;
+  const ny = d ? dy / d : -1;
+  const vn = b.vx * nx + b.vy * ny;
+  if (vn < 0) { b.vx -= 2 * vn * nx; b.vy -= 2 * vn * ny; }
+  b.x = t.cx + nx * R;
+  b.y = t.cy + ny * R;
+  registrarBatida(b, t);
+  return true;
+}
+
+// Uma batida num tijolo ou meteoro: conta para os poderes e, se quebrou, dá o ponto
+function registrarBatida(b, t) {
+  // cópia do multibola não carrega poderes (só os pontos vão para o dono); a bola do streamer também não
+  if (!b.dono && !b.streamer) {
+    b.carga++;
+    // a cada 10 encostos, 1 bomba (no máximo 2 guardadas; cheio, não conta)
+    if (b.bombas < BOMBA_MAX && ++b.batidas >= batidasPara(BOMBA_CADA)) {
+      b.bombas++;
+      b.batidas = 0;
+    }
+    // a cada 12 encostos, o !gravity (só 1; com ele pronto, não conta)
+    if (!b.gravidade && ++b.batidasGrav >= batidasPara(GRAV_CADA)) {
+      b.gravidade = true;
+      b.batidasGrav = 0;
+    }
+    // a cada 13 encostos, o !shock (só 1; com ele pronto, não conta)
+    if (!b.choque && ++b.batidasChoque >= batidasPara(CHOQUE_CADA)) {
+      b.choque = true;
+      b.batidasChoque = 0;
+    }
+    marcarPoderPronto(b, performance.now()); // modo intervalo: regra do ausente
+  }
+  t.vida--;
+  if (t.vida <= 0) {
+    if (t.circ) { quebrarMeteoro(t, b); return; } // fase 6: ver espaco.js
+    t.vivo = false;
+    tijolosVivos--;
+    // 1 ponto só quando o tijolo quebra (chefão: 5 para quem deu a última batida)
+    darPontos(b.dono || b, t.chefao ? CHEFAO_PONTOS : 1);
+    if (t.item) soltarItem(t);
   }
 }
 
@@ -161,7 +186,8 @@ function posicaoBloqueada(x, y) {
     const dy = y - Math.max(r.y, Math.min(y, r.y + r.h));
     return dx * dx + dy * dy < RAIO * RAIO;
   };
-  if (tijolos.some(t => t.vivo && dentroRet({ x: xDoTijolo(t, x), y: t.y, w: t.w, h: t.h }))) return true;
+  if (tijolos.some(t => t.vivo && (t.circ ? Math.hypot(x - t.cx, y - t.cy) < RAIO + t.r
+    : dentroRet({ x: xDoTijolo(t, x), y: t.y, w: t.w, h: t.h })))) return true;
   return paredesAtuais.some(p => {
     if (p.x1 === undefined) return dentroRet(p);
     const dx = p.x2 - p.x1;
@@ -189,6 +215,7 @@ function garantirMovimento(b) {
 
 // Move uma bola por um quadro e trata tudo que acontece com ela
 function atualizarBola(b, dt, agora) {
+  if (b.buraco) { avancarEspiral(b, dt); return; } // na espiral do buraco: não bate em nada e não pontua
   if (b.estado === 'caiu') {
     if (agora >= b.esperaAte) {
       b.x = W / 2;
@@ -214,6 +241,9 @@ function atualizarBola(b, dt, agora) {
   if (b.y < RAIO) { b.y = RAIO; b.vy = Math.abs(b.vy); }
   // modo intervalo: o chão é parede, a bola quica e nunca cai
   if (modoIntervalo && b.y > PISO_Y - RAIO) { b.y = PISO_Y - RAIO; b.vy = -Math.abs(b.vy); }
+
+  // fase 6: bola perto da entrada de um buraco aberto começa a espiral
+  if (capturarNoBuraco(b)) return;
 
   // raquete (só quando a bola desce; no modo intervalo não tem raquete)
   if (!modoIntervalo && b.vy > 0 &&

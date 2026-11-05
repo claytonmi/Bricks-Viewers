@@ -1,4 +1,5 @@
 // ===== Desenho na tela =====
+// desenhar() chama uma função por parte da tela, na ordem em que as coisas aparecem (de trás para a frente).
 
 // Nome do viewer em cima da bola (só na tela de espera)
 function etiqueta(texto, x, y) {
@@ -99,18 +100,100 @@ function desenharChefao(t, agora) {
   ctx.textAlign = 'left';
 }
 
-// Desenha um quadro completo
-function desenhar(agora) {
+// Fase 6: meteoro redondo e irregular, girando devagar (só visual). As trincas aparecem conforme perde vida.
+function desenharMeteoro(t, agora) {
+  ctx.save();
+  ctx.translate(t.cx, t.cy);
+  ctx.rotate(t.giro + agora / 9000);
+  ctx.beginPath();
+  t.forma.forEach((f, i) => {
+    const a = (i / t.forma.length) * Math.PI * 2;
+    const x = Math.cos(a) * t.r * f;
+    const y = Math.sin(a) * t.r * f;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = t.cor;
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+  for (const c of t.crateras) {
+    ctx.beginPath();
+    ctx.arc(Math.cos(c.a) * t.r * c.d, Math.sin(c.a) * t.r * c.d, t.r * c.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  const trincas = Math.min(t.trincas.length, t.vidaMax - t.vida);
+  ctx.strokeStyle = 'rgba(20, 10, 0, 0.8)';
+  ctx.lineWidth = 1.5;
+  for (let i = 0; i < trincas; i++) {
+    const a = t.trincas[i];
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(a) * t.r * 0.25, Math.sin(a) * t.r * 0.25);
+    ctx.lineTo(Math.cos(a + 0.4) * t.r * 0.7, Math.sin(a + 0.4) * t.r * 0.7);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// Fase 6: a entrada (escura, com espiral) e a saída (clara). Aparecem e somem aos poucos.
+function desenharBuraco(agora) {
+  if (!buraco || !buraco.entrada) return;
+  const f = buraco.fase;
+  const alfa = f === 'aparecendo' ? buraco.t / BURACO_SURGE : f === 'sumindo' ? 1 - buraco.t / BURACO_SOME : 1;
+  ctx.save();
+  ctx.globalAlpha = Math.max(0, Math.min(1, alfa));
+  const e = buraco.entrada;
+  const grad = ctx.createRadialGradient(e.x, e.y, 2, e.x, e.y, BURACO_R * 1.8);
+  grad.addColorStop(0, '#000');
+  grad.addColorStop(0.6, 'rgba(40, 10, 70, 0.9)');
+  grad.addColorStop(1, 'rgba(90, 40, 160, 0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(e.x, e.y, BURACO_R * 1.8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(196, 181, 253, 0.8)';
+  ctx.lineWidth = 2;
+  for (let k = 0; k < 3; k++) {
+    const a0 = agora / 300 + k * Math.PI * 2 / 3;
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, BURACO_R * 0.9, a0, a0 + 1.2);
+    ctx.stroke();
+  }
+  const s = buraco.saida;
+  const brilho = ctx.createRadialGradient(s.x, s.y, 2, s.x, s.y, BURACO_R * 1.8);
+  brilho.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+  brilho.addColorStop(0.5, 'rgba(34, 211, 238, 0.6)');
+  brilho.addColorStop(1, 'rgba(34, 211, 238, 0)');
+  ctx.fillStyle = brilho;
+  ctx.beginPath();
+  ctx.arc(s.x, s.y, BURACO_R * (1.8 + 0.08 * Math.sin(agora / 200)), 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+// ----- Partes da tela (desenhar chama todas, na ordem) -----
+
+// Fundo da fase, escurecido para as coisas se destacarem
+function desenharFundo(agora) {
   ctx.clearRect(0, 0, W, H);
   const fundo = imgs['fundo' + faseIndex];
   if (fundo) ctx.drawImage(fundo, 0, 0, W, H);
   ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
   ctx.fillRect(0, 0, W, H);
   if (faseNatal()) desenharNeve(agora); // Natal: neve caindo atrás dos tijolos
+  if (espacoAtiva()) desenharBuraco(agora); // Fase 6: o buraco fica embaixo dos meteoros
+}
 
-  // tijolos
+// Tijolos, sacos do Natal, chefão e meteoros
+function desenharTijolos(agora) {
+  // meteoros que estão chegando passam por trás dos que já estão parados (desenhados primeiro)
+  for (const t of tijolos) if (t.circ && t.entrando && t.vivo) desenharMeteoro(t, agora);
   for (const t of tijolos) {
     if (!t.vivo) continue;
+    if (t.circ) { if (!t.entrando) desenharMeteoro(t, agora); continue; }
     if (t.saco) { desenharSaco(t, agora); continue; }
     if (t.chefao) { desenharChefao(t, agora); continue; }
     const img = tijoloColorido(SPRITE_TIJOLO[t.vida] || 'tijolo', t.cor);
@@ -123,8 +206,10 @@ function desenhar(agora) {
     if (faseNatal()) desenharFitaPresente(t, t.x); // Natal: o tijolo vira presente
     ctx.globalAlpha = 1;
   }
+}
 
-  // paredes da fase
+// Paredes da fase (retas ou inclinadas)
+function desenharParedes() {
   for (const p of paredesAtuais) {
     if (p.x1 !== undefined) {
       ctx.strokeStyle = '#ffffff';
@@ -139,27 +224,31 @@ function desenhar(agora) {
       ctx.fillRect(p.x, p.y, p.w, p.h);
     }
   }
+}
 
-  // modo intervalo: chão-parede no lugar da raquete (embaixo dele fica escuro)
-  if (modoIntervalo && estado !== 'menu') {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-    ctx.fillRect(0, PISO_Y, W, H - PISO_Y);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, PISO_Y, W, 6);
+// Modo intervalo: chão-parede no lugar da raquete (embaixo dele fica escuro)
+function desenharChao() {
+  if (!modoIntervalo || estado === 'menu') return;
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+  ctx.fillRect(0, PISO_Y, W, H - PISO_Y);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, PISO_Y, W, 6);
+}
+
+// Raquete do streamer (brilha quando ele ganha ponto; no modo intervalo não tem)
+function desenharRaquete(agora) {
+  if (!imgs.paddle || modoIntervalo) return;
+  if (agora < paddleBrilhoAte) {
+    ctx.shadowColor = '#facc15';
+    ctx.shadowBlur = 30;
   }
+  if (faseNatal()) desenharBengala(paddleX - PADDLE_W / 2, PADDLE_Y); // Natal: a raquete vira bengala doce
+  else ctx.drawImage(imgs.paddle, paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H);
+  ctx.shadowBlur = 0;
+}
 
-  // raquete do streamer (brilha quando ele ganha ponto; no modo intervalo não tem)
-  if (imgs.paddle && !modoIntervalo) {
-    if (agora < paddleBrilhoAte) {
-      ctx.shadowColor = '#facc15';
-      ctx.shadowBlur = 30;
-    }
-    if (faseNatal()) desenharBengala(paddleX - PADDLE_W / 2, PADDLE_Y); // Natal: a raquete vira bengala doce
-    else ctx.drawImage(imgs.paddle, paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H);
-    ctx.shadowBlur = 0;
-  }
-
-  // campos do !gravity: círculo azul que pulsa e encolhe até a explosão
+// Campos do !gravity: círculo azul que pulsa e encolhe até a explosão
+function desenharCamposGravidade(agora) {
   for (const c of camposGrav) {
     const f = Math.min(1, (agora - c.inicio) / GRAV_TEMPO); // 0 → 1
     const r = GRAV_RAIO * (1 - 0.35 * f) + Math.sin(agora / 80) * 2;
@@ -177,16 +266,20 @@ function desenhar(agora) {
     ctx.stroke();
     ctx.setLineDash([]);
   }
+}
 
-  // cópias do multibola: mais transparentes, piscando nos 2 últimos segundos
+// Cópias do multibola: mais transparentes, piscando nos 2 últimos segundos
+function desenharCopias(agora) {
   for (const c of copias) {
     const falta = c.ate - agora;
     ctx.globalAlpha = falta < 2000 && Math.floor(agora / 150) % 2 ? 0.3 : 0.65;
     ctx.drawImage(bolaColorida(c.cor), c.x - TAM_BOLA / 2, c.y - TAM_BOLA / 2, TAM_BOLA, TAM_BOLA);
     ctx.globalAlpha = 1;
   }
+}
 
-  // bolas
+// Bolas dos viewers e o que cada uma mostra (poderes prontos, efeitos)
+function desenharBolas(agora) {
   for (const b of viewers) {
     if (b.estado === 'caiu') continue;
     // bola que acabou de usar !bomb brilha em vermelho
@@ -228,14 +321,10 @@ function desenhar(agora) {
       }
     }
   }
+}
 
-  // Natal: rena voando, presentinhos do saco e os "+1"
-  if (faseNatal()) {
-    desenharRena(agora);
-    desenharPresentinhos(agora);
-  }
-
-  // raios do !shock ligando a bola eletrizada às que ela atordoou
+// Raios do !shock ligando a bola eletrizada às que ela atordoou
+function desenharRaiosChoque() {
   for (const r of raiosChoque) {
     ctx.strokeStyle = '#fde047';
     ctx.lineWidth = 2;
@@ -244,8 +333,10 @@ function desenhar(agora) {
     linhaEletrica(r.de.x, r.de.y, r.para.x, r.para.y, 5);
     ctx.shadowBlur = 0;
   }
+}
 
-  // "Fulano usou !bomb": fica 2 s em cima da bola e some (por cima das outras bolas)
+// "Fulano usou !bomb": fica 2 s em cima da bola e some (por cima das outras bolas)
+function desenharAvisos(agora) {
   for (const b of viewers) {
     if (agora >= b.avisoAte || b.estado === 'caiu') continue;
     const y = b.y - 26;
@@ -261,9 +352,10 @@ function desenhar(agora) {
     ctx.textAlign = 'left';
     ctx.globalAlpha = 1;
   }
+}
 
-  // itens caindo (a raquete pega)
-  // amarelo com "+" = pontos do streamer; azul com "×2" = multibola
+// Itens caindo (a raquete pega): amarelo com "+" = pontos do streamer; azul com "×2" = multibola
+function desenharItens() {
   for (const it of itensCaindo) {
     const multi = it.tipo === 'multibola';
     ctx.fillStyle = multi ? '#22d3ee' : '#facc15';
@@ -276,8 +368,10 @@ function desenhar(agora) {
     ctx.fillText(multi ? '×2' : '+', it.x, it.y + (multi ? 4 : 5));
     ctx.textAlign = 'left';
   }
+}
 
-  // explosões (anel que some): laranja do !bomb, azul do !gravity
+// Explosões (anel que some): laranja do !bomb, azul do !gravity
+function desenharExplosoes(agora) {
   for (const e of explosoes) {
     const f = Math.min(1, (agora - e.inicio) / (e.tempo || BOMBA_TEMPO));
     ctx.globalAlpha = 1 - f;
@@ -289,13 +383,20 @@ function desenhar(agora) {
     ctx.stroke();
     ctx.globalAlpha = 1;
   }
+}
 
-  // nomes nas bolas (só antes do Pronto)
+// Partes só do Natal: rena voando, presentinhos do saco e os "+1"
+function desenharExtrasNatal(agora) {
+  if (!faseNatal()) return;
+  desenharRena(agora);
+  desenharPresentinhos(agora);
+}
+
+// Nomes nas bolas (só antes do Pronto) e o botão Pronto (no modo intervalo a partida começa sozinha)
+function desenharLobby(agora) {
   if (estado === 'lobby') {
     for (const b of viewers) etiqueta(b.nome, b.x, b.y);
   }
-
-  // botão Pronto (no modo intervalo a partida começa sozinha)
   if (estado === 'lobby' && !modoIntervalo) {
     ctx.fillStyle = '#22c55e';
     ctx.fillRect(BOTAO_PRONTO.x, BOTAO_PRONTO.y, BOTAO_PRONTO.w, BOTAO_PRONTO.h);
@@ -305,8 +406,10 @@ function desenhar(agora) {
     ctx.fillText('Pronto', BOTAO_PRONTO.x + BOTAO_PRONTO.w / 2, BOTAO_PRONTO.y + 23);
     ctx.textAlign = 'left';
   }
+}
 
-  // textos de estado
+// Textos de estado: contagem do lobby, tijolos/meteoros e vagas durante a partida, avisos
+function desenharTextos(agora) {
   ctx.fillStyle = '#ffffff';
   ctx.font = '16px sans-serif';
   if (estado === 'lobby' && modoIntervalo) {
@@ -336,7 +439,8 @@ function desenhar(agora) {
     // na chuva e na esteira, conta os que ainda vão aparecer (e o chefão, até ele cair)
     const chefaoFalta = faseTemChefao() && !chefaoCaiu ? 1 : 0;
     const fase = modoIntervalo ? `${FASES[faseIndex].nome}   ` : '';
-    ctx.fillText(`${fase}Tijolos: ${tijolosVivos + chuvaRestante + chefaoFalta}${extra}`, 20, 30);
+    const rotulo = espacoAtiva() ? 'Meteoros' : 'Tijolos'; // fase 6: conta meteoros
+    ctx.fillText(`${fase}${rotulo}: ${tijolosVivos + chuvaRestante + chefaoFalta}${extra}`, 20, 30);
     ctx.textAlign = 'right';
     // no intervalo as bolas nunca caem: mostra as vagas, porque dá para entrar no meio da fase
     const vagas = `Jogadores: ${viewers.filter(b => !b.streamer).length}/${maxViewers}`;
@@ -357,7 +461,6 @@ function desenhar(agora) {
       ctx.globalAlpha = 1;
     }
   }
-
   // chat caiu: avisa na tela (o status do menu fica escondido durante a partida)
   if (chatReconectando && estado !== 'menu') {
     ctx.fillStyle = '#f97316';
@@ -366,30 +469,52 @@ function desenhar(agora) {
     ctx.fillText('Chat da Twitch caiu, reconectando...', W / 2, 62);
     ctx.textAlign = 'left';
   }
+}
 
-  // botão de som (topo direito, ao lado das bolas)
-  if (estado !== 'menu') {
-    const m = BOTAO_SOM;
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
-    ctx.fillRect(m.x, m.y, m.w, m.h);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '14px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(somLigado ? '🔊 Som' : '🔇 Mudo', m.x + m.w / 2, m.y + 19);
-    ctx.textAlign = 'left';
+// Botão de som (topo direito, ao lado das bolas) e a barra de volume quando o mouse passa por cima
+function desenharBotaoSom() {
+  if (estado === 'menu') return;
+  const m = BOTAO_SOM;
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+  ctx.fillRect(m.x, m.y, m.w, m.h);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(somLigado ? '🔊 Som' : '🔇 Mudo', m.x + m.w / 2, m.y + 19);
+  ctx.textAlign = 'left';
+  // barra de volume (aparece com o mouse em cima ou arrastando)
+  if (mostrarVolume || arrastandoVolume) desenharBarraVolume();
+}
 
-    // barra de volume (aparece com o mouse em cima ou arrastando)
-    if (mostrarVolume || arrastandoVolume) desenharBarraVolume();
-  }
+// Contagem regressiva antes da partida
+function desenharContagem() {
+  if (estado !== 'contagem') return;
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 64px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(contagemTexto, W / 2, H / 2);
+  ctx.textAlign = 'left';
+}
 
-  if (estado === 'contagem') {
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 64px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(contagemTexto, W / 2, H / 2);
-    ctx.textAlign = 'left';
-  }
-
+// Desenho de um quadro completo: uma função por parte da tela, de trás para a frente
+function desenhar(agora) {
+  desenharFundo(agora);
+  desenharTijolos(agora);
+  desenharParedes();
+  desenharChao();
+  desenharRaquete(agora);
+  desenharCamposGravidade(agora);
+  desenharCopias(agora);
+  desenharBolas(agora);
+  desenharExtrasNatal(agora);
+  desenharRaiosChoque();
+  desenharAvisos(agora);
+  desenharItens();
+  desenharExplosoes(agora);
+  desenharLobby(agora);
+  desenharTextos(agora);
+  desenharBotaoSom();
+  desenharContagem();
   if (estado === 'pausa') desenharRankingPausa(agora);
 }
 

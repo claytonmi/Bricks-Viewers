@@ -30,6 +30,7 @@ function entrar(nome, streamer = false) {
     batidasGrav: 0,  // encostos em tijolo desde o último !gravity (com 12 ganha o poder)
     gravidade: false, // tem o !gravity pronto (só 1, não acumula)
     presoEm: null,    // campo do !gravity que está segurando esta bola
+    buraco: null,     // fase 6: na espiral de um buraco de minhoca (ver espaco.js)
     batidasChoque: 0, // encostos em tijolo desde o último !shock (com 13 ganha o poder)
     choque: false,    // tem o !shock pronto (só 1, não acumula)
     choqueAte: 0,     // até quando a bola está eletrizada (atordoa as bolas perto)

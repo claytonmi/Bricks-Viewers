@@ -15,6 +15,8 @@ function montarFase() {
   esteiraDesloc = FASES[faseIndex].padrao.map(() => 0);
   proximaGota = 0;
   resetarNatal();
+  // Fase 6: meteoros e buraco de minhoca (ver espaco.js)
+  if (FASES[faseIndex].espaco) { montarEspaco(); return; }
   // Fase com chuva: começa sem tijolos; eles caem do céu (ver atualizarChuva).
   // No lobby cai pelo total da fase; no início da partida o total se ajusta aos jogadores (ajustarChuva).
   if (FASES[faseIndex].chuva) {

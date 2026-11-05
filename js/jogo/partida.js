@@ -26,11 +26,13 @@ function atualizarJogo(dt, agora) {
   }
 
   atualizarItens(dt, agora);
+  atualizarEspaco(dt, agora); // fase 6: meteoros novos e buraco de minhoca
 
   // na chuva, só acaba depois do último tijolo e do chefão
   const chefaoFalta = faseTemChefao() && !chefaoCaiu;
   // Natal: espera também os presentinhos do saco sumirem
   if (tijolosVivos === 0 && chuvaRestante === 0 && !chefaoFalta && !natalPendente()) {
+    liberarBuracos(); // bola que ainda estiver no buraco sai antes do fim da fase
     if (modoIntervalo) terminarFase(agora); // intervalo: ranking e depois a próxima fase
     else finalizar();
   }
@@ -110,6 +112,7 @@ function iniciarJogo(agora) {
   ultimoCheckT = agora;
   ajustarChuva(); // fase com chuva: total de tijolos conforme os jogadores
   ajustarEsteira(); // esteira: idem (os que faltam entram pela borda)
+  ajustarEspaco(); // fase 6: idem (os meteoros que faltam)
   inicioFase = agora;
   for (const b of viewers) {
     b.estado = 'jogando';
@@ -125,38 +128,12 @@ function iniciarJogo(agora) {
 function finalizar() {
   estado = 'fim';
   pararMusica();
-  document.getElementById('btVoltei').classList.add('escondido');
-  document.getElementById('avisoVoltei').classList.add('escondido');
-  // aberto pelo link ninguém clica: sem botões, com o aviso do comando para jogar de novo
-  document.getElementById('btCopiar').classList.toggle('escondido', modoAutomatico);
-  document.getElementById('btVoltar').classList.toggle('escondido', modoAutomatico);
-  document.getElementById('rankingDica').classList.toggle('escondido', !modoAutomatico);
+  liberarBuracos(); // bola na espiral não fica parada no meio do caminho
   reinicioEm = 0;
-  atualizarDicaRanking(performance.now());
-  document.querySelector('#ranking h2').textContent = modoIntervalo ? 'Ranking do intervalo' : 'Ranking final';
   const lista = viewers.filter(b => !b.streamer).map(b => ({ nome: b.nome, pontos: b.pontos, streamer: false }));
   if (streamerPontua) lista.push({ nome: 'Streamer', pontos: streamerPts, streamer: true });
   lista.sort((a, b) => b.pontos - a.pontos);
-
-  const ol = document.getElementById('rankingLista');
-  ol.innerHTML = '';
-  // sem clique também não dá para rolar a lista: mostra os 10 primeiros inteiros
-  ol.classList.toggle('completa', modoAutomatico);
-  const mostrados = modoAutomatico ? lista.slice(0, 10) : lista;
-  mostrados.forEach((j, i) => {
-    const li = document.createElement('li');
-    li.textContent = `${i + 1}º  ${j.nome}  -  ${j.pontos} pts`; // textContent: nome vem do chat
-    if (i < 3) li.classList.add('top3');
-    if (j.streamer) li.classList.add('streamer');
-    ol.appendChild(li);
-  });
-  if (lista.length > mostrados.length) {
-    const li = document.createElement('li');
-    li.classList.add('mais-jogadores');
-    li.textContent = `e mais ${lista.length - mostrados.length} jogadores`;
-    ol.appendChild(li);
-  }
-  document.getElementById('ranking').classList.remove('escondido');
+  mostrarRankingFinal(lista); // tela: ver ranking.js
 }
 
 // Atualiza o contador de viewers (campo opcional na página)
