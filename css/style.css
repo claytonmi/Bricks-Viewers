@@ -390,6 +390,29 @@ body {
   background: #67e8f9;
 }
 
+/* Aberto pelo link do OBS: avisos no lugar dos botões */
+.aviso-voltei {
+  color: #bbb;
+  font-size: 14px;
+}
+.aviso-voltei b,
+.ranking-dica b {
+  color: #22d3ee;
+}
+.ranking-dica {
+  margin: 8px 0 0;
+  color: #ccc;
+}
+/* Sem clique também não dá para rolar: a lista mostra os 10 primeiros inteiros */
+#rankingLista.completa {
+  max-height: none;
+  overflow: visible;
+}
+#rankingLista .mais-jogadores {
+  color: #aaa;
+  text-align: center;
+}
+
 /* Rodapé discreto */
 .rodape {
   text-align: center;

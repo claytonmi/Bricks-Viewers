@@ -67,7 +67,7 @@
             <li><b>Tijolo chefão:</b> na Fase 1, quando a chuva acaba e sobram 5 tijolos ou menos, cai um tijolo grande e dourado com 20 de vida. Quem der a última batida ganha 5 pontos. A partida só acaba depois que ele quebra.</li>
             <li><b>Fase 5 (fábrica):</b> as linhas de tijolos andam como esteiras, cada uma para um lado, e o tijolo que sai por uma borda volta pela outra. Durante a partida, entram mais tijolos pela borda: 100 no total com até 15 jogadores, até 150 com 100 jogadores. Quando sobram 5 tijolos ou menos, o chefão desce e fica indo e voltando, cada vez mais rápido conforme perde vida.</li>
             <li data-evento="Fase Natalina" class="escondido"><b>Fase Natalina:</b> os tijolos são presentes e a neve cai. Quando sobram 5 tijolos ou menos, desce o saco do Papai Noel (20 de vida, balançando de um lado para o outro): quem der a última batida ganha 5 pontos e ele solta presentinhos que valem 1 ponto para a bola que pegar. De vez em quando passa uma rena voando lá em cima: acertar vale 10 pontos.</li>
-            <li><b>Modo intervalo:</b> para quando você sai da live. Sem raquete, o chão vira parede e as bolas nunca caem. Você entra como uma bola (fora do ranking), a partida começa sozinha em 20 s e o chat entra com !entrar a qualquer momento. Não cai item nenhum. As fases seguem em carrossel a partir da escolhida, com o ranking (top 10) por 15 s entre elas; os pontos somam, mas os poderes zeram a cada fase. Na Fase 3, no fim cai um chefão com 30 de vida na parede do meio. Quem tinha poder pronto e não usou nenhum na fase perde os pontos daquela fase. Clique em <b>Voltei!</b> (embaixo do jogo) ou digite <b>!voltei</b> no chat (só você e os moderadores) para parar e ver o ranking.</li>
+            <li><b>Modo intervalo:</b> para quando você sai da live. Sem raquete, o chão vira parede e as bolas nunca caem. Você entra como uma bola (fora do ranking), a partida começa sozinha em 20 s e o chat entra com !entrar a qualquer momento. Não cai item nenhum. As fases seguem em carrossel a partir da escolhida, com o ranking (top 10) por 15 s entre elas; os pontos somam, mas os poderes zeram a cada fase. Na Fase 3, no fim cai um chefão com 30 de vida na parede do meio. Quem tinha poder pronto e não usou nenhum na fase perde os pontos daquela fase. Clique em <b>Voltei!</b> (embaixo do jogo) ou digite <b>!voltei</b> no chat (só você e os moderadores) para parar e ver o ranking. Vocês também controlam o som pelo chat: <b>!mudo</b>, <b>!som</b> e <b>!volume 30</b>.</li>
             <li>Quanto mais jogadores, mais rápido saem os poderes: até 15 jogadores, os números abaixo; com 50 ou mais, !speed com 3 batidas, bomba com 6, !gravity com 7 e !shock com 8.</li>
             <li>A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba (use com <b>!bomb</b>). Dá para guardar no máximo 2.</li>
             <li>A cada 5 vezes que a sua bola bate em tijolos, você ganha uma carga de velocidade (use com <b>!speed</b>).</li>
@@ -92,6 +92,7 @@
           <ol id="rankingLista"></ol>
           <button id="btCopiar">Copiar top 3</button>
           <button id="btVoltar">Voltar ao menu</button>
+          <p id="rankingDica" class="ranking-dica escondido">Para jogar de novo, o streamer ou um moderador digita <b>!recomecar</b> no chat.</p>
         </div>
       </div>
     </main>
@@ -159,6 +160,8 @@
     <div class="rodape-jogo">
       <!-- Modo intervalo: o streamer voltou, para o jogo e mostra o ranking -->
       <button id="btVoltei" class="btn-voltei escondido">Voltei! Parar o intervalo</button>
+      <!-- Aberto pelo link do OBS não dá para clicar: o streamer usa o comando no chat -->
+      <span id="avisoVoltei" class="aviso-voltei escondido">Streamer: digite <b>!voltei</b> no chat para encerrar o intervalo</span>
       <footer class="rodape">Dev Clayton M. - Arte Daru</footer>
     </div>
     </div>

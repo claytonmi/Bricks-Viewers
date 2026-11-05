@@ -23,6 +23,7 @@ let comecaEm = 0;             // intervalo: quando o lobby termina e a partida c
 let pausaAte = 0;             // intervalo: fim do ranking entre as fases
 let ausentesFase = [];        // intervalo: quem ficou ausente na fase que acabou (perdeu os pontos dela)
 let iniciarAoConectar = false; // link do OBS: começa a partida sozinha assim que o chat conectar
+let modoAutomatico = false;   // aberto pelo link do intervalo: ninguém clica na tela, tudo é por comando no chat
 let mesSimulado = 0;         // simulador: mês para as fases de evento (0 = todas liberadas)
 let inicioFase = 0;          // intervalo: quando a fase atual começou
 let faseIndex = 0;            // fase que está sendo jogada

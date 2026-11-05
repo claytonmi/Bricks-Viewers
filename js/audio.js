@@ -28,9 +28,14 @@ function pararMusica() {
   musica.currentTime = 0;
 }
 
+// Liga ou desliga o som. A música só toca com uma partida em andamento (o ranking entre as fases também conta).
+function definirSom(ligado) {
+  somLigado = ligado;
+  if (somLigado && (estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa')) tocarMusica();
+  else musica.pause();
+}
+
 // Botão "Som" no topo do jogo
 function alternarSom() {
-  somLigado = !somLigado;
-  if (somLigado && (estado === 'lobby' || estado === 'contagem' || estado === 'jogando')) tocarMusica();
-  else musica.pause();
+  definirSom(!somLigado);
 }

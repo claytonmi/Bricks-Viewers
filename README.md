@@ -28,9 +28,14 @@ https://claytonmi.github.io/Bricks-Viewers/?canal=seu_canal&modo=intervalo&fase=
 ```
 
 1. No OBS, crie uma cena de "já volto" e adicione uma fonte Navegador com esse link, em 1920×1080.
-2. Nas propriedades da fonte, marque **Desligar fonte quando não visível** e **Atualizar navegador quando a cena se tornar ativa**.
+2. Nas propriedades da fonte, marque **Controlar áudio via OBS**, **Desligar fonte quando não visível** e **Atualizar navegador quando a cena se tornar ativa**. O som do jogo aparece no mixer do OBS, com volume e mudo como qualquer outra fonte.
 3. Ao trocar para essa cena, o jogo conecta no chat e o intervalo começa sozinho. O chat já pode digitar `!entrar`.
-4. Quando voltar, digite `!voltei` no chat para parar e mostrar o ranking (só o streamer e os moderadores podem usar). Depois é só trocar de cena. Trocar de cena sem o `!voltei` apaga a partida, com o ranking junto.
+4. Quando voltar, digite `!voltei` no chat para parar e mostrar o ranking com os 10 primeiros (só o streamer e os moderadores podem usar). Depois é só trocar de cena. Trocar de cena sem o `!voltei` apaga a partida, com o ranking junto.
+5. Para jogar outro intervalo sem trocar de cena, digite `!recomecar` no chat (streamer ou moderador). A pontuação começa do zero e o chat precisa digitar `!entrar` de novo.
+
+Aberto por esse link, o jogo não mostra botões, porque no OBS não dá para clicar: tudo é feito pelos comandos no chat.
+
+O streamer e os moderadores também controlam o som pelo chat, em qualquer modo: `!mudo`, `!som` e `!volume 30` (de 0 a 100). Quando a fonte reinicia ao trocar de cena, o som do jogo volta ao padrão; o volume do mixer do OBS continua como estava.
 
 Sem `&modo=intervalo`, o link só conecta no chat, e a partida começa pelo menu, com o Interagir.
 

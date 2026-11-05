@@ -83,6 +83,7 @@ function inicioPeloLink() {
     caixa.checked = true;
     caixa.onchange({ target: caixa });
     iniciarAoConectar = true;
+    modoAutomatico = true;
   }
   const vagas = Number(p.get('vagas'));
   if (Number.isInteger(vagas) && vagas >= 1 && vagas <= MAX_VIEWERS) {
