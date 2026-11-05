@@ -88,7 +88,9 @@ const NEVE_FLOCOS = 90;          // flocos de neve caindo na tela
 
 // Modo intervalo (o streamer sai e só o chat joga)
 const PISO_Y = PADDLE_Y;         // chão-parede no lugar da raquete: as bolas quicam e nunca caem
+const VAGAS_INTERVALO = 75;      // limite de jogadores ao marcar o modo intervalo (o streamer ainda pode mudar)
 const INTERVALO_ESPERA = 20000;  // lobby: a partida começa sozinha 20 s depois do Iniciar
+const RANKING_ESPERA = 30000;    // link do OBS: ao voltar para a cena, o ranking fica 30 s antes do jogo novo
 const PAUSA_RANKING = 15000;     // entre as fases: ranking (top 10) por 15 s
 const AUSENTE_TOLERANCIA = 90000; // poder pronto há menos de 1 min 30 s no fim da fase não conta como ausente
 const CHEFAO_PAREDE_VIDA = 30;   // Fase 3 no intervalo: chefão que cai na parede do meio

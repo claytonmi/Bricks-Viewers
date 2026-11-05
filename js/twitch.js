@@ -81,7 +81,7 @@ function abrirConexao(canal) {
         tentativasReconexao = 0;
         chatReconectando = false;
         // link do OBS: conectou, já começa
-        if (iniciarAoConectar && estado === 'menu') {
+        if (iniciarAoConectar && estado === 'menu' && fonteAtiva) {
           iniciarAoConectar = false;
           iniciarPartida();
         }

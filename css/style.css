@@ -390,6 +390,73 @@ body {
   background: #67e8f9;
 }
 
+/* Abas da tela de informações */
+.abas {
+  display: flex;
+  gap: 4px;
+  margin: 12px 0;
+  border-bottom: 1px solid #3a3a44;
+}
+.aba {
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #bbb;
+  font-size: 14px;
+  cursor: pointer;
+}
+.aba:hover {
+  color: #fff;
+}
+.aba.ativa {
+  color: #22d3ee;
+  border-bottom-color: #22d3ee;
+  font-weight: bold;
+}
+.texto-info h3 {
+  margin: 14px 0 4px;
+  font-size: 15px;
+  color: #facc15;
+}
+.texto-info ol {
+  margin: 4px 0 6px;
+  padding-left: 20px;
+}
+.texto-info ol li {
+  margin-bottom: 3px;
+}
+.tabela-comandos {
+  width: 100%;
+  margin: 4px 0 6px;
+  border-collapse: collapse;
+}
+.tabela-comandos th,
+.tabela-comandos td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #3a3a44;
+  text-align: left;
+  vertical-align: top;
+}
+.tabela-comandos td:first-child {
+  white-space: nowrap;
+  color: #22d3ee;
+}
+.obs-versao {
+  color: #999;
+  font-size: 12px;
+}
+
+/* Menu: o que falta para liberar o link do OBS */
+.dica-link-obs {
+  margin: 6px 0 0;
+  color: #aaa;
+  font-size: 12px;
+}
+.dica-link-obs:empty {
+  display: none;
+}
+
 /* Aberto pelo link do OBS: avisos no lugar dos botões */
 .aviso-voltei {
   color: #bbb;

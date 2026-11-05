@@ -9,6 +9,12 @@ function loop() {
   const dt = Math.min((agora - ultimoFrame) / 1000, 0.05);
   ultimoFrame = agora;
 
+  // link do OBS com a cena fora do ar: não calcula nem desenha nada, para não pesar no PC do streamer
+  if (!fonteAtiva) {
+    requestAnimationFrame(loop);
+    return;
+  }
+
   // Controle do streamer só começa depois do Pronto
   if (estado === 'contagem' || estado === 'jogando') {
     if (teclas.esq) paddleX -= VEL_PADDLE * dt;
@@ -29,6 +35,7 @@ function loop() {
     atualizarJogo(dt, agora);
   }
   if (estado === 'pausa') atualizarPausa(agora);
+  if (estado === 'fim') atualizarReinicio(agora);
 
   desenhar(agora);
 
@@ -36,6 +43,7 @@ function loop() {
   if (agora - ultimoRanking > 250) {
     atualizarRankingLateral();
     atualizarPainelComandos();
+    atualizarBotaoLink();
     atualizarListaSimulador();
     ultimoRanking = agora;
   }

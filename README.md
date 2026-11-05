@@ -21,21 +21,25 @@ A página se ajusta ao tamanho da tela: "Como jogar" à esquerda, o jogo no meio
 - **Fonte Navegador** (recomendado): cole o link do jogo. Coloque **Largura 1920** e **Altura 1080**. Para mexer no menu e nos botões, selecione a fonte e clique em **Interagir**.
 - **Captura de janela**: abra o jogo no navegador em tela cheia (F11) para não aparecer a barra do navegador.
 
-**Tela de "já volto", sem clicar em nada:** no menu, digite o canal, marque **Modo intervalo**, escolha a fase e clique em **Copiar link para o OBS**. O link fica assim:
+**Partida normal, com a raquete:** o streamer precisa do mouse ou do teclado, então o mais simples é jogar no navegador e usar a **Captura de janela**. O botão do link não serve para esse caso.
+
+**Tela de "já volto", sem clicar em nada:** no menu, conecte o canal, marque **Modo intervalo** e escolha a fase. Com isso, o botão **Copiar link para o OBS** é liberado. O link fica assim:
 
 ```
-https://claytonmi.github.io/Bricks-Viewers/?canal=seu_canal&modo=intervalo&fase=1&vagas=100
+https://claytonmi.github.io/Bricks-Viewers/?canal=seu_canal&modo=intervalo&fase=1&vagas=75
 ```
 
 1. No OBS, crie uma cena de "já volto" e adicione uma fonte Navegador com esse link, em 1920×1080.
-2. Nas propriedades da fonte, marque **Controlar áudio via OBS**, **Desligar fonte quando não visível** e **Atualizar navegador quando a cena se tornar ativa**. O som do jogo aparece no mixer do OBS, com volume e mudo como qualquer outra fonte.
+2. Nas propriedades da fonte, marque **Controlar áudio via OBS** e deixe **desligadas** as opções **Desligar fonte quando não visível** e **Atualizar navegador quando a cena se tornar ativa** (com elas ligadas, a página recarrega e o ranking se perde). O som do jogo aparece no mixer do OBS, com volume e mudo como qualquer outra fonte. Para ouvir também nos seus fones, ative o monitoramento em **Propriedades avançadas de áudio**. A tela de Informações do jogo tem uma aba **Usar no OBS** com esse passo a passo.
 3. Ao trocar para essa cena, o jogo conecta no chat e o intervalo começa sozinho. O chat já pode digitar `!entrar`.
-4. Quando voltar, digite `!voltei` no chat para parar e mostrar o ranking com os 10 primeiros (só o streamer e os moderadores podem usar). Depois é só trocar de cena. Trocar de cena sem o `!voltei` apaga a partida, com o ranking junto.
-5. Para jogar outro intervalo sem trocar de cena, digite `!recomecar` no chat (streamer ou moderador). A pontuação começa do zero e o chat precisa digitar `!entrar` de novo.
+4. Quando voltar, é só trocar de cena: o jogo para, guarda o ranking e não calcula nem desenha nada enquanto a cena está fora do ar. Se preferir ficar na cena, digite `!voltei` no chat para mostrar o ranking com os 10 primeiros, sem contagem (só o streamer e os moderadores podem usar).
+5. Ao abrir a cena de novo, o ranking aparece com uma contagem de 30 s, e depois começa um intervalo novo: a pontuação zera e o chat digita `!entrar` de novo. Sair de cena durante a contagem cancela a contagem, e ela recomeça quando a cena voltar. Sem nenhum jogador, o jogo novo abre direto.
+6. Para começar na hora, digite `!recomecar` no chat na tela do ranking (streamer ou moderador).
+7. Fechar o OBS apaga tudo: a próxima live começa do zero.
 
 Aberto por esse link, o jogo não mostra botões, porque no OBS não dá para clicar: tudo é feito pelos comandos no chat.
 
-O streamer e os moderadores também controlam o som pelo chat, em qualquer modo: `!mudo`, `!som` e `!volume 30` (de 0 a 100). Quando a fonte reinicia ao trocar de cena, o som do jogo volta ao padrão; o volume do mixer do OBS continua como estava.
+O streamer e os moderadores também controlam o som pelo chat, em qualquer modo: `!mudo`, `!som` e `!volume 30` (de 0 a 100). Ao fechar o OBS, o som do jogo volta ao padrão; o volume do mixer do OBS continua como estava.
 
 Sem `&modo=intervalo`, o link só conecta no chat, e a partida começa pelo menu, com o Interagir.
 
@@ -94,7 +98,7 @@ Para quando o streamer sai da live por um tempo. No menu, marque **Modo interval
 - Não tem raquete. O chão vira uma parede branca (na altura da raquete): as bolas quicam nos 4 lados e nunca caem.
 - O streamer entra como uma bola (com o nome do canal, em azul-claro). Ela só ajuda a quebrar tijolos: fica fora do ranking e da regra do ausente.
 - Não tem botão Pronto: a partida começa sozinha 20 s depois do Iniciar. As bolas esperam em linhas de 20, logo acima do chão.
-- `!entrar` funciona a qualquer momento, até o limite de jogadores do menu (marcar Modo intervalo sobe o limite para 100, e dá para baixar). Durante a fase, o canto da tela mostra as vagas. No meio da fase, a bola nasce no chão e já sai jogando. Não tem lançar nem mirar: as bolas saem sozinhas.
+- `!entrar` funciona a qualquer momento, até o limite de jogadores do menu (marcar Modo intervalo já coloca o limite em 75, e dá para mudar). Durante a fase, o canto da tela mostra as vagas. No meio da fase, a bola nasce no chão e já sai jogando. Não tem lançar nem mirar: as bolas saem sozinhas.
 - Fases em carrossel a partir da escolhida (ex: 3 → 4 → 5 → 1 → 2 → 3...). Quando os tijolos de uma fase acabam, aparece o ranking (10 primeiros, com 🥇🥈🥉) por 15 s, com a contagem para a próxima fase em cima. Ninguém precisa entrar de novo: as bolas passam de fase e os pontos somam. Cada fase é uma partida nova: poderes e batidas zeram, e só os pontos continuam. Os poderes não funcionam durante o ranking nem na contagem.
 - Fase 3 no intervalo: quando todos os tijolos quebram, cai um tijolo chefão com 30 de vida em cima da parede branca do meio. No modo normal, a Fase 3 continua sem chefão.
 - Não cai item nenhum (nem pontos, nem multibola).

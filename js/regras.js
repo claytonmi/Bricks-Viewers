@@ -456,7 +456,7 @@ function processarComando(usuario, mensagem, autoridade = false) {
     if (autoridade) pararIntervalo();
   } else if (cmd === '!recomecar' || cmd === '!recomeçar') {
     // aberto pelo link do OBS: começa outro intervalo depois do ranking final, sem precisar clicar
-    if (autoridade && modoAutomatico && estado === 'fim') iniciarPartida();
+    if (autoridade && modoAutomatico && estado === 'fim' && fonteAtiva) iniciarPartida();
   } else if (cmd === '!mudo' || cmd === '!som') {
     // som por comando, para quando o jogo está no OBS e não dá para clicar no botão
     if (autoridade) definirSom(cmd === '!som');
@@ -619,6 +619,7 @@ function atualizarJogo(dt, agora) {
 // Vai da tela de menu para o lobby (viewers entram com !entrar)
 function iniciarPartida() {
   if (!faseLiberada(indiceFase)) return; // fase de evento fora do mês dela
+  reinicioEm = 0;
   maxViewers = Number(document.getElementById('qtd').value);
   modoIntervalo = document.getElementById('modoIntervalo').checked;
   // antes de montar, pois define os itens (no intervalo o streamer não pontua)
@@ -779,6 +780,8 @@ function finalizar() {
   document.getElementById('btCopiar').classList.toggle('escondido', modoAutomatico);
   document.getElementById('btVoltar').classList.toggle('escondido', modoAutomatico);
   document.getElementById('rankingDica').classList.toggle('escondido', !modoAutomatico);
+  reinicioEm = 0;
+  atualizarDicaRanking(performance.now());
   document.querySelector('#ranking h2').textContent = modoIntervalo ? 'Ranking do intervalo' : 'Ranking final';
   const lista = viewers.filter(b => !b.streamer).map(b => ({ nome: b.nome, pontos: b.pontos, streamer: false }));
   if (streamerPontua) lista.push({ nome: 'Streamer', pontos: streamerPts, streamer: true });

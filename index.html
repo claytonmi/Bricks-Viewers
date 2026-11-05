@@ -40,7 +40,8 @@
           <p><label title="Sem raquete: só o chat joga, as fases seguem em carrossel a partir da escolhida até você clicar em Voltei"><input type="checkbox" id="modoIntervalo"> Modo intervalo (só o chat joga)</label></p>
           <button id="btIniciar" disabled>Iniciar</button>
           <button id="btInfo">Informações</button>
-          <button id="btLinkObs" title="Copia um link que já conecta no chat. Com Modo intervalo marcado, o jogo também começa sozinho.">Copiar link para o OBS</button>
+          <button id="btLinkObs" disabled title="Copia um link para deixar o modo intervalo numa cena do OBS: o jogo conecta e começa sozinho.">Copiar link para o OBS</button>
+          <p id="dicaLinkObs" class="dica-link-obs"></p>
           <a class="btn-feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSd-vS0iptBB_gezDnBC4j9xURUAn8eALuvJGB8ZbTT05ws64w/viewform" target="_blank" rel="noopener">Enviar feedback ou bug</a>
         </div>
       </div>
@@ -51,6 +52,14 @@
           <h2>Bricks Viewers</h2>
           <p><b>Desenvolvimento:</b> Clayton M.</p>
           <p><b>Arte:</b> Daru</p>
+
+          <!-- Abas da tela de informações (ver menu.js) -->
+          <div class="abas">
+            <button class="aba ativa" data-aba="abaJogo">Como jogar</button>
+            <button class="aba" data-aba="abaObs">Usar no OBS</button>
+          </div>
+
+          <div id="abaJogo">
           <p><b>Como funciona:</b> o streamer controla a raquete. Cada viewer entra no jogo com uma bola pelo chat e tenta quebrar os tijolos. Quem quebrar mais tijolos fica no topo do ranking.</p>
           <p><b>Comandos no chat:</b></p>
           <ul>
@@ -80,6 +89,56 @@
             <li><span class="icone-item multibola">×2</span><b>Multibola</b>: cada bola do chat ganha uma cópia por 8 segundos. Os pontos da cópia vão para o dono. Pegar outro enquanto as cópias estão na tela renova o tempo.</li>
             <li><span class="icone-item pontos">+</span><b>Pontos</b>: o streamer ganha 5 pontos. Só cai com "Streamer pontua no ranking" marcado.</li>
           </ul>
+          </div>
+
+          <div id="abaObs" class="escondido">
+            <h3>Modo intervalo: tela de "já volto"</h3>
+            <p>O jogo funciona sozinho enquanto você está fora, e ninguém precisa clicar em nada.</p>
+            <ol>
+              <li>Neste menu, conecte o canal, marque <b>Modo intervalo</b>, escolha a fase e clique em <b>Copiar link para o OBS</b>.</li>
+              <li>No OBS, crie uma cena de "já volto" e adicione uma fonte <b>Navegador</b>.</li>
+              <li>Cole o link no campo <b>URL</b>.</li>
+              <li>Coloque <b>Largura 1920</b> e <b>Altura 1080</b>.</li>
+              <li>Ligue <b>Controlar áudio via OBS</b>. Sem isso, o jogo não aparece no mixer e você não consegue mutar nem regular o som dele.</li>
+              <li>Deixe <b>desligadas</b> as opções <b>Desligar fonte quando não visível</b> e <b>Atualizar navegador quando a cena se tornar ativa</b>. Com elas ligadas, a página recarrega e o ranking se perde.</li>
+              <li>Ao trocar para essa cena, o jogo começa sozinho em 20 segundos. O chat só precisa digitar <b>!entrar</b>.</li>
+              <li>Quando voltar, é só trocar de cena: o jogo para e guarda o ranking, sem pesar no PC. Se preferir ficar na cena, digite <b>!voltei</b> para mostrar o ranking na hora.</li>
+              <li>Ao abrir a cena de novo, o ranking aparece com uma contagem de 30 segundos, e depois começa um intervalo novo, com o chat entrando de novo. Se sair de cena durante a contagem, ela para e recomeça quando você voltar.</li>
+              <li>Fechar o OBS apaga tudo, então a próxima live começa do zero.</li>
+            </ol>
+
+            <h3>Partida normal, com a raquete</h3>
+            <p>Você precisa do mouse ou do teclado, então o mais simples é abrir o jogo no navegador em tela cheia (F11) e usar a <b>Captura de janela</b> no OBS. Não minimize a janela nem troque de aba, porque o jogo pode parar.</p>
+
+            <h3>Som do jogo</h3>
+            <ul>
+              <li><b>Mutar ou regular:</b> com <b>Controlar áudio via OBS</b> marcado, o jogo aparece no <b>Mixer de áudio</b> com o nome da fonte. Use a barra para o volume e o ícone de alto-falante para mutar. Se ele não aparecer, abra a fonte e confira se essa opção está marcada.</li>
+              <li><b>Para você ouvir também:</b> com essa opção, o som vai para a live, mas pode não sair nos seus fones. No mixer, clique nos três pontinhos, abra <b>Propriedades avançadas de áudio</b> e, em <b>Monitoramento de áudio</b>, escolha <b>Monitorar e enviar</b>.</li>
+              <li><b>Sem essa opção:</b> o jogo toca direto no computador e entra na live pelo <b>Áudio do desktop</b>. Mutar esse canal também muta o resto do computador na live.</li>
+            </ul>
+
+            <h3>Comandos no chat (só streamer e moderadores)</h3>
+            <table class="tabela-comandos">
+              <tr><th>Comando</th><th>O que faz</th></tr>
+              <tr><td><b>!voltei</b></td><td>Para o modo intervalo e mostra o ranking, sem contagem</td></tr>
+              <tr><td><b>!recomecar</b></td><td>Na tela do ranking, começa outro intervalo na hora, com os pontos zerados (só aberto pelo link)</td></tr>
+              <tr><td><b>!mudo</b></td><td>Desliga o som do jogo</td></tr>
+              <tr><td><b>!som</b></td><td>Liga o som do jogo</td></tr>
+              <tr><td><b>!volume 30</b></td><td>Muda o volume, de 0 a 100. O padrão é 40</td></tr>
+            </table>
+            <p>Ao fechar o OBS, o som do jogo volta ao padrão. Para um ajuste que fica guardado, use o mixer do OBS.</p>
+
+            <h3>Sugestões de configuração</h3>
+            <ul>
+              <li><b>Tela cheia:</b> clique com o botão direito na fonte e escolha <b>Transformar &gt; Ajustar à tela</b>.</li>
+              <li><b>Live em 60 FPS:</b> nas propriedades da fonte, marque <b>Usar FPS personalizado</b> e coloque 60.</li>
+              <li><b>Vagas:</b> ao marcar o Modo intervalo, o limite já vem em 75 jogadores. Se quiser outro número, mude antes de copiar o link, porque você estará fora para aumentar.</li>
+              <li><b>Jogo novo não apareceu?</b> Abra as propriedades da fonte e clique em <b>Atualizar</b>.</li>
+              <li><b>Teste antes da live:</b> troque para a cena, digite !entrar e depois !voltei.</li>
+            </ul>
+            <p class="obs-versao">Os nomes das opções podem mudar um pouco conforme a versão e o idioma do OBS.</p>
+          </div>
+
           <a class="btn-feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSd-vS0iptBB_gezDnBC4j9xURUAn8eALuvJGB8ZbTT05ws64w/viewform" target="_blank" rel="noopener">Enviar feedback ou bug</a>
           <button id="btFecharInfo">Voltar</button>
         </div>

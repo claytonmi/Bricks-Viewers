@@ -54,8 +54,8 @@ document.getElementById('btIniciar').onclick = iniciarPartida;
 document.getElementById('btVoltar').onclick = voltarMenu;
 document.getElementById('btConectar').onclick = conectarChat;
 document.getElementById('btVoltei').onclick = pararIntervalo;
-// Modo intervalo: o streamer não pontua (a opção fica apagada). As vagas sobem para o máximo, porque o
-// streamer estará fora para aumentar; ele ainda pode baixar. Desmarcando, volta o número que estava.
+// Modo intervalo: o streamer não pontua (a opção fica apagada). As vagas já vêm em 75, porque ele estará
+// fora e pode esquecer de ajustar; ainda dá para mudar antes de copiar o link. Desmarcando, volta o número que estava.
 let qtdAntesDoIntervalo = 5;
 document.getElementById('modoIntervalo').onchange = e => {
   const pontua = document.getElementById('pontuaStreamer');
@@ -64,7 +64,7 @@ document.getElementById('modoIntervalo').onchange = e => {
   const qtd = document.getElementById('qtd');
   if (e.target.checked) {
     qtdAntesDoIntervalo = qtd.value;
-    qtd.value = qtd.max;
+    qtd.value = VAGAS_INTERVALO;
   } else {
     qtd.value = qtdAntesDoIntervalo;
   }
@@ -84,6 +84,7 @@ function inicioPeloLink() {
     caixa.onchange({ target: caixa });
     iniciarAoConectar = true;
     modoAutomatico = true;
+    ouvirCenaDoObs();
   }
   const vagas = Number(p.get('vagas'));
   if (Number.isInteger(vagas) && vagas >= 1 && vagas <= MAX_VIEWERS) {
@@ -105,6 +106,88 @@ function inicioPeloLink() {
   }
 }
 
+// ----- Cena do jogo no OBS -----
+// A página fica sempre carregada e o jogo só vive na memória dela: fechar o OBS apaga tudo, e a próxima
+// live começa do zero. O streamer usa isto com "Desligar fonte" e "Atualizar navegador" desligados.
+//   Sai de cena  -> o jogo para e o ranking fica pronto (sem calcular nem desenhar nada)
+//   Volta à cena -> mostra o ranking, conta 30 s e começa um intervalo novo
+//   Sai de novo  -> cancela a contagem; ao voltar, conta 30 s de novo
+function ouvirCenaDoObs() {
+  // o OBS avisa pelo evento e pela função antiga; o aviso repetido é ignorado
+  window.addEventListener('obsSourceActiveChanged', e => {
+    if (e.detail && typeof e.detail.active === 'boolean') cenaMudou(e.detail.active);
+  });
+  if (window.obsstudio) window.obsstudio.onActiveChange = ativa => cenaMudou(!!ativa);
+}
+
+let cenaJaAvisada = false; // o OBS já avisou alguma vez sobre a cena?
+
+function cenaMudou(ativa) {
+  if (!modoAutomatico) return;
+  // O OBS não diz como a cena estava quando a página abriu, então o jogo começa como se estivesse no ar.
+  // Se o primeiro aviso é "entrou no ar", ela estava fora desde o início: o jogo rodou escondido e recomeça do zero.
+  if (!cenaJaAvisada) {
+    cenaJaAvisada = true;
+    if (ativa && estado !== 'menu') {
+      iniciarPartida();
+      return;
+    }
+  }
+  if (ativa === fonteAtiva) return;
+  fonteAtiva = ativa;
+  if (!ativa) {
+    reinicioEm = 0;
+    if (estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa') finalizar();
+    pararMusica();
+    return;
+  }
+  ultimoFrame = performance.now();
+  if (estado === 'menu') {
+    // saiu de cena antes de o chat conectar: se já conectou, começa agora; senão, começa ao conectar
+    if (iniciarAoConectar && !document.getElementById('btIniciar').disabled) {
+      iniciarAoConectar = false;
+      iniciarPartida();
+    }
+  } else if (estado === 'fim') {
+    // sem ninguém no ranking, não tem o que mostrar: já abre o jogo novo
+    if (viewers.some(b => !b.streamer)) {
+      reinicioEm = performance.now() + RANKING_ESPERA;
+      atualizarDicaRanking(performance.now());
+    } else {
+      iniciarPartida();
+    }
+  }
+}
+
+// Depois do ranking: conta até o jogo novo
+function atualizarReinicio(agora) {
+  if (!reinicioEm) return;
+  if (agora >= reinicioEm) iniciarPartida();
+  else atualizarDicaRanking(agora);
+}
+
+function atualizarDicaRanking(agora) {
+  const dica = document.getElementById('rankingDica');
+  const texto = reinicioEm
+    ? `Novo intervalo em ${Math.ceil((reinicioEm - agora) / 1000)} s. Para começar já, o streamer ou um moderador digita !recomecar.`
+    : 'Para jogar de novo, o streamer ou um moderador digita !recomecar no chat.';
+  if (dica.textContent !== texto) dica.textContent = texto;
+}
+
+// O link do OBS só serve para o modo intervalo, em que tudo funciona por comando no chat.
+// Fora dele, o streamer precisa da raquete e do menu. Chamado pelo loop, 4 vezes por segundo.
+function atualizarBotaoLink() {
+  const conectado = !document.getElementById('btIniciar').disabled;
+  const intervalo = document.getElementById('modoIntervalo').checked;
+  document.getElementById('btLinkObs').disabled = !(conectado && intervalo);
+  let dica = '';
+  if (!conectado && !intervalo) dica = 'Para gerar o link do OBS, conecte o canal e marque o Modo intervalo.';
+  else if (!conectado) dica = 'Para gerar o link do OBS, conecte o canal.';
+  else if (!intervalo) dica = 'Para gerar o link do OBS, marque o Modo intervalo.';
+  const el = document.getElementById('dicaLinkObs');
+  if (el.textContent !== dica) el.textContent = dica;
+}
+
 // Monta o link com o que está escolhido no menu e copia
 document.getElementById('btLinkObs').onclick = () => {
   const status = document.getElementById('status');
@@ -114,14 +197,25 @@ document.getElementById('btLinkObs').onclick = () => {
     status.textContent = 'Digite o nome do canal para gerar o link do OBS.';
     return;
   }
-  let link = `${location.origin}${location.pathname}?canal=${canal}`;
-  if (document.getElementById('modoIntervalo').checked) {
-    link += `&modo=intervalo&fase=${indiceFase + 1}&vagas=${document.getElementById('qtd').value}`;
-  }
+  const link = `${location.origin}${location.pathname}?canal=${canal}` +
+    `&modo=intervalo&fase=${indiceFase + 1}&vagas=${document.getElementById('qtd').value}`;
   copiarAntigo(link, () => {
     status.textContent = 'Link copiado! No OBS: fonte Navegador, cole o link, Largura 1920 e Altura 1080.';
   });
 };
+
+// Abas da tela de informações
+function mostrarAba(id) {
+  document.querySelectorAll('.aba').forEach(bt => {
+    const ativa = bt.dataset.aba === id;
+    bt.classList.toggle('ativa', ativa);
+    document.getElementById(bt.dataset.aba).classList.toggle('escondido', !ativa);
+  });
+  document.getElementById('info').scrollTop = 0;
+}
+document.querySelectorAll('.aba').forEach(bt => {
+  bt.onclick = () => mostrarAba(bt.dataset.aba);
+});
 
 document.getElementById('btInfo').onclick = () => document.getElementById('info').classList.remove('escondido');
 document.getElementById('btFecharInfo').onclick = () => document.getElementById('info').classList.add('escondido');
