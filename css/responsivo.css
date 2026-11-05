@@ -1,0 +1,42 @@
+/* ===== Telas menores. Precisa ser o último CSS: sobrescreve os anteriores ===== */
+
+/* Tela pequena: o jogo fica na mesma linha, mas o layout encolhe sozinho */
+@media (max-width: 520px) {
+  .caixa {
+    min-width: 0;
+    width: 90vw;
+    box-sizing: border-box;
+  }
+}
+
+/* Celular em pé: o jogo fica pequeno, então o menu cobre a tela toda e rola se precisar */
+@media (max-width: 900px) and (orientation: portrait) {
+  .sobreposicao {
+    position: fixed;
+    overflow-y: auto;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  .caixa {
+    margin: auto;
+  }
+}
+
+/* Tela estreita: somem os painéis e o jogo ocupa a largura toda */
+@media (max-width: 900px) {
+  .painel-comandos,
+  .ranking-lateral {
+    display: none;
+  }
+  :root {
+    --jogo: min(calc(100vw - 32px), calc((100vh - 80px) * 1200 / 680));
+  }
+  .coluna-jogo {
+    grid-template-columns: var(--jogo);
+    grid-template-rows: auto auto;
+  }
+  .jogo,
+  .rodape-jogo {
+    grid-column: 1;
+  }
+}

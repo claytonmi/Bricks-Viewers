@@ -1,0 +1,5 @@
+# Quebra de linha normalizada no Git, em qualquer sistema
+* text=auto
+
+*.png binary
+*.mp3 binary

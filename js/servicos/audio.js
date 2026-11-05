@@ -4,7 +4,7 @@ let somLigado = true;
 let volumeMusica = 0.4;          // volume da música, de 0 a 1
 let mostrarVolume = false;       // barra aparece quando o mouse está sobre o botão Som
 let arrastandoVolume = false;    // true enquanto o streamer arrasta a bolinha
-const musica = new Audio('assets/musica.mp3');
+const musica = new Audio('assets/audio/musica.mp3');
 musica.loop = true;
 musica.volume = volumeMusica;
 

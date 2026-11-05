@@ -1,0 +1,27 @@
+/* ===== Base: variáveis, página e utilitários ===== */
+
+/* Layout que cabe na tela toda (feito para 1920x1080 no OBS):
+     [ Como jogar ] [   jogo grande    ] [ Ranking ]
+                    [ Voltei · créditos ]
+   O jogo cresce até onde der, mantendo a proporção 1200x680; os painéis têm a altura do jogo. */
+:root {
+  --lateral: 200px;   /* largura de cada painel (Como jogar e Ranking) */
+  --rodape: 40px;     /* altura da linha embaixo do jogo (Voltei e créditos) */
+  --vao: 16px;        /* espaço entre os blocos e as bordas */
+  /* largura do jogo: o maior possível que caiba na largura e na altura da tela */
+  --larg: 100vw;      /* tamanho da tela antes da escala (ver ajustarEscala) */
+  --alt: 100vh;
+  --jogo: min(calc(var(--larg) - 2 * var(--lateral) - 4 * var(--vao)),
+              calc((var(--alt) - var(--rodape) - 3 * var(--vao)) * 1200 / 680));
+}
+
+body {
+  margin: 0;
+  background: #1b1b1f;
+  color: #eee;
+  font-family: sans-serif;
+}
+
+.escondido {
+  display: none !important;
+}

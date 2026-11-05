@@ -1,0 +1,127 @@
+/* ===== Painéis ao lado do jogo: Como jogar e Ranking ===== */
+
+/* Painéis dos lados: mesma altura do jogo (rolam se o conteúdo passar) */
+.painel-comandos,
+.ranking-lateral {
+  grid-row: 1;
+  contain: size;            /* não aumenta a altura da linha: acompanha a altura do jogo */
+  overflow-x: hidden;       /* o efeito de entrada das linhas do ranking não cria barra para o lado */
+  overflow-y: auto;
+  background: #2c2c34;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+}
+
+/* ----- Ranking (direita) ----- */
+.ranking-lateral {
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
+}
+.ranking-lateral h3 {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 17px;
+}
+.ranking-lateral ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ranking-lateral li {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px solid #3a3a44;
+  font-size: 15px;
+}
+.ranking-lateral li span:first-child {
+  min-width: 0;            /* deixa o nome encolher e aparecer "..." */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ranking-lateral li span:last-child {
+  flex-shrink: 0;          /* os pontos nunca são cortados */
+  min-width: 18px;
+  text-align: right;
+}
+.ranking-lateral li.streamer span {
+  color: #22d3ee;
+}
+/* Lista de todos os jogadores: ocupa o espaço do painel e rola quando passa */
+#rankingTopo {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+/* Com o simulador aberto, a lista fica com altura fixa e o simulador embaixo */
+.ranking-lateral:has(.simulador:not(.escondido)) #rankingTopo {
+  flex: 0 0 auto;
+  max-height: 200px;
+}
+
+/* ----- Como jogar e comandos do chat (esquerda) ----- */
+.painel-comandos {
+  grid-column: 1;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.painel-comandos h3 {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 17px;
+}
+.painel-comandos h4 {
+  margin: 10px 0 4px;
+  padding-top: 8px;
+  border-top: 1px solid #3a3a44;
+  font-size: 15px;
+  text-align: center;
+}
+.painel-comandos p {
+  margin: 0;
+}
+.painel-comandos ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.painel-comandos li {
+  padding: 5px 0;
+  border-bottom: 1px solid #3a3a44;
+}
+.painel-comandos li:last-child {
+  border-bottom: none;
+}
+.painel-comandos b {
+  color: #facc15;
+}
+.painel-comandos .obs {
+  color: #999;
+  font-size: 12px;
+}
+/* Depois do Pronto não dá mais para entrar: o !entrar fica apagado */
+.painel-comandos li.fechado {
+  opacity: 0.4;
+}
+
+/* Modo intervalo: aviso da regra do ausente */
+.painel-comandos li.aviso-ausente {
+  color: #fdba74;
+}
+.painel-comandos li.aviso-ausente b {
+  color: #f97316;
+}
+
+/* Jogador novo aparece com um pequeno efeito */
+.ranking-lateral li.entrou {
+  animation: entrou 0.4s ease;
+}
+@keyframes entrou {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: none; }
+}

@@ -1,0 +1,105 @@
+/* ===== Layout: colunas, tela do jogo, camadas e rodapé ===== */
+
+.layout {
+  display: flex;
+  justify-content: center;
+  padding: var(--vao);
+  min-height: var(--alt);
+  box-sizing: border-box;
+}
+
+/* Com escala: a tela é montada em 1920x1080 (ou proporção da janela) e encolhe ou cresce como uma imagem */
+.escalada {
+  overflow: hidden;
+}
+.escalada .layout {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--larg);
+  height: var(--alt);
+  transform-origin: 0 0;
+}
+
+.coluna-jogo {
+  display: grid;
+  grid-template-columns: var(--lateral) var(--jogo) var(--lateral);
+  grid-template-rows: auto var(--rodape);
+  gap: var(--vao);
+  align-self: center;
+}
+
+.jogo {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  width: var(--jogo);
+}
+
+/* Embaixo do jogo: botão Voltei (modo intervalo) e créditos */
+.rodape-jogo {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+#tela {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #000;
+  border-radius: 8px;
+  touch-action: none;             /* o dedo move a raquete sem a página rolar */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Camadas sobre o jogo (menu, informações, ranking) */
+.sobreposicao {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  overflow-y: auto;   /* se a caixa for maior que o jogo, rola em vez de cortar */
+}
+.sobreposicao > .caixa {
+  margin: auto;       /* centraliza sem cortar o topo quando rola */
+}
+
+.caixa {
+  background: #2c2c34;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 320px;
+  text-align: center;
+}
+
+/* Modo intervalo: botão do streamer para parar o jogo (fora da tela do jogo) */
+.btn-voltei {
+  display: block;
+  padding: 8px 22px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #000;
+  background: #22d3ee;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-voltei:hover {
+  background: #67e8f9;
+}
+
+/* Rodapé discreto */
+.rodape {
+  text-align: center;
+  font-size: 11px;
+  color: #777;
+  padding: 0;
+}

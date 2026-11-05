@@ -1,0 +1,56 @@
+/* Simulador (só para testes) */
+.simulador {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #3a3a44;
+}
+.simulador h4 {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 14px;
+}
+.simulador button {
+  display: block;
+  width: 100%;
+  margin: 4px 0;
+}
+.simulador h5 {
+  margin: 10px 0 4px;
+  text-align: center;
+  font-size: 13px;
+}
+.simulador input,
+.simulador select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 4px 0;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+/* Campo + botão pequeno na mesma linha */
+.sim-linha {
+  display: flex;
+  gap: 4px;
+}
+.sim-linha button {
+  width: 32px;
+  flex-shrink: 0;
+}
+.sim-rapidos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 4px;
+}
+.sim-rapidos button {
+  padding-left: 0;
+  padding-right: 0;
+  font-size: 12px;
+}
+/* Situação da bola escolhida: poderes e pontos */
+.sim-info {
+  margin: 2px 0;
+  font-size: 12px;
+  color: #aaa;
+  min-height: 15px;
+}

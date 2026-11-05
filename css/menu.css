@@ -1,0 +1,54 @@
+/* ===== Menu do streamer ===== */
+
+/* Menu com o fundo do Bricks */
+#menu {
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+              url('../assets/imagens/interface/menu.png') center / cover no-repeat;
+}
+
+/* Bloco do chat dentro do menu */
+.bloco-chat {
+  margin-bottom: 12px;
+}
+.bloco-chat input {
+  width: 100%;
+  padding: 6px;
+  margin: 4px 0;
+  box-sizing: border-box;
+}
+.bloco-chat h3 {
+  margin: 0 0 6px;
+}
+
+/* Seleção de fase */
+.linha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+#faseImg {
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Menu: o que falta para liberar o link do OBS */
+.dica-link-obs {
+  margin: 6px 0 0;
+  color: #aaa;
+  font-size: 12px;
+}
+.dica-link-obs:empty {
+  display: none;
+}
+
+/* Botão discreto para enviar feedback ou reportar bug (abre o formulário em nova aba) */
+.btn-feedback {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #22d3ee;
+}

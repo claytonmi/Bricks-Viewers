@@ -1,6 +1,6 @@
 // ===== Chat da Twitch =====
 // Conexão direta com o chat (leitura anônima, sem login).
-// Cada mensagem vira um comando no jogo (ver processarComando em regras.js).
+// Cada mensagem vira um comando no jogo (ver processarComando em jogo/comandos.js).
 // Se a conexão cair (a Twitch derruba de vez em quando), reconecta sozinho.
 
 let timerReconexao = null;     // próxima tentativa de reconectar

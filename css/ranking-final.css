@@ -1,0 +1,49 @@
+/* ===== Ranking final ===== */
+
+/* Ranking final */
+#rankingLista {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  max-height: 320px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+#rankingLista li {
+  padding: 6px 8px;
+  border-bottom: 1px solid #3a3a44;
+}
+
+.top3 {
+  color: #facc15;
+  font-weight: bold;
+}
+
+.streamer {
+  color: #22d3ee;
+}
+
+/* Aberto pelo link do OBS: avisos no lugar dos botões */
+.aviso-voltei {
+  color: #bbb;
+  font-size: 14px;
+}
+.aviso-voltei b,
+.ranking-dica b {
+  color: #22d3ee;
+}
+.ranking-dica {
+  margin: 8px 0 0;
+  color: #ccc;
+}
+
+/* Sem clique também não dá para rolar: a lista mostra os 10 primeiros inteiros */
+#rankingLista.completa {
+  max-height: none;
+  overflow: visible;
+}
+#rankingLista .mais-jogadores {
+  color: #aaa;
+  text-align: center;
+}

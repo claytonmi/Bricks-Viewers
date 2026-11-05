@@ -33,7 +33,7 @@ const PADRAO_TIJOLOS = [
 const FASES = [
   {
     nome: 'Fase 1',
-    fundo: 'assets/Fase1.png',
+    fundo: 'assets/imagens/fases/fase-1.png',
     cores: null,
     paredes: [],
     padrao: PADRAO_TIJOLOS,
@@ -41,7 +41,7 @@ const FASES = [
   },
   {
     nome: 'Fase 2',
-    fundo: 'assets/Fase2.png',
+    fundo: 'assets/imagens/fases/fase-2.png',
     cores: ['#facc15', '#ef4444', '#3b82f6'], // amarelo, vermelho, azul
     paredes: [
       { x: 110, y: 224, w: 171, h: 8 },
@@ -54,7 +54,7 @@ const FASES = [
   },
   {
     nome: 'Fase 3',
-    fundo: 'assets/Fase3.png',
+    fundo: 'assets/imagens/fases/fase-3.png',
     cores: ['#22c55e', '#a855f7', '#f97316'], // verde, roxo, laranja
     paredes: [
       { x1: 149, y1: 248, x2: 300, y2: 164, espessura: 8 },
@@ -66,7 +66,7 @@ const FASES = [
   },
   {
     nome: 'Fase 4',
-    fundo: 'assets/Fase4.png',
+    fundo: 'assets/imagens/fases/fase-4.png',
     cores: ['#22d3ee', '#ec4899', '#facc15'], // ciano, rosa, amarelo
     paredes: [
       { x1: 194, y1: 126, x2: 337, y2: 218, espessura: 8 },
@@ -78,7 +78,7 @@ const FASES = [
   },
   {
     nome: 'Fase 5',
-    fundo: 'assets/Fase5.png',
+    fundo: 'assets/imagens/fases/fase-5.png',
     cores: ['#f97316', '#94a3b8', '#facc15'], // laranja, aço, amarelo
     paredes: [],
     padrao: PADRAO_TIJOLOS,
@@ -87,7 +87,7 @@ const FASES = [
   {
     // Evento de Natal: só aparece liberada em dezembro (no simulador fica liberada para testar)
     nome: 'Fase Natalina',
-    fundo: 'assets/FaseNatal.png',
+    fundo: 'assets/imagens/fases/fase-natal.png',
     cores: ['#dc2626', '#16a34a', '#facc15', '#3b82f6', '#ec4899'], // presentes: vermelho, verde, dourado, azul, rosa
     paredes: [],
     padrao: [
@@ -102,23 +102,3 @@ const FASES = [
     natal: true // tijolos de presente, neve, chefão saco do Papai Noel e rena voando
   }
 ];
-
-// A fase está liberada? Fase de evento só no mês dela.
-// No simulador, vale o mês escolhido no painel (0 = todas liberadas, o padrão, para testar).
-function faseLiberada(i) {
-  const f = FASES[i];
-  if (!f.mes) return true;
-  const simulador = !document.getElementById('simulador').classList.contains('escondido');
-  if (simulador) return mesSimulado === 0 || mesSimulado === f.mes;
-  return new Date().getMonth() + 1 === f.mes;
-}
-
-// Imagens que o jogo carrega ao abrir (fundos entram pela fase)
-const ARQUIVOS = {
-  bola: 'assets/ball.png',
-  paddle: 'assets/player.png',
-  tijolo: 'assets/brick.png',
-  tijolo3: 'assets/brick3.png',
-  tijolo4: 'assets/brick4.png'
-};
-FASES.forEach((f, i) => { ARQUIVOS['fundo' + i] = f.fundo; });
