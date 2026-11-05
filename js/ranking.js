@@ -95,7 +95,7 @@ function atualizarRankingLateral() {
   novas.forEach(li => {
     const posAntes = antes.get(li);
     if (posAntes === undefined) return; // linha nova: aparece sem deslizar
-    const dy = posAntes - li.getBoundingClientRect().top;
+    const dy = (posAntes - li.getBoundingClientRect().top) / escalaTela; // medida na tela; o deslize é antes da escala
     if (Math.abs(dy) < 1) return;
     li.style.transition = 'none';
     li.style.transform = `translateY(${dy}px)`;

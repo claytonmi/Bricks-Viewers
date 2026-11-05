@@ -16,16 +16,31 @@ body {
   --rodape: 40px;     /* altura da linha embaixo do jogo (Voltei e créditos) */
   --vao: 16px;        /* espaço entre os blocos e as bordas */
   /* largura do jogo: o maior possível que caiba na largura e na altura da tela */
-  --jogo: min(calc(100vw - 2 * var(--lateral) - 4 * var(--vao)),
-              calc((100vh - var(--rodape) - 3 * var(--vao)) * 1200 / 680));
+  --larg: 100vw;      /* tamanho da tela antes da escala (ver ajustarEscala) */
+  --alt: 100vh;
+  --jogo: min(calc(var(--larg) - 2 * var(--lateral) - 4 * var(--vao)),
+              calc((var(--alt) - var(--rodape) - 3 * var(--vao)) * 1200 / 680));
 }
 
 .layout {
   display: flex;
   justify-content: center;
   padding: var(--vao);
-  min-height: 100vh;
+  min-height: var(--alt);
   box-sizing: border-box;
+}
+
+/* Com escala: a tela é montada em 1920x1080 (ou proporção da janela) e encolhe ou cresce como uma imagem */
+.escalada {
+  overflow: hidden;
+}
+.escalada .layout {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--larg);
+  height: var(--alt);
+  transform-origin: 0 0;
 }
 
 .coluna-jogo {

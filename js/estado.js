@@ -24,7 +24,8 @@ let pausaAte = 0;             // intervalo: fim do ranking entre as fases
 let ausentesFase = [];        // intervalo: quem ficou ausente na fase que acabou (perdeu os pontos dela)
 let iniciarAoConectar = false; // link do OBS: começa a partida sozinha assim que o chat conectar
 let modoAutomatico = false;   // aberto pelo link do intervalo: ninguém clica na tela, tudo é por comando no chat
-let fonteAtiva = true;        // link do OBS: a cena do jogo está no ar? (fora do ar, o jogo fica parado)
+let escalaTela = 1;           // quanto a tela inteira está aumentada ou diminuída (ver ajustarEscala)
+let fonteAtiva = true;       // link do OBS: a cena do jogo está no ar? (fora do ar, o jogo fica parado)
 let reinicioEm = 0;           // link do OBS: quando o jogo novo começa, depois do ranking (0 = sem contagem)
 let mesSimulado = 0;         // simulador: mês para as fases de evento (0 = todas liberadas)
 let inicioFase = 0;          // intervalo: quando a fase atual começou

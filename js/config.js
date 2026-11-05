@@ -95,6 +95,11 @@ const PAUSA_RANKING = 15000;     // entre as fases: ranking (top 10) por 15 s
 const AUSENTE_TOLERANCIA = 90000; // poder pronto há menos de 1 min 30 s no fim da fase não conta como ausente
 const CHEFAO_PAREDE_VIDA = 30;   // Fase 3 no intervalo: chefão que cai na parede do meio
 
+// A tela é montada neste tamanho e depois aumenta ou diminui junto (ver ajustarEscala)
+const TELA_BASE_W = 1920;
+const TELA_BASE_H = 1080;
+const TELA_MIN_ESCALA = 900;     // até esta largura vale o layout de celular, sem escala
+
 const CELULA_W = W / 16;        // 16 colunas de tijolos
 const TIJOLO_W = 70;
 const TIJOLO_H = 24;
