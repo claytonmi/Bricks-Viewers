@@ -4,7 +4,7 @@
 // Fases que terminam com o tijolo chefão (a partida só acaba depois que ele quebra)
 function faseTemChefao() {
   const f = FASES[faseIndex];
-  return !!(f.chuva || f.esteira || f.natal || (modoIntervalo && f.chefaoIntervalo));
+  return !!(f.chuva || f.esteira || f.natal || f.anoNovo || (modoIntervalo && f.chefaoIntervalo));
 }
 
 // ----- Chefão na parede (modo intervalo, fase com "chefaoIntervalo") -----

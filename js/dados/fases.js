@@ -109,5 +109,21 @@ const FASES = [
     ],
     mes: 12,   // só liberada em dezembro
     natal: true // tijolos de presente, neve, chefão saco do Papai Noel e rena voando
+  },
+  {
+    // Ano Novo Chinês: só liberada perto da data (ver anonovo.js)
+    nome: 'Fase Ano Novo Chinês',
+    fundo: 'assets/imagens/fases/fase-ano-novo.png',
+    cores: ['#dc2626', '#facc15'], // vermelho e dourado
+    paredes: [],
+    padrao: [
+      'L.1.L.1.L.1.L.1.',
+      '2E22F22E22F22E22',
+      '2.2.2.2.2.2.2.2.',
+      '3E33L33F33E33L33',
+      '3.3.3.3.3.3.3.3.',
+      'L1L1L1L1L1L1L1L1'
+    ],
+    anoNovo: true // lanterna (L), envelope (E) e fogos (F) no padrão; chefão dragão (ver anonovo.js)
   }
 ];

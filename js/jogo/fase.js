@@ -15,6 +15,7 @@ function montarFase() {
   esteiraDesloc = FASES[faseIndex].padrao.map(() => 0);
   proximaGota = 0;
   resetarNatal();
+  resetarAnoNovo();
   // Fase 6: meteoros e buraco de minhoca (ver espaco.js)
   if (FASES[faseIndex].espaco) { montarEspaco(); return; }
   // Fase com chuva: começa sem tijolos; eles caem do céu (ver atualizarChuva).
@@ -29,15 +30,17 @@ function montarFase() {
   FASES[faseIndex].padrao.forEach((linha, r) => {
     [...linha].forEach((c, col) => {
       if (c === '.') return;
+      const especial = TIPOS_ANO_NOVO[c]; // Ano Novo: lanterna, envelope e fogos (letras no padrao)
       const t = {
         x: col * CELULA_W + (CELULA_W - TIJOLO_W) / 2,
         y: TIJOLO_TOPO + r * 30,
         w: TIJOLO_W,
         h: TIJOLO_H,
-        vida: Number(c),
+        vida: especial ? especial.vida : Number(c),
+        tipo: especial ? especial.tipo : null,
         vivo: true,
         item: false,
-        cor: corDoTijolo(r),
+        cor: especial ? null : corDoTijolo(r),
         linha: r, // na esteira, cada linha anda numa direção
         slot: col // na esteira, o lugar dele na linha (para achar os lugares vazios)
       };
@@ -109,8 +112,9 @@ function tocaParede(t, margem) {
 // No simulador, vale o mês escolhido no painel (0 = todas liberadas, o padrão, para testar).
 function faseLiberada(i) {
   const f = FASES[i];
-  if (!f.mes) return true;
   const simulador = !document.getElementById('simulador').classList.contains('escondido');
+  if (f.anoNovo) return simulador ? mesSimulado === 0 : anoNovoLiberado(); // Ano Novo: só perto da data
+  if (!f.mes) return true;
   if (simulador) return mesSimulado === 0 || mesSimulado === f.mes;
   return new Date().getMonth() + 1 === f.mes;
 }

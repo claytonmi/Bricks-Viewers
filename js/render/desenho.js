@@ -13,6 +13,18 @@ function etiqueta(texto, x, y) {
   ctx.textAlign = 'left';
 }
 
+// Nome do viewer embaixo da bola (no modo intervalo, o que aparece no OBS)
+function etiquetaAbaixo(texto, x, y) {
+  ctx.font = '11px sans-serif';
+  const w = ctx.measureText(texto).width + 8;
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+  ctx.fillRect(x - w / 2, y + 2, w, 14);
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.fillText(texto, x, y + 13);
+  ctx.textAlign = 'left';
+}
+
 // Linha em zigue-zague (raio elétrico) de (x1, y1) até (x2, y2); muda a cada quadro
 function linhaEletrica(x1, y1, x2, y2, tremor) {
   const passos = 6;
@@ -193,6 +205,8 @@ function desenharTijolos(agora) {
   for (const t of tijolos) if (t.circ && t.entrando && t.vivo) desenharMeteoro(t, agora);
   for (const t of tijolos) {
     if (!t.vivo) continue;
+    if (t.dragao) { desenharSegmentoDragao(t, agora); continue; } // Ano Novo
+    if (t.tipo) { desenharTijoloAnoNovo(t, agora); continue; }   // Ano Novo: lanterna, envelope, fogos
     if (t.circ) { if (!t.entrando) desenharMeteoro(t, agora); continue; }
     if (t.saco) { desenharSaco(t, agora); continue; }
     if (t.chefao) { desenharChefao(t, agora); continue; }
@@ -287,7 +301,9 @@ function desenharBolas(agora) {
       ctx.shadowColor = '#ef4444';
       ctx.shadowBlur = 18;
     }
+    if (b.fantasma) ctx.globalAlpha = 0.4; // atordoada na frente do dragão: passa por dentro dele
     ctx.drawImage(bolaColorida(b.cor), b.x - TAM_BOLA / 2, b.y - TAM_BOLA / 2, TAM_BOLA, TAM_BOLA);
+    ctx.globalAlpha = 1;
     ctx.shadowBlur = 0;
     // !shock: bola eletrizada (aura amarela tremendo no raio do choque)
     if (agora < b.choqueAte) {
@@ -318,6 +334,18 @@ function desenharBolas(agora) {
         ctx.textAlign = 'center';
         ctx.fillText(marcas, b.x, b.y - 12);
         ctx.textAlign = 'left';
+      }
+    }
+    // modo intervalo (link do OBS): nome de cada viewer embaixo da bola, o streamer incluído
+    // ciclo: aparece por 15 s (some aos poucos nos últimos 2), fica escondido 15 s e volta
+    if (modoIntervalo && estado === 'jogando') {
+      if (!b.nomeDesde) b.nomeDesde = agora; // começa no primeiro quadro da partida em que o nome aparece
+      const fase = (agora - b.nomeDesde) % (NOME_MOSTRA + NOME_ESCONDIDO);
+      if (fase < NOME_MOSTRA) {
+        const sumindo = fase > NOME_MOSTRA - NOME_SUMIR;
+        ctx.globalAlpha = sumindo ? (NOME_MOSTRA - fase) / NOME_SUMIR : 1;
+        etiquetaAbaixo(b.nome, b.x, b.y + TAM_BOLA / 2);
+        ctx.globalAlpha = 1;
       }
     }
   }
@@ -507,6 +535,7 @@ function desenhar(agora) {
   desenharCopias(agora);
   desenharBolas(agora);
   desenharExtrasNatal(agora);
+  desenharExtrasAnoNovo(agora);
   desenharRaiosChoque();
   desenharAvisos(agora);
   desenharItens();

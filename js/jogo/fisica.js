@@ -60,7 +60,7 @@ function xDoTijolo(t, bx) {
 function baterNosTijolos(b) {
   for (const t of tijolos) {
     if (!t.vivo) continue;
-    if (t.circ) { if (baterNoMeteoro(b, t)) return; continue; }
+    if (t.circ) { if (t.dragao && b.fantasma) continue; if (baterNoMeteoro(b, t)) return; continue; }
     const tx = xDoTijolo(t, b.x);
     const cx = Math.max(tx, Math.min(b.x, tx + t.w));
     const cy = Math.max(t.y, Math.min(b.y, t.y + t.h));
@@ -119,8 +119,10 @@ function registrarBatida(b, t) {
     }
     marcarPoderPronto(b, performance.now()); // modo intervalo: regra do ausente
   }
+  if (t.dragao) { danoNoDragao(b, performance.now()); return; } // Ano Novo: o dragão inteiro perde vida; o corpo não quebra
   t.vida--;
   if (t.vida <= 0) {
+    if (t.tipo) { romperTijoloAnoNovo(t, b.dono || b, performance.now()); return; } // Ano Novo: tijolo especial
     if (t.circ) { quebrarMeteoro(t, b); return; } // fase 6: ver espaco.js
     t.vivo = false;
     tijolosVivos--;
