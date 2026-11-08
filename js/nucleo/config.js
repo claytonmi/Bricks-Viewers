@@ -10,10 +10,9 @@ const VEL_PADDLE = 520;          // velocidade da raquete com teclado
 const PADDLE_W = 150;
 const PADDLE_H = 16;
 const PADDLE_Y = H - 40;
-const ESPACO_BOLA = 19;          // distância entre bolas na mesma linha
+const ESPACO_BOLA = 24;          // distância entre bolas na mesma linha
 const BOLAS_POR_LINHA = 20;
 const MAX_VIEWERS = 100;         // 5 linhas de 20 bolas
-const INTERVALO_STREAMER = 7000; // a cada 7 s: +1 ponto do streamer se mais de 50% das bolas estiverem no ar
 const ESPERA_QUEDA = 1000;       // 1 s até a bola voltar ao centro
 const DURACAO_SPEED = 5000;      // !speed dura 5 s
 const CARGA_SPEED = 5;           // batidas necessárias para usar !speed de novo
@@ -40,6 +39,7 @@ const IMUNE_CHOQUE = 3000;       // depois do atordoamento, imune a outro !shock
 const PODER_APOS_EFEITO = 1500;  // saiu do efeito do poder de outra bola: só usa poder 1,5 s depois (o pedido espera na fila)
 const ITENS_PORCENTO = 0.2;       // 20% dos tijolos da fase (sorteados) soltam item
 const DURACAO_AVISO = 2000;      // tempo do texto "Fulano usou !bomb" parado em cima da bola (ms)
+const AVISO_TEMPO = 7000;       // tempo do aviso "Faltam X batidas..." em cima da bola (ms)
 const AVISO_SOME = 300;          // depois disso, o texto some aos poucos (ms)
 const NOME_MOSTRA = 15000;       // modo intervalo: nome do viewer embaixo da bola fica visível por 15 s...
 const NOME_SUMIR = 2000;         // ...e nos últimos 2 s vai sumindo aos poucos
@@ -47,8 +47,11 @@ const NOME_ESCONDIDO = 15000;    // depois fica escondido por 15 s e volta, em c
 const BOMBA_TEMPO = 350;         // tempo da animação da explosão (ms)
 const ITEM_VEL = 160;            // velocidade de queda do item (px por segundo)
 const ITEM_TAM = 16;             // tamanho do item na tela
-const ITEM_PONTOS = 5;           // pontos do streamer ao pegar um item com a raquete
+const ITEM_PONTOS = 1;
+const ITENS_PONTOS_PARTIDA = 5; // quantos itens de pontos caem em cada partida, sempre (não importa o número de viewers)           // pontos do streamer ao pegar um item com a raquete
+const REBATIDAS_POR_PONTO = 10;  // "Streamer pontua": a cada 10 rebatidas na raquete, +1 ponto do streamer
 const MULTIBOLA_CHANCE = 0.25;   // dos itens que caem, 1 em 4 é multibola (os outros dão pontos ao streamer)
+const ITEM_MENOS_CHANCE = 0.33;  // dos itens de pontos, 1 em 3 é vermelho: tira 1 ponto do streamer (nunca fica abaixo de 0)
 const MULTIBOLA_TEMPO = 8000;    // multibola: cada bola ganha uma cópia por 8 s (os pontos da cópia vão para o dono)
 
 // Muitos jogadores: cada bola acerta menos tijolos, então os poderes saem com menos batidas
@@ -68,12 +71,17 @@ const ESTEIRA_SURGE = 400;       // tempo do efeito de um tijolo novo aparecendo
 const CHUVA_MIN_JOGADORES = 15;  // até aqui a chuva fica no mínimo; daí até 100 jogadores sobe aos poucos
 
 // Tijolo chefão (fases com chuva ou esteira): cai quando sobram poucos tijolos
-const CHEFAO_QUANDO = 5;         // cai quando restam 5 tijolos ou menos na tela
-const CHEFAO_VIDA = 20;
+const CHEFAO_QUANDO = 4;         // cai quando restam 4 tijolos ou menos na tela
+const CHEFAO_VIDA = 40;
 const CHEFAO_PONTOS = 5;         // pontos para quem der a última batida
 const CHEFAO_H = 54;             // altura de 2 linhas de tijolos (largura de 2 colunas)
 const CHEFAO_ESTEIRA_Y = 40;     // esteira: altura onde o chefão para de descer e começa a ir e voltar
 const CHEFAO_ESTEIRA_VEL = 60;   // esteira: velocidade do chefão com a vida cheia (até 3x quando quase quebrando)
+
+// Fim de fase travado (todas as fases): com poucos tijolos e nenhuma bola encostando neles, uma bola é atraída para eles
+// (fim de fase travado vale com qualquer quantidade de tijolos: ver atualizarFimTravado em chefao.js)
+const FIM_TRAVADO_TEMPO = 10000; // ms sem encostar em tijolo antes de atrair uma bola
+const ATRACAO_TEMPO = 3000;      // quanto tempo a bola fica atraída para o tijolo mais perto (ms)
 
 // Fase de Natal (ver natal.js)
 const SACO_W = 110;              // chefão saco do Papai Noel
@@ -96,7 +104,7 @@ const INTERVALO_ESPERA = 20000;  // lobby: a partida começa sozinha 20 s depois
 const RANKING_ESPERA = 30000;    // link do OBS: ao voltar para a cena, o ranking fica 30 s antes do jogo novo
 const PAUSA_RANKING = 15000;     // entre as fases: ranking (top 10) por 15 s
 const AUSENTE_TOLERANCIA = 90000; // poder pronto há menos de 1 min 30 s no fim da fase não conta como ausente
-const CHEFAO_PAREDE_VIDA = 30;   // Fase 3 no intervalo: chefão que cai na parede do meio
+const CHEFAO_PAREDE_VIDA = 40;   // Fase 3 no intervalo: chefão que cai na parede do meio
 
 // A tela é montada neste tamanho e depois aumenta ou diminui junto (ver ajustarEscala)
 const TELA_BASE_W = 1920;

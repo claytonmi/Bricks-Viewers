@@ -34,6 +34,7 @@ const FASES = [
   {
     nome: 'Fase 1',
     fundo: 'assets/imagens/fases/fase-1.png',
+    escurecer: 0.55, // véu preto sobre o fundo (padrão 0.35): a Fase 1 é cheia de tijolo vermelho
     cores: null,
     paredes: [],
     padrao: PADRAO_TIJOLOS,

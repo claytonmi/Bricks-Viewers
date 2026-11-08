@@ -15,8 +15,11 @@ function terminarFase(agora) {
     b.pontos -= perdeu;
     ausentesFase.push({ nome: b.nome, perdeu });
   }
-  estado = 'pausa';
-  pausaAte = agora + PAUSA_RANKING;
+  // empate no pódio: o desempate roda antes do ranking entre as fases (desempate.js); depois, a pausa segue
+  iniciarDesempate(montarLinhas(), () => {
+    estado = 'pausa';
+    pausaAte = agoraJogo() + PAUSA_RANKING;
+  });
 }
 
 // Roda a cada quadro durante o ranking entre as fases
@@ -35,6 +38,7 @@ function proximaFaseLiberada(i) {
 
 // Próxima fase do carrossel: as bolas voltam para o chão e a contagem começa (ninguém precisa entrar de novo)
 function proximaFase() {
+  ordensDesempate = new Map(); // cada fase tem o seu ranking: o desempate de uma não vale na seguinte
   faseIndex = proximaFaseLiberada(faseIndex);
   montarFase();
   viewers.forEach((b, i) => {
@@ -67,5 +71,6 @@ function proximaFase() {
 // Botão "Voltei": o streamer voltou, o intervalo para e aparece o ranking com os pontos de todas as fases
 function pararIntervalo() {
   if (!modoIntervalo || estado === 'menu' || estado === 'fim') return;
+  if (estado === 'desempate') { suspenderDesempate(); return; } // no meio do desempate: Continuar ou Cancelar
   finalizar();
 }

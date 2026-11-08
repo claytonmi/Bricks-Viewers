@@ -69,11 +69,11 @@ function cenaMudou(ativa) {
   fonteAtiva = ativa;
   if (!ativa) {
     reinicioEm = 0;
-    if (estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa') finalizar();
+    if (estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa' || estado === 'desempate') finalizar();
     pararMusica();
     return;
   }
-  ultimoFrame = performance.now();
+  ultimoFrame = agoraJogo();
   if (estado === 'menu') {
     // saiu de cena antes de o chat conectar: se já conectou, começa agora; senão, começa ao conectar
     if (iniciarAoConectar && !document.getElementById('btIniciar').disabled) {
@@ -83,8 +83,8 @@ function cenaMudou(ativa) {
   } else if (estado === 'fim') {
     // sem ninguém no ranking, não tem o que mostrar: já abre o jogo novo
     if (viewers.some(b => !b.streamer)) {
-      reinicioEm = performance.now() + RANKING_ESPERA;
-      atualizarDicaRanking(performance.now());
+      reinicioEm = agoraJogo() + RANKING_ESPERA;
+      atualizarDicaRanking(agoraJogo());
     } else {
       iniciarPartida();
     }

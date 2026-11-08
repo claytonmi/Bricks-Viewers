@@ -121,6 +121,55 @@
 .ranking-lateral li.entrou {
   animation: entrou 0.4s ease;
 }
+/* Menu de pausa: por cima da tela inteira, no centro */
+.menu-pausa {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+.menu-pausa-caixa {
+  width: min(420px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding: 18px 22px;
+  background: #1c1c22;
+  border: 2px solid #facc15;
+  border-radius: 12px;
+  text-align: center;
+}
+.menu-pausa-caixa h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+.menu-pausa-caixa ol {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  text-align: left;
+}
+.menu-pausa-caixa li {
+  padding: 4px 0;
+  border-bottom: 1px solid #3a3a44;
+}
+.menu-pausa-botoes {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.aviso-entrada {
+  margin: 6px 0 0;
+  padding: 4px 6px;
+  font-size: 13px;
+  color: #facc15;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 @keyframes entrou {
   from { opacity: 0; transform: translateX(12px); }
   to   { opacity: 1; transform: none; }

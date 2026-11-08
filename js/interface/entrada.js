@@ -13,6 +13,8 @@ function pontoNoCanvas(e) {
 document.addEventListener('keydown', e => {
   // digitando num campo (ex: nome do canal) ou escolhendo numa lista: deixa as teclas funcionarem normalmente
   if (e.target.matches('input:not([type]), input[type="text"], textarea, select')) return;
+  // Esc pausa e volta do jogo (no navegador; no OBS a tecla não chega)
+  if (e.key === 'Escape') { if (!e.repeat) alternarPausa(); return; }
   if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') teclas.esq = true;
   if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') teclas.dir = true;
   if (e.key.startsWith('Arrow')) e.preventDefault();

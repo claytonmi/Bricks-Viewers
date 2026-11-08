@@ -75,6 +75,12 @@ function abrirConexao(canal) {
         processarComando(tags['display-name'] || m[2], m[3], autoridade);
         continue;
       }
+      // Ban ou timeout: a Twitch manda CLEARCHAT com o login do viewer (sem login, é a limpeza do chat inteiro)
+      const banimento = linha.match(/^(?:@\S+ )?:tmi\.twitch\.tv CLEARCHAT #\S+ :(\S+)/);
+      if (banimento) {
+        removerViewer(banimento[1]);
+        continue;
+      }
       if (linha.includes(' JOIN #') || linha.includes(' 366 ')) {
         status.textContent = 'Conectado no chat de ' + canal + '. Pode digitar !entrar.';
         btIniciar.disabled = false;

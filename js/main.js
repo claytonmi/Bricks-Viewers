@@ -1,17 +1,59 @@
 // ===== Início e loop principal =====
 // Este arquivo é o último a carregar: liga as imagens e começa o jogo.
 
-let ultimoFrame = performance.now();
+let ultimoFrame = agoraJogo();
 let ultimoRanking = 0;          // última atualização do ranking lateral
 
+// Com a janela escondida (minimizada, atrás de outra janela ou aba em segundo plano) o navegador para o
+// requestAnimationFrame, e o jogo congelava. Nesse caso um timer num Worker (que não é limitado) chama o loop.
+let quadroPendente = false;
+let pararTimerEscondido = null;
+
+function agendarFrame() {
+  if (quadroPendente) return;
+  quadroPendente = true;
+  requestAnimationFrame(() => { quadroPendente = false; loop(); });
+}
+
+function ligarTimerEscondido() {
+  if (pararTimerEscondido) return;
+  try {
+    const url = URL.createObjectURL(new Blob(['setInterval(function () { postMessage(0); }, 16);'], { type: 'text/javascript' }));
+    const worker = new Worker(url);
+    worker.onmessage = () => { if (document.hidden) loop(); };
+    pararTimerEscondido = () => { worker.terminate(); URL.revokeObjectURL(url); };
+  } catch (e) {
+    // navegador sem Worker: o timer da página é limitado a 1 s, mas ainda anda
+    const id = setInterval(() => { if (document.hidden) loop(); }, 16);
+    pararTimerEscondido = () => clearInterval(id);
+  }
+}
+
+function desligarTimerEscondido() {
+  if (!pararTimerEscondido) return;
+  pararTimerEscondido();
+  pararTimerEscondido = null;
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) ligarTimerEscondido();
+  else desligarTimerEscondido();
+});
+
 function loop() {
-  const agora = performance.now();
+  const agora = agoraJogo();
   const dt = Math.min((agora - ultimoFrame) / 1000, 0.05);
   ultimoFrame = agora;
 
   // link do OBS com a cena fora do ar: não calcula nem desenha nada, para não pesar no PC do streamer
   if (!fonteAtiva) {
-    requestAnimationFrame(loop);
+    agendarFrame();
+    return;
+  }
+
+  // pausado (Esc): o jogo fica parado; o menu de pausa é um elemento da página por cima do canvas
+  if (pausadoJogo) {
+    agendarFrame();
     return;
   }
 
@@ -34,6 +76,7 @@ function loop() {
     atualizarNatal(dt, agora); // fase de Natal: saco do Papai Noel, presentinhos e rena
     atualizarJogo(dt, agora);
   }
+  if (estado === 'desempate') atualizarDesempate(dt, agora); // mini-jogo de empate no pódio (desempate.js)
   if (estado === 'pausa') atualizarPausa(agora);
   if (estado === 'fim') atualizarReinicio(agora);
 
@@ -47,14 +90,15 @@ function loop() {
     atualizarListaSimulador();
     ultimoRanking = agora;
   }
-  requestAnimationFrame(loop);
+  agendarFrame();
 }
 
 carregarImagens()
   .then(() => {
     mostrarFase();
     inicioPeloLink(); // link do OBS: já conecta e começa sozinho
-    requestAnimationFrame(loop);
+    if (document.hidden) ligarTimerEscondido(); // a página pode abrir já escondida
+    agendarFrame();
   })
   .catch(err => {
     alert(err.message);

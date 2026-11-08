@@ -28,6 +28,24 @@ function temPoder(b, cmd) {
   return false;
 }
 
+// Quantas batidas faltam para o poder ficar pronto (usado no aviso em cima da bola)
+function faltaBatidas(b, cmd) {
+  if (cmd === '!speed') return batidasPara(CARGA_SPEED) - b.carga;
+  if (cmd === '!bomb') return batidasPara(BOMBA_CADA) - b.batidas;
+  if (cmd === '!gravity') return batidasPara(GRAV_CADA) - b.batidasGrav;
+  if (cmd === '!shock') return batidasPara(CHOQUE_CADA) - b.batidasChoque;
+  return 0;
+}
+
+// Viewer pediu um poder que ainda não está pronto: "Faltam X batidas para Nome usar !poder" em cima da bola, por 7 s
+function avisarFaltaBatidas(b, cmd, agora) {
+  const falta = Math.max(1, faltaBatidas(b, cmd));
+  b.aviso = falta === 1
+    ? `Falta 1 batida para ${b.nome} usar ${cmd}`
+    : `Faltam ${falta} batidas para ${b.nome} usar ${cmd}`;
+  b.avisoAte = agora + AVISO_TEMPO + AVISO_SOME;
+}
+
 // Bola com algum poder ativo (!speed, !bomb, !gravity ou !shock): os poderes dos outros não pegam nela
 function usandoPoder(b, agora) {
   return agora < b.poderAte;

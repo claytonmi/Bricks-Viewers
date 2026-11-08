@@ -193,7 +193,7 @@ function desenharFundo(agora) {
   ctx.clearRect(0, 0, W, H);
   const fundo = imgs['fundo' + faseIndex];
   if (fundo) ctx.drawImage(fundo, 0, 0, W, H);
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+  ctx.fillStyle = `rgba(0, 0, 0, ${FASES[faseIndex].escurecer ?? 0.35})`;
   ctx.fillRect(0, 0, W, H);
   if (faseNatal()) desenharNeve(agora); // Natal: neve caindo atrás dos tijolos
   if (espacoAtiva()) desenharBuraco(agora); // Fase 6: o buraco fica embaixo dos meteoros
@@ -382,9 +382,10 @@ function desenharAvisos(agora) {
   }
 }
 
-// Itens caindo (a raquete pega): amarelo com "+" = pontos do streamer; azul com "×2" = multibola
+// Itens caindo (a raquete pega): amarelo com "+" = pontos do streamer; bomba preta brilhando = tira ponto; azul com "×2" = multibola
 function desenharItens() {
   for (const it of itensCaindo) {
+    if (it.tipo === 'menos') { desenharBombaItem(it.x, it.y); continue; }
     const multi = it.tipo === 'multibola';
     ctx.fillStyle = multi ? '#22d3ee' : '#facc15';
     ctx.beginPath();
@@ -396,6 +397,40 @@ function desenharItens() {
     ctx.fillText(multi ? '×2' : '+', it.x, it.y + (multi ? 4 : 5));
     ctx.textAlign = 'left';
   }
+}
+
+// Item que tira ponto: bomba preta com pavio e faísca laranja, com brilho pulsando
+function desenharBombaItem(x, y) {
+  const r = ITEM_TAM / 2;
+  const pulso = 0.5 + 0.5 * Math.sin(performance.now() / 120);
+  ctx.save();
+  ctx.shadowColor = '#f97316';
+  ctx.shadowBlur = 8 + 10 * pulso;
+  ctx.fillStyle = '#1f2937';
+  ctx.beginPath();
+  ctx.arc(x, y + 1, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  // brilho na bomba
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.beginPath();
+  ctx.arc(x - r * 0.35, y - r * 0.2, r * 0.22, 0, Math.PI * 2);
+  ctx.fill();
+  // pavio
+  ctx.strokeStyle = '#d6d3d1';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x + r * 0.4, y - r * 0.7);
+  ctx.quadraticCurveTo(x + r * 0.9, y - r * 1.4, x + r * 1.1, y - r * 1.1);
+  ctx.stroke();
+  // faísca na ponta do pavio
+  ctx.shadowColor = '#facc15';
+  ctx.shadowBlur = 6 + 8 * pulso;
+  ctx.fillStyle = pulso > 0.5 ? '#facc15' : '#f97316';
+  ctx.beginPath();
+  ctx.arc(x + r * 1.1, y - r * 1.1, 2.2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 // Explosões (anel que some): laranja do !bomb, azul do !gravity
@@ -534,6 +569,7 @@ function desenhar(agora) {
   desenharCamposGravidade(agora);
   desenharCopias(agora);
   desenharBolas(agora);
+  desenharDesempate(agora); // tijolo que foge e cartaz do mata-mata (desempate.js)
   desenharExtrasNatal(agora);
   desenharExtrasAnoNovo(agora);
   desenharRaiosChoque();
@@ -553,11 +589,14 @@ function desenharRankingPausa(agora) {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
   ctx.fillRect(0, 0, W, H);
 
-  const lista = viewers.filter(b => !b.streamer).slice().sort((a, b) => b.pontos - a.pontos).slice(0, 10);
+  const lista = montarLinhas().slice(0, 10); // mesma ordem do ranking (inclui o desempate)
   const cx = W / 2;
   const caixaW = 560;
   const linhaH = 38;
-  const caixaH = 150 + Math.max(1, lista.length) * linhaH + (ausentesFase.length ? 34 : 0);
+  // um texto por ausente (até 4 linhas; o resto vira "e mais N")
+  const linhasAusentes = ausentesFase.length ? Math.min(ausentesFase.length, 4) + (ausentesFase.length > 4 ? 1 : 0) : 0;
+  const alturaAusentes = linhasAusentes ? 30 + linhasAusentes * 22 : 0;
+  const caixaH = 150 + Math.max(1, lista.length) * linhaH + alturaAusentes;
   const x = cx - caixaW / 2;
   const y = Math.max(10, (H - caixaH) / 2);
 
@@ -610,16 +649,20 @@ function desenharRankingPausa(agora) {
     ctx.fillText(`${b.pontos} pts`, x + caixaW - 36, ly);
   });
 
-  // quem ficou ausente nesta fase (tinha poder e não usou nenhum): perdeu os pontos da fase
+  // quem ficou ausente nesta fase (tinha poder pronto e não usou nenhum): perdeu os pontos da fase
   if (ausentesFase.length) {
-    const nomes = ausentesFase.map(a => a.perdeu ? `${a.nome} (-${a.perdeu})` : a.nome);
-    let texto = 'Ausentes: ' + nomes.join(', ');
-    ctx.font = '15px sans-serif';
+    const ultimaLinha = y + caixaH - 14;
+    const primeiraLinha = ultimaLinha - (linhasAusentes - 1) * 22;
     ctx.textAlign = 'center';
-    while (ctx.measureText(texto).width > caixaW - 40 && texto.length > 20) texto = texto.slice(0, -2);
-    if (texto.length < ('Ausentes: ' + nomes.join(', ')).length) texto += '…';
     ctx.fillStyle = '#f97316';
-    ctx.fillText(texto, cx, y + caixaH - 18);
+    ctx.font = 'bold 16px sans-serif';
+    ctx.fillText('Ausentes: tinham poder pronto e não usaram', cx, primeiraLinha - 24);
+    ctx.font = '16px sans-serif';
+    ausentesFase.slice(0, 4).forEach((a, i) => {
+      const txt = a.perdeu ? `${a.nome}: perdeu ${a.perdeu} pts` : `${a.nome}: sem pontos para perder`;
+      ctx.fillText(txt, cx, primeiraLinha + i * 22);
+    });
+    if (ausentesFase.length > 4) ctx.fillText(`e mais ${ausentesFase.length - 4}`, cx, primeiraLinha + 4 * 22);
   }
   ctx.textAlign = 'left';
 }
