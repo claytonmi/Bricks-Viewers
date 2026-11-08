@@ -40,6 +40,7 @@
 }
 .icone-item.multibola { background: #22d3ee; }
 .icone-item.pontos { background: #facc15; font-size: 14px; }
+.icone-item.menos { background: #1f2937; color: #fff; font-size: 14px; box-shadow: 0 0 8px #f97316; }
 
 /* Abas da tela de informações */
 .abas {

@@ -47,7 +47,7 @@ function entrar(nome, streamer = false) {
   viewers.push(b);
   // modo intervalo com a fase rolando: nasce no chão, num lugar ao acaso, e já é lançada
   if (modoIntervalo && estado === 'jogando') {
-    const agora = performance.now();
+    const agora = agoraJogo();
     b.x = W * (0.2 + Math.random() * 0.6);
     b.y = PISO_Y - RAIO - 2;
     b.estado = 'jogando';
@@ -55,6 +55,24 @@ function entrar(nome, streamer = false) {
     b.aviso = `${b.nome} entrou`;
     b.avisoAte = agora + DURACAO_AVISO + AVISO_SOME;
   }
+  atualizarContador();
+}
+
+// Tira a bola de um viewer banido ou em timeout (a Twitch avisa pelo CLEARCHAT): ele some do jogo e do ranking.
+// Os tijolos que ele já quebrou continuam quebrados; os pontos dele saem junto com a bola.
+function removerViewer(nome) {
+  const alvo = String(nome).toLowerCase();
+  const b = viewers.find(v => !v.streamer && v.nome.toLowerCase() === alvo);
+  if (!b) return;
+  b.estado = 'removida'; // quem ainda tiver referência a esta bola deixa de tratá-la como jogando
+  b.presoEm = null;
+  b.buraco = null;
+  viewers = viewers.filter(v => v !== b);
+  copias = copias.filter(c => c.dono !== b); // a cópia do multibola some junto
+  camposGrav.forEach(c => {
+    c.presas = c.presas.filter(p => p.b !== b);
+    if (c.dono === b) c.fim = 0; // o campo que ele criou explode já e solta as bolas presas
+  });
   atualizarContador();
 }
 

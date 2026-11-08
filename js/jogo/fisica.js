@@ -25,11 +25,25 @@ function posicaoSlot(k) {
   return { x: W / 2 + deslocamento, y: alturaLinha(linha) };
 }
 
+// Velocidade horizontal mínima: a bola nunca fica quase vertical (~14 graus), senão quica presa na mesma coluna
+const VX_MINIMO = VEL_BASE * 0.25;
+
+// Se a bola está quase vertical, empurra a componente horizontal até o mínimo (mantém a velocidade e os sinais)
+function garantirAngulo(b) {
+  if (Math.abs(b.vx) >= VX_MINIMO) return;
+  const velocidade = Math.hypot(b.vx, b.vy) || VEL_BASE;
+  const sx = b.vx < 0 ? -1 : b.vx > 0 ? 1 : (Math.random() < 0.5 ? -1 : 1);
+  const sy = b.vy < 0 ? -1 : 1;
+  b.vx = sx * VX_MINIMO;
+  b.vy = sy * Math.sqrt(Math.max(0, velocidade * velocidade - VX_MINIMO * VX_MINIMO));
+}
+
 // Lança a bola para cima com um ângulo aleatório
 function lancar(b) {
   const vx = (Math.random() * 2 - 1) * VEL_BASE * 0.4;
   b.vx = vx;
   b.vy = -Math.sqrt(VEL_BASE * VEL_BASE - vx * vx);
+  garantirAngulo(b);
 }
 
 // Rebote na raquete: o ângulo depende de onde a bola bateu
@@ -39,6 +53,14 @@ function rebaterNaRaquete(b) {
   b.vx = Math.sin(ang) * VEL_BASE;
   b.vy = -Math.cos(ang) * VEL_BASE;
   b.y = PADDLE_Y - RAIO;
+  // streamer: a cada REBATIDAS_POR_PONTO rebatidas na raquete, +1 ponto (só com "Streamer pontua" marcado).
+  // Com mais viewers já há mais bolas para rebater, então o número é o mesmo para qualquer quantidade.
+  // no desempate a raquete só rebate: não conta para o streamer
+  if (estado !== 'desempate' && streamerPontua && ++rebatidasStreamer >= REBATIDAS_POR_PONTO) {
+    rebatidasStreamer = 0;
+    streamerPts++;
+    paddleBrilhoAte = agoraJogo() + 600; // raquete brilha quando o streamer ganha ponto
+  }
 }
 
 // Batidas para ganhar um poder: quanto mais jogadores, menos batidas (cada bola acerta menos tijolos).
@@ -99,6 +121,8 @@ function baterNoMeteoro(b, t) {
 
 // Uma batida num tijolo ou meteoro: conta para os poderes e, se quebrou, dá o ponto
 function registrarBatida(b, t) {
+  ultimoToqueTijolo = agoraJogo(); // qualquer encosto em tijolo zera o contador do fim de fase travado
+  if (t.desempate) { desempateBateu(b); return; } // tijolo do mini-jogo de empate: só conta a batida (desempate.js)
   // cópia do multibola não carrega poderes (só os pontos vão para o dono); a bola do streamer também não
   if (!b.dono && !b.streamer) {
     b.carga++;
@@ -117,17 +141,18 @@ function registrarBatida(b, t) {
       b.choque = true;
       b.batidasChoque = 0;
     }
-    marcarPoderPronto(b, performance.now()); // modo intervalo: regra do ausente
+    marcarPoderPronto(b, agoraJogo()); // modo intervalo: regra do ausente
   }
-  if (t.dragao) { danoNoDragao(b, performance.now()); return; } // Ano Novo: o dragão inteiro perde vida; o corpo não quebra
+  if (t.dragao) { danoNoDragao(b, agoraJogo()); return; } // Ano Novo: o dragão inteiro perde vida; o corpo não quebra
   t.vida--;
   if (t.vida <= 0) {
-    if (t.tipo) { romperTijoloAnoNovo(t, b.dono || b, performance.now()); return; } // Ano Novo: tijolo especial
+    if (t.tipo) { romperTijoloAnoNovo(t, b.dono || b, agoraJogo()); return; } // Ano Novo: tijolo especial
     if (t.circ) { quebrarMeteoro(t, b); return; } // fase 6: ver espaco.js
     t.vivo = false;
     tijolosVivos--;
     // 1 ponto só quando o tijolo quebra (chefão: 5 para quem deu a última batida)
     darPontos(b.dono || b, t.chefao ? CHEFAO_PONTOS : 1);
+    if (t.chefao) quebrarRestantes(b.dono || b); // chefão quebrado: os tijolos que sobravam também quebram
     if (t.item) soltarItem(t);
   }
 }
@@ -234,6 +259,7 @@ function atualizarBola(b, dt, agora) {
   // !speed dobra a velocidade; empurrada por !bomb fica mais rápida; atordoada pelo !shock anda a 1%
   const mult = (agora < b.velExtraAte ? MULT_SPEED : 1) * (agora < b.impulsoAte ? BOMBA_IMPULSO : 1) *
     (agora < b.atordoadaAte ? ATORDOADA_VEL : 1);
+  if (b.atraidaAte > agora) atrairParaTijolo(b); // fim de fase travado: anda para o tijolo mais perto
   b.x += b.vx * mult * dt;
   b.y += b.vy * mult * dt;
 
@@ -261,6 +287,9 @@ function atualizarBola(b, dt, agora) {
   }
 
   baterNosTijolos(b);
+
+  // depois de qualquer batida (chão, teto, raquete, tijolo, parede), a bola não fica quase vertical
+  garantirAngulo(b);
 
   // caiu
   if (b.y - RAIO > H) {

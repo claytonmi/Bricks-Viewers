@@ -81,11 +81,13 @@
           <p><b>Extras:</b></p>
           <ul>
             <li>Na Fase 1, os tijolos caem do céu como chuva e se empilham: 135 na partida com até 15 jogadores, aumentando até 250 com 100 jogadores. Quanto mais tijolos na tela, mais devagar a chuva.</li>
-            <li><b>Tijolo chefão:</b> na Fase 1, quando a chuva acaba e sobram 5 tijolos ou menos, cai um tijolo grande e dourado com 20 de vida. Quem der a última batida ganha 5 pontos. A partida só acaba depois que ele quebra.</li>
-            <li><b>Fase 5 (fábrica):</b> as linhas de tijolos andam como esteiras, cada uma para um lado, e o tijolo que sai por uma borda volta pela outra. Durante a partida, entram mais tijolos pela borda: 100 no total com até 15 jogadores, até 150 com 100 jogadores. Quando sobram 5 tijolos ou menos, o chefão desce e fica indo e voltando, cada vez mais rápido conforme perde vida.</li>
+            <li><b>Tijolo chefão:</b> na Fase 1, quando a chuva acaba e sobram 4 tijolos ou menos, cai um tijolo grande e dourado com 40 de vida. Quem der a última batida ganha 5 pontos e derruba os tijolos que ainda sobravam. A partida só acaba depois que ele quebra.</li>
+            <li><b>Fim de fase travado:</b> se nenhuma bola encostar nos tijolos que sobraram por 10 s, uma bola escolhida ao acaso é atraída para o tijolo mais perto por 3 s.</li>
+            <li><b>Desempate no pódio:</b> quem empata em pontos e está entre 1º e 4º lugar joga um mini-jogo no fim da partida. Só as bolas empatadas jogam, e um tijolo anda no alto da tela; cada batida dá 1 ponto de desempate, e o tijolo tem vida igual ao número de bolas. Quem ganhar fica na frente. O desempate só muda a ordem, não os pontos. Empates abaixo do 4º ficam juntos, na mesma posição.</li>
+            <li><b>Fase 5 (fábrica):</b> as linhas de tijolos andam como esteiras, cada uma para um lado, e o tijolo que sai por uma borda volta pela outra. Durante a partida, entram mais tijolos pela borda: 100 no total com até 15 jogadores, até 150 com 100 jogadores. Quando sobram 4 tijolos ou menos, o chefão desce e fica indo e voltando, cada vez mais rápido conforme perde vida.</li>
             <li><b>Fase 6 (espaço):</b> meteoros redondos espalhados pela tela. Os grandes precisam de 5 batidas e viram dois pedaços ao quebrar. Quando um acaba, outro entra pela parte de cima. Um buraco de minhoca aparece de tempos em tempos: a bola que chega perto da entrada escura sai pela saída clara, na mesma direção em que entrou. Com 100 jogadores, são 150 meteoros.</li>
-            <li data-evento="Fase Natalina" class="escondido"><b>Fase Natalina:</b> os tijolos são presentes e a neve cai. Quando sobram 5 tijolos ou menos, desce o saco do Papai Noel (20 de vida, balançando de um lado para o outro): quem der a última batida ganha 5 pontos e ele solta presentinhos que valem 1 ponto para a bola que pegar. De vez em quando passa uma rena voando lá em cima: acertar vale 10 pontos.</li>
-            <li><b>Modo intervalo:</b> para quando você sai da live. Sem raquete, o chão vira parede e as bolas nunca caem. Você entra como uma bola (fora do ranking), a partida começa sozinha em 20 s e o chat entra com !entrar a qualquer momento. Não cai item nenhum. As fases seguem em carrossel a partir da escolhida, com o ranking (top 10) por 15 s entre elas; os pontos somam, mas os poderes zeram a cada fase. Na Fase 3, no fim cai um chefão com 30 de vida na parede do meio. Quem tinha poder pronto e não usou nenhum na fase perde os pontos daquela fase. Clique em <b>Voltei!</b> (embaixo do jogo) ou digite <b>!voltei</b> no chat (só você e os moderadores) para parar e ver o ranking. Vocês também controlam o som pelo chat: <b>!mudo</b>, <b>!som</b> e <b>!volume 30</b>.</li>
+            <li data-evento="Fase Natalina" class="escondido"><b>Fase Natalina:</b> os tijolos são presentes e a neve cai. Quando sobram 4 tijolos ou menos, desce o saco do Papai Noel (40 de vida, balançando de um lado para o outro): quem der a última batida ganha 5 pontos e ele solta presentinhos que valem 1 ponto para a bola que pegar. De vez em quando passa uma rena voando lá em cima: acertar vale 10 pontos.</li>
+            <li><b>Modo intervalo:</b> para quando você sai da live. Sem raquete, o chão vira parede e as bolas nunca caem. Você entra como uma bola (fora do ranking), a partida começa sozinha em 20 s e o chat entra com !entrar a qualquer momento. Não cai item nenhum. As fases seguem em carrossel a partir da escolhida, com o ranking (top 10) por 15 s entre elas; os pontos somam, mas os poderes zeram a cada fase. Na Fase 3, no fim cai um chefão com 40 de vida na parede do meio. Quem tinha poder pronto e não usou nenhum na fase perde os pontos daquela fase. Clique em <b>Voltei!</b> (embaixo do jogo) ou digite <b>!voltei</b> no chat (só você e os moderadores) para parar e ver o ranking. Vocês também controlam o som pelo chat: <b>!mudo</b>, <b>!som</b> e <b>!volume 30</b>.</li>
             <li>Quanto mais jogadores, mais rápido saem os poderes: até 15 jogadores, os números abaixo; com 50 ou mais, !speed com 3 batidas, bomba com 6, !gravity com 7 e !shock com 8.</li>
             <li>A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba (use com <b>!bomb</b>). Dá para guardar no máximo 2.</li>
             <li>A cada 5 vezes que a sua bola bate em tijolos, você ganha uma carga de velocidade (use com <b>!speed</b>).</li>
@@ -93,10 +95,12 @@
             <li>A cada 13 vezes que a sua bola bate em tijolos, você ganha o choque (use com <b>!shock</b>). Também não acumula.</li>
             <li>Enquanto um poder seu está ativo, os poderes dos outros não pegam na sua bola. Se mandar outro poder nesse tempo, ele espera na fila e sai quando o primeiro acabar. Se a sua bola estiver sob o poder de outra (presa, atordoada ou empurrada), o seu comando também espera e sai 1,5 segundo depois que o efeito acabar.</li>
           </ul>
-          <p><b>Itens para o streamer</b> (20% dos tijolos soltam um item ao quebrar; pegue com a raquete antes que passe dela):</p>
+          <p><b>Pontos do streamer</b> (só com "Streamer pontua no ranking" marcado): você aparece no ranking como "Streamer" e ganha 1 ponto a cada 10 bolas que rebater com a raquete, com qualquer quantidade de viewers. Os itens de pontos (abaixo) dão mais 1 ponto cada.</p>
+          <p><b>Itens para o streamer</b> (20% dos tijolos soltam um item ao quebrar; pegue com a raquete antes que passe dela). Cada partida tem 5 itens de pontos, sempre, não importa o número de viewers:</p>
           <ul class="lista-itens">
             <li><span class="icone-item multibola">×2</span><b>Multibola</b>: cada bola do chat ganha uma cópia por 8 segundos. Os pontos da cópia vão para o dono. Pegar outro enquanto as cópias estão na tela renova o tempo.</li>
-            <li><span class="icone-item pontos">+</span><b>Pontos</b>: o streamer ganha 5 pontos. Só cai com "Streamer pontua no ranking" marcado.</li>
+            <li><span class="icone-item pontos">+</span><b>Pontos</b>: o streamer ganha 1 ponto. Só cai com "Streamer pontua no ranking" marcado.</li>
+            <li><span class="icone-item menos">−</span><b>Menos ponto</b> (bomba preta com brilho laranja): tira 1 ponto do streamer, sem passar de zero. Também só cai com "Streamer pontua no ranking" marcado.</li>
           </ul>
           </div>
 
@@ -157,7 +161,12 @@
       <div id="ranking" class="sobreposicao escondido">
         <div class="caixa">
           <h2>Ranking final</h2>
+          <p id="desempateAviso" class="escondido" style="margin:0 0 10px;padding:10px 12px;font-size:22px;font-weight:bold;text-align:center;color:#facc15;background:rgba(250,204,21,0.12);border:2px solid #facc15;border-radius:8px"></p>
           <ol id="rankingLista"></ol>
+          <div id="desempateEscolha" class="escondido" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+            <button id="btDesempateContinuar">Continuar ao desempate</button>
+            <button id="btDesempateCancelar">Cancelar</button>
+          </div>
           <button id="btCopiar">Copiar top 3</button>
           <button id="btVoltar">Voltar ao menu</button>
           <p id="rankingDica" class="ranking-dica escondido">Para jogar de novo, o streamer ou um moderador digita <b>!recomecar</b> no chat.</p>
@@ -185,6 +194,8 @@
     <aside id="rankingLateral" class="ranking-lateral">
       <h3>Ranking</h3>
       <ol id="rankingTopo"></ol>
+      <!-- Aviso curto quando alguém tenta entrar no meio da partida (some sozinho) -->
+      <p id="avisoEntrada" class="aviso-entrada escondido"></p>
 
       <!-- Simulador: aparece quando o canal digitado é simulador, simulacao ou dev (ver simulador.js) -->
       <div id="simulador" class="simulador escondido">
@@ -235,6 +246,18 @@
     </div>
   </div>
 
+  <!-- Menu de pausa (Esc no navegador): ranking atual, Continuar e Voltar ao menu -->
+  <div id="menuPausa" class="menu-pausa escondido">
+    <div class="menu-pausa-caixa">
+      <h2>Pausado</h2>
+      <ol id="pausaRanking"></ol>
+      <div class="menu-pausa-botoes">
+        <button id="btContinuar">Continuar</button>
+        <button id="btVoltarPausa">Voltar ao menu</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Ordem importa: cada arquivo usa o que os anteriores definiram -->
   <script src="js/nucleo/config.js"></script>
   <script src="js/dados/fases.js"></script>
@@ -253,6 +276,8 @@
   <script src="js/jogo/comandos.js"></script>
   <script src="js/jogo/partida.js"></script>
   <script src="js/jogo/intervalo.js"></script>
+  <script src="js/jogo/desempate-regras.js"></script>
+  <script src="js/jogo/desempate.js"></script>
   <script src="js/jogo/eventos/natal.js"></script>
   <script src="js/jogo/eventos/anonovo.js"></script>
   <script src="js/render/imagens.js"></script>

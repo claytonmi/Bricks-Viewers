@@ -8,7 +8,7 @@ function processarComando(usuario, mensagem, autoridade = false) {
   const texto = String(mensagem || '').replace(/[\u{E0000}​-‍⁠﻿]/gu, ' ');
   const partes = texto.trim().split(/\s+/);
   const cmd = (partes[0] || '').toLowerCase();
-  const agora = performance.now();
+  const agora = agoraJogo();
 
   if (cmd === '!voltei') {
     // o mesmo que o botão Voltei, para quando o jogo está no OBS e não dá para clicar
@@ -26,21 +26,39 @@ function processarComando(usuario, mensagem, autoridade = false) {
       definirVolume(v / 100);
       if (v > 0 && !somLigado) definirSom(true);
     }
+  } else if (cmd === '!vagas') {
+    // quantas vagas tem: o streamer usa no OBS, onde não dá para ver o menu (aparece no painel do ranking)
+    if (estado === 'menu') return;
+    const jogadores = viewers.filter(b => !b.streamer).length;
+    mostrarAvisoLateral(`Vagas: ${jogadores}/${maxViewers}`, 6000);
   } else if (cmd === '!entrar') {
     // modo intervalo: entra a qualquer momento (no meio da fase, no ranking entre as fases...)
+    // no desempate ninguém entra: o mini-jogo só tem as bolas que estão disputando
+    if (estado === 'desempate') return;
     if (estado === 'lobby' || (modoIntervalo && estado !== 'menu' && estado !== 'fim')) entrar(usuario);
+    else if (!modoIntervalo && (estado === 'contagem' || estado === 'jogando')) mostrarAvisoEntrada(usuario);
   } else if (corDoComando(partes)) {
     // Cor da bola: !azul, !#ff8800, !cor 255 136 0... (pode trocar durante a partida)
     if (estado === 'menu' || estado === 'fim') return;
     const b = viewers.find(v => v.nome === usuario);
-    if (!b || agora < b.corAteT) return; // cooldown de 5 s entre trocas
+    if (!b) return;
+    if (agora < b.corAteT) {
+      // trocou antes de 5 s: avisa em cima da bola, no máximo uma vez a cada 10 s por viewer
+      if (agora >= (b.msgCorAte || 0)) {
+        b.msgCorAte = agora + 10000;
+        b.aviso = `${b.nome}, calma! Tá trocando de roupa rápido demais`;
+        b.avisoAte = agora + 4000 + AVISO_SOME;
+      }
+      return;
+    }
     b.cor = corDoComando(partes);
     b.corAteT = agora + COOLDOWN_COR;
   } else if (PODERES.includes(cmd)) {
     // !speed, !bomb, !gravity, !shock: com outro poder ativo, entra na fila
     if (estado !== 'jogando') return;
     const b = viewers.find(v => v.nome === usuario);
-    if (!b || !temPoder(b, cmd)) return;
+    if (!b) return;
+    if (!temPoder(b, cmd)) { avisarFaltaBatidas(b, cmd, agora); return; }
     if (podeUsarAgora(b, agora)) usarPoder(b, cmd, agora);
     else {
       if (!b.fila.includes(cmd)) b.fila.push(cmd); // repetido na fila não entra

@@ -5,9 +5,7 @@
 const MEDALHAS = ['🥇', '🥈', '🥉'];   // ouro, prata, bronze
 // Texto do top 3 para o streamer colar no chat (viewers e, se marcado, o streamer)
 function textoTop3() {
-  const itens = viewers.filter(b => !b.streamer).map(b => ({ nome: b.nome, pontos: b.pontos }));
-  if (streamerPontua) itens.push({ nome: 'Streamer', pontos: streamerPts });
-  itens.sort((a, b) => b.pontos - a.pontos);
+  const itens = montarLinhas(); // mesma ordem do ranking, com o desempate
   const linhas = itens.slice(0, 3).map((j, i) => `${MEDALHAS[i]} ${j.nome} - ${j.pontos} pts`);
   return ['🏆 Bricks Viewers - Top 3', ...linhas].join('\n');
 }
@@ -40,6 +38,22 @@ function copiarAntigo(texto, feedback) {
 
 document.getElementById('btCopiar').addEventListener('click', copiarTop3);
 
+// Aviso curto embaixo do ranking lateral (some sozinho depois de uns segundos)
+let timerAvisoLateral = null;
+function mostrarAvisoLateral(texto, ms = 5000) {
+  const el = document.getElementById('avisoEntrada');
+  if (!el) return;
+  el.textContent = texto;
+  el.classList.remove('escondido');
+  clearTimeout(timerAvisoLateral);
+  timerAvisoLateral = setTimeout(() => el.classList.add('escondido'), ms);
+}
+
+// Quem tenta entrar no meio da partida (modo normal)
+function mostrarAvisoEntrada(nome) {
+  mostrarAvisoLateral(`${nome} só pode entrar na próxima rodada`);
+}
+
 // Ranking final (ao lado do jogo): a lista e os botões. Aberto pelo link do OBS, sem botões e com a dica do comando.
 function mostrarRankingFinal(lista) {
   document.getElementById('btVoltei').classList.add('escondido');
@@ -47,7 +61,7 @@ function mostrarRankingFinal(lista) {
   document.getElementById('btCopiar').classList.toggle('escondido', modoAutomatico);
   document.getElementById('btVoltar').classList.toggle('escondido', modoAutomatico);
   document.getElementById('rankingDica').classList.toggle('escondido', !modoAutomatico);
-  atualizarDicaRanking(performance.now());
+  atualizarDicaRanking(agoraJogo());
   document.querySelector('#ranking h2').textContent = modoIntervalo ? 'Ranking do intervalo' : 'Ranking final';
 
   const ol = document.getElementById('rankingLista');
@@ -57,7 +71,7 @@ function mostrarRankingFinal(lista) {
   const mostrados = modoAutomatico ? lista.slice(0, 10) : lista;
   mostrados.forEach((j, i) => {
     const li = document.createElement('li');
-    li.textContent = `${i + 1}º  ${j.nome}  -  ${j.pontos} pts`; // textContent: nome vem do chat
+    li.textContent = `${j.posicao || i + 1}º  ${j.nome}  -  ${j.pontos} pts`; // textContent: nome vem do chat
     if (i < 3) li.classList.add('top3');
     if (j.streamer) li.classList.add('streamer');
     ol.appendChild(li);
@@ -80,17 +94,14 @@ function atualizarRankingLateral() {
   if (!painel || !lista) return;
 
   // aparece na contagem e durante a partida; some no menu e no ranking final
-  const visivel = estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa';
+  const visivel = estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa' || estado === 'desempate';
   painel.style.visibility = visivel ? 'visible' : 'hidden';
   if (!visivel) return;
 
   // modo intervalo: a bola do streamer não entra no ranking
-  const itens = viewers.filter(b => !b.streamer).map(b => ({ chave: b.nome, nome: b.nome, pontos: b.pontos, streamer: false }));
-  if (streamerPontua) itens.push({ chave: '__streamer__', nome: 'Streamer', pontos: streamerPts, streamer: true });
-  itens.sort((a, b) => b.pontos - a.pontos); // sort é estável: quem entrou antes fica na frente em empate
-  const top = itens; // todos os jogadores (a lista rola se for grande)
+  const top = montarLinhas(); // todos os jogadores, na ordem do ranking com o desempate (a lista rola se for grande)
 
-  const chave = top.map(j => j.chave + ':' + j.pontos).join('|');
+  const chave = top.map(j => j.chave + ':' + j.pontos + ':' + j.posicao).join('|');
   if (chave === chaveRankingLateral) return;
   chaveRankingLateral = chave;
 
