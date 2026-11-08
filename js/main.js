@@ -58,7 +58,7 @@ function loop() {
   }
 
   // Controle do streamer só começa depois do Pronto
-  if (estado === 'contagem' || estado === 'jogando') {
+  if (estado === 'contagem' || estado === 'jogando' || estado === 'desempate') {
     if (teclas.esq) paddleX -= VEL_PADDLE * dt;
     if (teclas.dir) paddleX += VEL_PADDLE * dt;
     paddleX = Math.max(PADDLE_W / 2, Math.min(W - PADDLE_W / 2, paddleX));

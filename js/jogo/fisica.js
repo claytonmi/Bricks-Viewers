@@ -55,7 +55,8 @@ function rebaterNaRaquete(b) {
   b.y = PADDLE_Y - RAIO;
   // streamer: a cada REBATIDAS_POR_PONTO rebatidas na raquete, +1 ponto (só com "Streamer pontua" marcado).
   // Com mais viewers já há mais bolas para rebater, então o número é o mesmo para qualquer quantidade.
-  if (streamerPontua && ++rebatidasStreamer >= REBATIDAS_POR_PONTO) {
+  // no desempate a raquete só rebate: não conta para o streamer
+  if (estado !== 'desempate' && streamerPontua && ++rebatidasStreamer >= REBATIDAS_POR_PONTO) {
     rebatidasStreamer = 0;
     streamerPts++;
     paddleBrilhoAte = agoraJogo() + 600; // raquete brilha quando o streamer ganha ponto
@@ -121,6 +122,7 @@ function baterNoMeteoro(b, t) {
 // Uma batida num tijolo ou meteoro: conta para os poderes e, se quebrou, dá o ponto
 function registrarBatida(b, t) {
   ultimoToqueTijolo = agoraJogo(); // qualquer encosto em tijolo zera o contador do fim de fase travado
+  if (t.desempate) { desempateBateu(b); return; } // tijolo do mini-jogo de empate: só conta a batida (desempate.js)
   // cópia do multibola não carrega poderes (só os pontos vão para o dono); a bola do streamer também não
   if (!b.dono && !b.streamer) {
     b.carga++;

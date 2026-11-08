@@ -14,6 +14,8 @@ function ordenarLinhas(linhas) {
       if (b.l.pontos !== a.l.pontos) return b.l.pontos - a.l.pontos;
       const oa = a.l.ordem, ob = b.l.ordem;
       if (oa !== undefined && ob !== undefined && oa !== ob) return oa - ob;
+      if (oa !== undefined && ob === undefined) return -1; // quem decidiu o desempate fica na frente de quem não jogou
+      if (oa === undefined && ob !== undefined) return 1;
       if (!!a.l.streamer !== !!b.l.streamer) return a.l.streamer ? 1 : -1;
       return a.i - b.i;
     })
