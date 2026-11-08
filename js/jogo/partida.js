@@ -78,7 +78,7 @@ function sortearFaseIntervalo() {
 // Menu no centro com o ranking atual, Continuar e Voltar ao menu. O relógio do jogo para junto.
 function alternarPausa() {
   if (pausadoJogo) { continuarJogo(); return; }
-  if (estado !== 'lobby' && estado !== 'contagem' && estado !== 'jogando') return;
+  if (estado !== 'lobby' && estado !== 'contagem' && estado !== 'jogando' && estado !== 'desempate') return;
   pausadoJogo = true;
   pausadoEm = performance.now();
   mostrarMenuPausa();
