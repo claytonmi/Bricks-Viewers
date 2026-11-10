@@ -148,7 +148,8 @@ const BARRA_VOL = { x: W - 300, y: 44, w: 110, h: 24 };
 // Cores que o viewer pode escolher com !azul, !vermelho...
 const CORES = {
   azul: '#3b82f6', vermelho: '#ef4444', amarelo: '#facc15', verde: '#22c55e',
-  branco: '#ffffff', roxo: '#a855f7', laranja: '#f97316', rosa: '#ec4899', ciano: '#22d3ee'
+  branco: '#ffffff', roxo: '#a855f7', laranja: '#f97316', rosa: '#ec4899', ciano: '#22d3ee',
+  preto: '#000000' // bola escura ganha contorno branco (ver bolaColorida)
 };
 
 // Qual imagem de tijolo mostrar conforme a vida restante

@@ -10,7 +10,7 @@ let contadorSimulado = 0;
 let nomeSimulado = 'Streamer';     // base dos nomes dos viewers falsos
 
 const COMANDOS_SIMULADOS = ['!azul', '!vermelho', '!amarelo', '!verde', '!branco', '!roxo',
-                            '!laranja', '!rosa', '!ciano', '!speed', '!bomb', '!gravity', '!shock'];
+                            '!laranja', '!rosa', '!ciano', '!preto', '!speed', '!bomb', '!gravity', '!shock'];
 
 // Liga o modo simulação: fecha o chat (se estiver aberto), mostra o painel e libera o Iniciar
 // (o painel fica no ranking lateral, que só aparece depois do Iniciar)

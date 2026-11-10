@@ -88,7 +88,7 @@ function prepararGrupo(agora) {
   viewers = bolas;
   tijolos = []; // o tijolo só nasce quando o grupo começa a jogar
   d.etapa = criarDisputa(grupo.map(l => l.chave));
-  d.ganhos = new Map(); // pontos ganhos neste grupo (ainda desfazíveis)
+  d.ganhos = []; // pontos dados neste grupo, um por vez (ainda desfazíveis)
   d.tijolo = null;
   d.fase = 'aviso';
   d.comecaEm = agora + DESEMPATE_AVISO;
@@ -152,20 +152,45 @@ function desempateBateu(b) {
   if (res.fim) d.acabouGrupo = true; // o grupo acabou: concluído no fim do quadro
 }
 
-// +1 ponto para quem ganhou a posição no desempate (o streamer soma no próprio contador)
+// Todos os jogadores do ranking durante o desempate (inclusive os que estão fora do campo)
+function jogadoresDoRanking(d) {
+  const lista = d.originais.filter(b => !b.streamer).map(b => ({ chave: b.nome, ref: b }));
+  if (streamerPontua) lista.push({ chave: BOLA_STREAMER_CHAVE, ref: null });
+  return lista;
+}
+
+const pontosDoJogador = p => (p.chave === BOLA_STREAMER_CHAVE ? streamerPts : p.ref.pontos);
+
+function somarPontoDesempate(d, p) {
+  d.ganhos.push(p);
+  if (p.chave === BOLA_STREAMER_CHAVE) streamerPts++;
+  else p.ref.pontos++;
+}
+
+// +1 ponto para quem ganhou a posição no desempate. Se com isso ele empatar com alguém que já estava
+// na frente (e não jogou este desempate), esse alguém também ganha +1 e continua na frente; se esse +1
+// empatar com outro que estava mais acima, o mesmo vale para ele, e assim por diante.
 function darPontoDesempate(d, chave) {
-  d.ganhos.set(chave, (d.ganhos.get(chave) || 0) + 1);
-  if (chave === BOLA_STREAMER_CHAVE) streamerPts++;
-  else { const b = d.bolas.get(chave); if (b) b.pontos++; }
+  somarPontoDesempate(d, { chave, ref: chave === BOLA_STREAMER_CHAVE ? null : d.bolas.get(chave) });
+  const noGrupo = new Set(d.grupos[d.indice].map(l => l.chave));
+  const fora = jogadoresDoRanking(d).filter(p => !noGrupo.has(p.chave));
+  const subiram = new Set(); // quem já ganhou o +1 agora não conta de novo
+  let total = pontosDoJogador({ chave, ref: d.bolas.get(chave) });
+  for (;;) {
+    const empatados = fora.filter(p => !subiram.has(p) && pontosDoJogador(p) === total);
+    if (empatados.length === 0) break;
+    empatados.forEach(p => { somarPontoDesempate(d, p); subiram.add(p); });
+    total++;
+  }
 }
 
 // Desfaz os pontos já dados no grupo atual (quando o desempate para no meio: Voltei ou troca de cena)
 function desfazerPontosDesempate(d) {
-  for (const [chave, n] of d.ganhos) {
-    if (chave === BOLA_STREAMER_CHAVE) streamerPts -= n;
-    else { const b = d.bolas.get(chave); if (b) b.pontos -= n; }
+  for (const p of d.ganhos) {
+    if (p.chave === BOLA_STREAMER_CHAVE) streamerPts--;
+    else p.ref.pontos--;
   }
-  d.ganhos = new Map();
+  d.ganhos = [];
 }
 
 // Mensagem grande acabou: começa o jogo do grupo. O tijolo nasce no alto e as bolas são lançadas para cima.
