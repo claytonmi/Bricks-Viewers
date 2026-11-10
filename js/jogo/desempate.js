@@ -20,7 +20,7 @@ let desempateSuspenso = null;       // Voltei no meio do desempate: função que
 // Linhas do ranking (viewers e, se marcado, o streamer), já ordenadas, com a posição de cada uma.
 // Durante o desempate, o ranking vem de todos os jogadores da fase (não só das bolas que estão no campo).
 function montarLinhas() {
-  const origem = desempate ? desempate.originais : viewers;
+  const origem = desempate && estado === 'desempate' ? desempate.originais : viewers;
   const linhas = origem.filter(b => !b.streamer).map(b => ({ chave: b.nome, nome: b.nome, pontos: b.pontos, streamer: false, ref: b }));
   if (streamerPontua) linhas.push({ chave: BOLA_STREAMER_CHAVE, nome: 'Streamer', pontos: streamerPts, streamer: true, ref: null });
   for (const l of linhas) l.ordem = ordensDesempate.get(l.chave);
@@ -257,7 +257,7 @@ function atualizarTextoDesempate() {
 // Cartaz no topo do jogo (mata-mata) com a vida do tijolo e o tempo. O tijolo é desenhado pela tela normal.
 function desenharDesempate(agora) {
   const d = desempate;
-  if (!d) return;
+  if (!d || estado !== 'desempate') return;
   const aviso = d.fase === 'aviso';
   const segundos = Math.max(0, Math.ceil(((aviso ? d.comecaEm : d.fimEm) - agora) / 1000));
   const titulo = aviso ? `Desempate: ${textoDoGrupo()}` : `Mata-mata: ${textoDoGrupo()}`;
@@ -314,6 +314,16 @@ function cancelarDesempate() {
   esconderEscolhaDesempate();
   estado = 'fim';
   mostrarRankingFinal(montarLinhas());
+}
+
+// Voltou ao menu ou começou outra partida: apaga qualquer desempate (em andamento ou parado no Voltei).
+// Sem isso, o desempate antigo continuava na tela e o ranking da partida nova mostrava os jogadores antigos.
+function limparDesempate() {
+  desempate = null;
+  desempateSuspenso = null;
+  esconderEscolhaDesempate();
+  const aviso = document.getElementById('desempateAviso');
+  if (aviso) aviso.classList.add('escondido');
 }
 
 // Trocou de cena ou saiu no meio: some com o mini-jogo sem dar ordem a ninguém

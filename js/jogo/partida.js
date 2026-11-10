@@ -44,6 +44,7 @@ function iniciarPartida() {
   viewers = [];
   streamerPts = 0;
   ordensDesempate = new Map(); // partida nova: nenhum desempate decidido ainda
+  limparDesempate();           // nem desempate antigo pendurado (desempate.js)
   paddleX = W / 2;
   estado = 'lobby';
   // modo intervalo: o streamer já entra como uma bola e a partida começa sozinha em 20 s
@@ -112,6 +113,7 @@ function mostrarMenuPausa() {
 // Volta para a configuração (o chat continua conectado)
 function voltarMenu() {
   if (pausadoJogo) continuarJogo();
+  limparDesempate(); // voltou ao menu no meio do desempate: ele não pode continuar na próxima partida
   estado = 'menu';
   pararMusica();
   viewers = [];
