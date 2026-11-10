@@ -5,7 +5,7 @@
 // Desligado enquanto CONTADOR_CODIGO estiver vazio. Para ligar: crie o site em goatcounter.com e coloque aqui
 // o código do endereço (o "xxx" de https://xxx.goatcounter.com).
 
-const CONTADOR_CODIGO = '';
+const CONTADOR_CODIGO = 'bricksviewers'; // painel: https://bricksviewers.goatcounter.com
 
 const eventosPendentes = []; // eventos que chegaram antes do script do contador carregar
 
