@@ -33,7 +33,8 @@ Bricks-Viewers/
     │   └── arquivos.js     imagens carregadas ao abrir
     ├── servicos/
     │   ├── audio.js        música e botão de som
-    │   └── twitch.js       conexão com o chat
+    │   ├── twitch.js       conexão com o chat
+    │   └── contador.js     contador de acessos (GoatCounter)
     ├── jogo/
     │   ├── fisica.js       bola, rebotes e colisões
     │   ├── itens.js        itens que caem
@@ -79,4 +80,15 @@ Bricks-Viewers/
    - `padrao`: o desenho dos tijolos;
    - `chuva` (opcional, ex: `{ total: 250 }`): os tijolos caem do céu em vez de começarem prontos. O `total` vale com 100 jogadores; com até 15, caem 135. A vida de cada um é sorteada entre os números do `padrao`. No fim cai o tijolo chefão.
    - `esteira` (opcional, ex: `{ vel: 40, total: 150 }`): as linhas de tijolos andam para os lados. Use sem paredes. O `total` vale com 100 jogadores (com até 15, são 100): começa com os do `padrao` e os que faltam entram pela borda durante a partida. No fim desce o tijolo chefão.
-   - `chefaoIntervalo` (opcional, ex: `{ parede: 1 }`): só no modo intervalo. Quando todos os tijolos quebram, cai um chefão com 30 de vida no centro da parede indicada (posição na lista de `paredes`, começando do 0).
+   - `chefaoIntervalo` (opcional, ex: `{ parede: 1 }`): só no modo intervalo. Quando todos os tijolos quebram, cai um chefão com 40 de vida no centro da parede indicada (posição na lista de `paredes`, começando do 0).
+
+## Contador de acessos
+
+O site conta as visitas com o [GoatCounter](https://www.goatcounter.com), que não usa cookies. Além das visitas, conta dois eventos: `copiou-link-obs` (clique em **Copiar link do OBS**) e `abriu-no-obs` (página aberta pelo link do OBS). Nenhum nome de canal ou de viewer vai para o contador: o endereço é enviado sem a parte depois do `?`.
+
+Para ligar:
+
+1. Crie uma conta em goatcounter.com e escolha o código do site (o `xxx` de `https://xxx.goatcounter.com`).
+2. Em `js/servicos/contador.js`, coloque esse código em `CONTADOR_CODIGO`.
+
+Com o código vazio, o contador fica desligado. Abrindo o jogo pelo próprio computador (`localhost`), o GoatCounter não conta.

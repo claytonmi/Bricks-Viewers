@@ -2,7 +2,7 @@
 // Tijolos marcados soltam um item e a raquete pode pegar.
 
 // Tijolo marcado quebrou: solta um item no centro dele.
-// 1 em 4 é multibola; os outros dão pontos ao streamer, e 1 em 3 deles é vermelho (tira ponto).
+// 1 em 4 é multibola; os outros dão pontos ao streamer, e 1 em 3 deles é a bomba preta (tira ponto).
 // Só caem com "Streamer pontua" marcado.
 function soltarItem(t) {
   if (modoIntervalo) return; // modo intervalo: sem raquete, não cai item nenhum
@@ -43,7 +43,7 @@ function atualizarItens(dt, agora) {
       if (it.tipo === 'multibola') {
         ativarMultibola(agora);
         paddleBrilhoAte = agora + 600;
-      } else if (it.tipo === 'menos') { // item vermelho: tira 1 ponto do streamer, sem passar de 0
+      } else if (it.tipo === 'menos') { // bomba preta: tira 1 ponto do streamer, sem passar de 0
         if (streamerPontua) streamerPts = Math.max(0, streamerPts - ITEM_PONTOS);
       } else if (streamerPontua) { // o ponto do item só vale quando "Streamer pontua" está marcado
         streamerPts += ITEM_PONTOS;

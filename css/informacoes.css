@@ -40,7 +40,18 @@
 }
 .icone-item.multibola { background: #22d3ee; }
 .icone-item.pontos { background: #facc15; font-size: 14px; }
-.icone-item.menos { background: #1f2937; color: #fff; font-size: 14px; box-shadow: 0 0 8px #f97316; }
+/* Menos ponto: a mesma bomba do jogo (desenharBombaItem), com pavio, faísca e brilho laranja pulsando */
+.icone-item.menos { width: 20px; height: 20px; border-radius: 0; overflow: visible; }
+.icone-item.menos .corpo { fill: #1f2937; animation: brilho-bomba 0.75s ease-in-out infinite alternate; }
+.icone-item.menos .faisca { animation: faisca-bomba 0.75s steps(1) infinite; }
+@keyframes brilho-bomba {
+  from { filter: drop-shadow(0 0 2px #f97316); }
+  to   { filter: drop-shadow(0 0 5px #f97316); }
+}
+@keyframes faisca-bomba {
+  0%  { fill: #facc15; }
+  50% { fill: #f97316; }
+}
 
 /* Abas da tela de informações */
 .abas {

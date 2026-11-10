@@ -1,7 +1,7 @@
 // ===== Fase de Natal =====
 // Fase de evento (só liberada em dezembro). Os tijolos são presentes, a neve cai na tela,
 // no fim desce o chefão saco do Papai Noel e, de vez em quando, uma rena passa voando lá em cima.
-// - Saco: quando sobram 5 tijolos ou menos, desce e fica balançando de um lado para o outro (mais rápido
+// - Saco: quando sobram 4 tijolos ou menos, desce e fica balançando de um lado para o outro (mais rápido
 //   conforme perde vida). Quem dá a última batida ganha os pontos do chefão; ao estourar, solta
 //   presentinhos que valem 1 ponto para a bola que pegar.
 // - Rena puxando o trenó: passa a cada 20 a 35 s; a bola que acertar (rena ou trenó) ganha 10 pontos e ela foge.

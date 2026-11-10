@@ -3,7 +3,7 @@
 
 // Cria a bola de um viewer no lobby
 // (modo intervalo: dá para entrar a qualquer momento; durante a fase, a bola já sai jogando)
-function entrar(nome, streamer = false) {
+function entrar(nome, streamer = false, login = nome) {
   const jogadores = viewers.filter(b => !b.streamer).length; // a bola do streamer não ocupa vaga
   if (!streamer && jogadores >= maxViewers) return;
   if (viewers.some(b => b.nome.toLowerCase() === String(nome).toLowerCase())) return;
@@ -14,6 +14,7 @@ function entrar(nome, streamer = false) {
     usouNaFase: false, // modo intervalo: usou algum poder na fase atual
     poderDesde: 0,   // modo intervalo: desde quando tem um poder pronto nesta fase (0 = nenhum)
     nome,
+    login: String(login).toLowerCase(), // login da Twitch: o ban chega por ele (o nome pode ser diferente)
     cor: '#ffffff',
     x: p.x,
     y: p.y,
@@ -62,8 +63,11 @@ function entrar(nome, streamer = false) {
 // Os tijolos que ele já quebrou continuam quebrados; os pontos dele saem junto com a bola.
 function removerViewer(nome) {
   const alvo = String(nome).toLowerCase();
-  const b = viewers.find(v => !v.streamer && v.nome.toLowerCase() === alvo);
+  // procura também nas bolas fora do campo durante o desempate (lá só ficam as empatadas)
+  const todas = desempate ? desempate.originais : viewers;
+  const b = todas.find(v => !v.streamer && (v.login === alvo || v.nome.toLowerCase() === alvo));
   if (!b) return;
+  if (desempate) desempate.originais = desempate.originais.filter(v => v !== b); // não volta ao fim do desempate
   b.estado = 'removida'; // quem ainda tiver referência a esta bola deixa de tratá-la como jogando
   b.presoEm = null;
   b.buraco = null;

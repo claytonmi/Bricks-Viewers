@@ -90,7 +90,7 @@ canvas.addEventListener('click', e => {
     alternarSom();
     return;
   }
-  if (estado !== 'lobby') return;
+  if (estado !== 'lobby' || modoIntervalo) return; // no intervalo não tem Pronto: a partida começa sozinha
   const b = BOTAO_PRONTO;
   if (p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) {
     iniciarContagem();

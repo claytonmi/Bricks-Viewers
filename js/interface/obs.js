@@ -15,6 +15,7 @@ function inicioPeloLink() {
     caixa.onchange({ target: caixa });
     iniciarAoConectar = true;
     modoAutomatico = true;
+    contarEvento('abriu-no-obs'); // contador de acessos: só o evento, sem o canal
     ouvirCenaDoObs();
     ajustarEscala();
   }
@@ -131,6 +132,7 @@ document.getElementById('btLinkObs').onclick = () => {
   }
   const link = `${location.origin}${location.pathname}?canal=${canal}` +
     `&modo=intervalo&fase=${indiceFase + 1}&vagas=${document.getElementById('qtd').value}`;
+  contarEvento('copiou-link-obs'); // contador de acessos: só o evento, sem o canal
   copiarAntigo(link, () => {
     status.textContent = 'Link copiado! No OBS: fonte Navegador, cole o link e use o tamanho da sua live (1280x720 ou 1920x1080).';
   });

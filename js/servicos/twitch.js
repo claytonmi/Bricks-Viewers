@@ -72,7 +72,8 @@ function abrirConexao(canal) {
         // streamer ou moderador (as tags vêm da Twitch, o viewer não consegue falsificar)
         const autoridade = tags.mod === '1' || /(^|,)broadcaster\//.test(tags.badges || '');
         // nome de exibição; se vier vazio, usa o login (que sempre existe)
-        processarComando(tags['display-name'] || m[2], m[3], autoridade);
+        // o login vai junto: o ban (CLEARCHAT) chega pelo login, que pode ser diferente do nome de exibição
+        processarComando(tags['display-name'] || m[2], m[3], autoridade, m[2]);
         continue;
       }
       // Ban ou timeout: a Twitch manda CLEARCHAT com o login do viewer (sem login, é a limpeza do chat inteiro)

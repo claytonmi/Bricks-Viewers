@@ -3,7 +3,8 @@
 
 // Recebe uma mensagem do chat (ou do teste) e age conforme o comando
 // (autoridade = quem mandou é o streamer ou um moderador)
-function processarComando(usuario, mensagem, autoridade = false) {
+// (login = nome de login na Twitch; o ban chega por ele)
+function processarComando(usuario, mensagem, autoridade = false, login = usuario) {
   // 7TV/Chatterino põem um caractere invisível no fim de mensagens repetidas: tira antes de ler
   const texto = String(mensagem || '').replace(/[\u{E0000}​-‍⁠﻿]/gu, ' ');
   const partes = texto.trim().split(/\s+/);
@@ -35,7 +36,7 @@ function processarComando(usuario, mensagem, autoridade = false) {
     // modo intervalo: entra a qualquer momento (no meio da fase, no ranking entre as fases...)
     // no desempate ninguém entra: o mini-jogo só tem as bolas que estão disputando
     if (estado === 'desempate') return;
-    if (estado === 'lobby' || (modoIntervalo && estado !== 'menu' && estado !== 'fim')) entrar(usuario);
+    if (estado === 'lobby' || (modoIntervalo && estado !== 'menu' && estado !== 'fim')) entrar(usuario, false, login);
     else if (!modoIntervalo && (estado === 'contagem' || estado === 'jogando')) mostrarAvisoEntrada(usuario);
   } else if (corDoComando(partes)) {
     // Cor da bola: !azul, !#ff8800, !cor 255 136 0... (pode trocar durante a partida)

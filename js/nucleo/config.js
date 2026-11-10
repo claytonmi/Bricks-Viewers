@@ -51,7 +51,7 @@ const ITEM_PONTOS = 1;
 const ITENS_PONTOS_PARTIDA = 5; // quantos itens de pontos caem em cada partida, sempre (não importa o número de viewers)           // pontos do streamer ao pegar um item com a raquete
 const REBATIDAS_POR_PONTO = 10;  // "Streamer pontua": a cada 10 rebatidas na raquete, +1 ponto do streamer
 const MULTIBOLA_CHANCE = 0.25;   // dos itens que caem, 1 em 4 é multibola (os outros dão pontos ao streamer)
-const ITEM_MENOS_CHANCE = 0.33;  // dos itens de pontos, 1 em 3 é vermelho: tira 1 ponto do streamer (nunca fica abaixo de 0)
+const ITEM_MENOS_CHANCE = 0.33;  // dos itens de pontos, 1 em 3 é a bomba preta: tira 1 ponto do streamer (nunca fica abaixo de 0)
 const MULTIBOLA_TEMPO = 8000;    // multibola: cada bola ganha uma cópia por 8 s (os pontos da cópia vão para o dono)
 
 // Muitos jogadores: cada bola acerta menos tijolos, então os poderes saem com menos batidas
