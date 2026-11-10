@@ -2,7 +2,8 @@
 // Sem desenho nem páginas: só contas sobre pontos, posições e tijolo. Testadas em dev/testes-desempate.js.
 // Um jogador "decidido" tem uma ordem do desempate (0 = 1º do grupo); quem não jogou não tem.
 
-const DESEMPATE_ATE = 4;      // grupos que começam em 1º a 4º lugar jogam o desempate
+const DESEMPATE_ATE = 3;      // só jogam o desempate os empates que envolvem o pódio: grupo que começa em 1º, 2º ou 3º
+                              // (3º com 4º joga; 4º com 5º não)
 const DESEMPATE_MIN_PONTOS = 1; // quem tem 0 pontos não disputa (ninguém pontuou, não há o que desempatar)
 
 // Ordena as linhas do ranking: mais pontos primeiro. Em empate: quem já tem ordem do desempate vem na ordem dele;
