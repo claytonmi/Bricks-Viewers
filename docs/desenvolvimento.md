@@ -12,6 +12,7 @@ Bricks-Viewers/
 ├── assets/
 │   ├── audio/              música
 │   └── imagens/
+│       ├── espaco/         meteoros da Fase 6
 │       ├── fases/          fundos das fases
 │       ├── interface/      imagens do menu
 │       └── sprites/        bola, raquete e tijolos
@@ -81,6 +82,19 @@ Bricks-Viewers/
    - `chuva` (opcional, ex: `{ total: 250 }`): os tijolos caem do céu em vez de começarem prontos. O `total` vale com 100 jogadores; com até 15, caem 135. A vida de cada um é sorteada entre os números do `padrao`. No fim cai o tijolo chefão.
    - `esteira` (opcional, ex: `{ vel: 40, total: 150 }`): as linhas de tijolos andam para os lados. Use sem paredes. O `total` vale com 100 jogadores (com até 15, são 100): começa com os do `padrao` e os que faltam entram pela borda durante a partida. No fim desce o tijolo chefão.
    - `chefaoIntervalo` (opcional, ex: `{ parede: 1 }`): só no modo intervalo. Quando todos os tijolos quebram, cai um chefão com 40 de vida no centro da parede indicada (posição na lista de `paredes`, começando do 0).
+
+## Imagens dos meteoros (Fase 6)
+
+Os meteoros vêm de `assets/imagens/espaco/`: `meteoro-<cor>-<número>.png`, com as cores `marrom`, `azul` e `dourado` (o primeiro terço dos meteoros da partida é marrom, o segundo azul e o último dourado) e 3 formatos de cada (`1`, `2` e `3`, sorteados para cada meteoro). As imagens carregam quando a fase é montada.
+
+Para trocar a arte, é só editar ou substituir esses PNGs, mantendo os mesmos nomes. Cuidados:
+
+- Imagem quadrada, com fundo transparente.
+- O meteoro deve ocupar a mesma proporção das imagens atuais: nas de 128 × 128, o raio é de 60 px (um pouco de margem em volta). Se mudar essa proporção, ajuste `METEORO_IMAGEM_RAIO` em `js/jogo/espaco.js`; senão, o desenho fica maior ou menor que a área onde a bola bate.
+- O meteoro gira devagar no jogo, então a imagem não precisa ter "lado de cima".
+- As trincas que aparecem quando o meteoro grande perde vida são desenhadas pelo jogo por cima da imagem.
+
+Se uma imagem faltar ou não carregar, o jogo desenha o meteoro sozinho, então ele nunca fica invisível.
 
 ## Contador de acessos
 

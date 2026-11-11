@@ -14,6 +14,7 @@ function espacoAtiva() {
 
 // Monta os meteoros da fase: 20 já na tela, espalhados e parados. Chamado por montarFase.
 function montarEspaco() {
+  carregarImagensEspaco(); // as imagens dos meteoros já carregam quando a fase é montada
   espacoTotal = FASES[faseIndex].espaco.total;
   espacoSeq = 0;
   proximaGota = 0;
@@ -59,10 +60,39 @@ function novoMeteoro(x, y, r, grande, grupo, seq, pedaco = false) {
     x: x - r, y: y - r, w: 2 * r, h: 2 * r,   // caixa em volta do círculo (para o que espera por tijolos em caixa)
     vivo: true, vida: vidaMax, vidaMax,
     item: false, cor: corDoMeteoro(seq),
+    // imagem: cor pela ordem de chegada e um dos formatos, sorteado (ver imagemDoMeteoro)
+    corNome: METEORO_CORES_NOMES[ESPACO_CORES.indexOf(corDoMeteoro(seq))] || 'marrom',
+    variante: 1 + Math.floor(Math.random() * METEORO_VARIANTES),
     forma, crateras, trincas, giro: Math.random() * Math.PI * 2,
     entrando: false, destino: null,
     chefao: false, linha: null, slot: null
   };
+}
+
+// ----- Imagens dos meteoros -----
+// PNGs em assets/imagens/espaco/: meteoro-<cor>-<1 a 3>.png (cor: marrom, azul ou dourado, na ordem de ESPACO_CORES).
+// Dá para editar as imagens à vontade: o jogo só precisa que o meteoro ocupe a mesma proporção da imagem
+// (raio = METEORO_IMAGEM_RAIO da largura; nas imagens de 128 px, raio de 60 px). Enquanto a imagem não carrega,
+// ou se ela não existir, o meteoro é desenhado pelo código, então nunca fica invisível.
+const METEORO_CORES_NOMES = ['marrom', 'azul', 'dourado'];
+const METEORO_VARIANTES = 3;
+const METEORO_IMAGEM_RAIO = 60 / 128;
+const imagensMeteoro = new Map();
+
+function imagemDoMeteoro(t) {
+  const nome = `meteoro-${t.corNome}-${t.variante}`;
+  if (!imagensMeteoro.has(nome)) {
+    const img = new Image();
+    img.src = 'assets/imagens/espaco/' + nome + '.png';
+    imagensMeteoro.set(nome, img);
+  }
+  return imagensMeteoro.get(nome);
+}
+
+function carregarImagensEspaco() {
+  for (const corNome of METEORO_CORES_NOMES) {
+    for (let v = 1; v <= METEORO_VARIANTES; v++) imagemDoMeteoro({ corNome, variante: v });
+  }
 }
 
 function atualizarCaixa(t) {

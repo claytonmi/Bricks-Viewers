@@ -117,6 +117,19 @@ function desenharMeteoro(t, agora) {
   ctx.save();
   ctx.translate(t.cx, t.cy);
   ctx.rotate(t.giro + agora / 9000);
+  const img = imagemDoMeteoro(t); // PNG de assets/imagens/espaco/ (ver espaco.js)
+  if (img.complete && img.naturalWidth > 0) {
+    const lado = t.r / METEORO_IMAGEM_RAIO; // o meteoro da imagem fica do tamanho do meteoro do jogo
+    ctx.drawImage(img, -lado / 2, -lado / 2, lado, lado);
+  } else {
+    desenharMeteoroPorCodigo(t);
+  }
+  desenharTrincas(t);
+  ctx.restore();
+}
+
+// Meteoro desenhado pelo código (enquanto a imagem não carrega ou se ela faltar)
+function desenharMeteoroPorCodigo(t) {
   ctx.beginPath();
   t.forma.forEach((f, i) => {
     const a = (i / t.forma.length) * Math.PI * 2;
@@ -137,6 +150,10 @@ function desenharMeteoro(t, agora) {
     ctx.arc(Math.cos(c.a) * t.r * c.d, Math.sin(c.a) * t.r * c.d, t.r * c.r, 0, Math.PI * 2);
     ctx.fill();
   }
+}
+
+// Trincas: aparecem conforme o meteoro grande perde vida (desenhadas por cima da imagem)
+function desenharTrincas(t) {
   const trincas = Math.min(t.trincas.length, t.vidaMax - t.vida);
   ctx.strokeStyle = 'rgba(20, 10, 0, 0.8)';
   ctx.lineWidth = 1.5;
@@ -147,7 +164,6 @@ function desenharMeteoro(t, agora) {
     ctx.lineTo(Math.cos(a + 0.4) * t.r * 0.7, Math.sin(a + 0.4) * t.r * 0.7);
     ctx.stroke();
   }
-  ctx.restore();
 }
 
 // Fase 6: a entrada (escura, com espiral) e a saída (clara). Aparecem e somem aos poucos.
