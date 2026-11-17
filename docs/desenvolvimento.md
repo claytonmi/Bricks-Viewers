@@ -96,6 +96,19 @@ Para trocar a arte, é só editar ou substituir esses PNGs, mantendo os mesmos n
 
 Se uma imagem faltar ou não carregar, o jogo desenha o meteoro sozinho, então ele nunca fica invisível.
 
+## Imagens da Fase Natalina
+
+As artes da fase de Natal vêm de `assets/imagens/natal/` e carregam quando a fase é montada:
+
+| Arquivo | O que é | Tamanho no jogo (largura × altura) |
+|---|---|---|
+| `rena-treno.png` | rena puxando o trenó (olhando para a direita; o jogo espelha quando ela vai para a esquerda) | 132 × 52 |
+| `papai-noel-saco.png` | chefão saco do Papai Noel (a vida aparece por cima) | 110 × 84 |
+| `bengala-doce.png` | raquete da fase (a parte reta, em cima, é a que rebate) | 158 × 46 |
+| `presente-<cor>.png` | presentinhos que caem do saco (`vermelho`, `verde`, `dourado`, `azul`, `rosa`) | 14 × 14 |
+
+A imagem é encaixada nesse tamanho sem distorcer (centralizada e apoiada embaixo), então dá para desenhar maior, por exemplo no dobro. O ideal é manter a mesma proporção da tabela: uma imagem bem mais alta ou mais larga aparece menor dentro do espaço. Use PNG com fundo transparente. Se uma imagem faltar ou não carregar, o jogo usa o desenho do próprio código.
+
 ## Contador de acessos
 
 O site conta as visitas com o [GoatCounter](https://www.goatcounter.com), que não usa cookies. Além das visitas, conta dois eventos: `copiou-link-obs` (clique em **Copiar link do OBS**) e `abriu-no-obs` (página aberta pelo link do OBS). Nenhum nome de canal ou de viewer vai para o contador: o endereço é enviado sem a parte depois do `?`.

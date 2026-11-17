@@ -26,6 +26,39 @@ function resetarNatal() {
   rena = null;
   proximaRena = 0;
   textosFlutuantes = [];
+  if (faseNatal()) carregarImagensNatal(); // as imagens já carregam quando a fase é montada
+}
+
+// ----- Imagens da fase (assets/imagens/natal/) -----
+// rena-treno.png, papai-noel-saco.png, bengala-doce.png e presente-<cor>.png. Dá para editar à vontade:
+// cada imagem é encaixada no tamanho que a coisa tem no jogo, sem distorcer. Enquanto a imagem não carrega,
+// ou se ela faltar, o jogo usa o desenho do próprio código.
+const PRESENTE_IMAGEM = {
+  '#dc2626': 'presente-vermelho', '#16a34a': 'presente-verde', '#facc15': 'presente-dourado',
+  '#3b82f6': 'presente-azul', '#ec4899': 'presente-rosa'
+};
+const imagensNatal = new Map();
+
+function imagemNatal(nome) {
+  if (!imagensNatal.has(nome)) {
+    const img = new Image();
+    img.src = 'assets/imagens/natal/' + nome + '.png';
+    imagensNatal.set(nome, img);
+  }
+  const img = imagensNatal.get(nome);
+  return img.complete && img.naturalWidth > 0 ? img : null; // null: ainda carregando ou faltando
+}
+
+function carregarImagensNatal() {
+  ['rena-treno', 'papai-noel-saco', 'bengala-doce', ...Object.values(PRESENTE_IMAGEM)].forEach(imagemNatal);
+}
+
+// Encaixa a imagem na caixa sem distorcer: centralizada na largura e apoiada embaixo
+function desenharEncaixado(img, x, y, w, h) {
+  const e = Math.min(w / img.naturalWidth, h / img.naturalHeight);
+  const iw = img.naturalWidth * e;
+  const ih = img.naturalHeight * e;
+  ctx.drawImage(img, x + (w - iw) / 2, y + (h - ih), iw, ih);
 }
 
 // Roda a cada quadro durante a partida
@@ -213,17 +246,18 @@ function criarSpriteRena() {
 
 function desenharRena(agora) {
   if (!rena) return;
-  if (!spriteRena) spriteRena = criarSpriteRena();
+  const img = imagemNatal('rena-treno'); // a imagem olha para a direita, como o desenho do código
+  if (!img && !spriteRena) spriteRena = criarSpriteRena();
   ctx.save();
   ctx.shadowColor = '#fde68a';
   ctx.shadowBlur = 10;
-  if (rena.dir > 0) {
-    ctx.drawImage(spriteRena, rena.x, rena.y);
-  } else {
-    ctx.translate(rena.x + RENA_W, rena.y);
+  ctx.translate(rena.x, rena.y);
+  if (rena.dir < 0) { // indo para a esquerda: espelha
+    ctx.translate(RENA_W, 0);
     ctx.scale(-1, 1);
-    ctx.drawImage(spriteRena, 0, 0);
   }
+  if (img) desenharEncaixado(img, 0, 0, RENA_W, RENA_H);
+  else ctx.drawImage(spriteRena, 0, 0);
   ctx.restore();
 }
 
@@ -253,6 +287,13 @@ function desenharSaco(t, agora) {
   ctx.save();
   ctx.shadowColor = '#facc15';
   ctx.shadowBlur = 12 + Math.sin(agora / 150) * 5;
+  const img = imagemNatal('papai-noel-saco');
+  if (img) {
+    desenharEncaixado(img, x, y, w, h);
+    ctx.restore();
+    desenharVidaSaco(t, x, y, w, h);
+    return;
+  }
   // corpo do saco (mais largo embaixo)
   ctx.fillStyle = '#b91c1c';
   ctx.beginPath();
@@ -285,7 +326,11 @@ function desenharSaco(t, agora) {
   ctx.fillStyle = '#3b82f6';
   ctx.fillRect(x + w * 0.52, y + h * 0.04, 9, 10);
   ctx.restore();
-  // vida
+  desenharVidaSaco(t, x, y, w, h);
+}
+
+// Vida do saco, no meio dele
+function desenharVidaSaco(t, x, y, w, h) {
   ctx.font = 'bold 22px sans-serif';
   ctx.textAlign = 'center';
   ctx.lineWidth = 4;
@@ -351,15 +396,27 @@ function criarSpriteBengala() {
 
 // x e y são os mesmos da raquete normal (canto de cima da parte que rebate)
 function desenharBengala(x, y) {
-  if (!spriteBengala) spriteBengala = criarSpriteBengala();
   const m = BENGALA_MARGEM;
-  ctx.drawImage(spriteBengala, x - m, y + PADDLE_H / 2 - (m + BENGALA_GROSSURA / 2));
+  const bx = x - m;
+  const by = y + PADDLE_H / 2 - (m + BENGALA_GROSSURA / 2);
+  const img = imagemNatal('bengala-doce');
+  if (img) { // mesma caixa do desenho do código: a parte reta fica no lugar da raquete
+    const w = PADDLE_W + m * 2;
+    const h = BENGALA_RAIO * 2 + BENGALA_GROSSURA + m * 2;
+    const e = Math.min(w / img.naturalWidth, h / img.naturalHeight);
+    ctx.drawImage(img, bx, by, img.naturalWidth * e, img.naturalHeight * e);
+    return;
+  }
+  if (!spriteBengala) spriteBengala = criarSpriteBengala();
+  ctx.drawImage(spriteBengala, bx, by);
 }
 
 // Presentinhos caindo e os "+1" subindo
 function desenharPresentinhos(agora) {
   for (const p of presentinhos) {
     const s = PRESENTINHO_TAM;
+    const img = PRESENTE_IMAGEM[p.cor] && imagemNatal(PRESENTE_IMAGEM[p.cor]);
+    if (img) { ctx.drawImage(img, p.x - s / 2, p.y - s / 2, s, s); continue; }
     ctx.fillStyle = p.cor;
     ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
     ctx.fillStyle = '#fde68a';
