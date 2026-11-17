@@ -105,6 +105,7 @@ function mostrarMenuPausa() {
   lista.forEach((b, i) => {
     const li = document.createElement('li');
     li.textContent = `${i + 1}º  ${b.nome}  -  ${b.pontos} pts`; // textContent: nome vem do chat
+    if (i < 3) li.classList.add('top3');
     ol.appendChild(li);
   });
   document.getElementById('menuPausa').classList.remove('escondido');
@@ -155,6 +156,8 @@ function atualizarContagem(agora) {
 function iniciarJogo(agora) {
   estado = 'jogando';
   rebatidasStreamer = 0;
+  rebatidasPorPonto = calcularRebatidasPorPonto(viewers.length);
+  velTodasAte = 0;
   ajustarChuva(); // fase com chuva: total de tijolos conforme os jogadores
   ajustarEsteira(); // esteira: idem (os que faltam entram pela borda)
   ajustarEspaco(); // fase 6: idem (os meteoros que faltam)

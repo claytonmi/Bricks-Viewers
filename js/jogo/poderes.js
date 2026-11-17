@@ -64,6 +64,12 @@ function podeUsarAgora(b, agora) {
     agora >= b.atordoadaAte && agora >= b.efeitoAte;
 }
 
+// Pode soltar esse poder agora? Além de podeUsarAgora: com o item velocidade ativo (todas as bolas já
+// estão 2x), o !speed espera ele acabar e só então sai, valendo só para a bola de quem pediu.
+function poderLiberado(b, cmd, agora) {
+  return podeUsarAgora(b, agora) && !(cmd === '!speed' && agora < velTodasAte);
+}
+
 // Gasta a carga e solta o poder
 function usarPoder(b, cmd, agora) {
   if (cmd === '!speed') {
@@ -87,11 +93,14 @@ function usarPoder(b, cmd, agora) {
   mostrarAviso(b, cmd, agora);
 }
 
-// Fila: quando o poder anterior acaba, solta o próximo pedido (se ainda tiver a carga)
+// Fila: quando o poder anterior acaba, solta o próximo pedido (se ainda tiver a carga).
+// Um !speed esperando o item velocidade não segura os outros poderes da fila.
 function atualizarFilas(agora) {
   for (const b of viewers) {
     if (b.fila.length === 0 || !podeUsarAgora(b, agora)) continue;
-    const cmd = b.fila.shift();
+    const i = b.fila.findIndex(cmd => poderLiberado(b, cmd, agora));
+    if (i < 0) continue;
+    const cmd = b.fila.splice(i, 1)[0];
     if (temPoder(b, cmd)) usarPoder(b, cmd, agora);
   }
 }

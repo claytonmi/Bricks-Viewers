@@ -60,7 +60,7 @@ function processarComando(usuario, mensagem, autoridade = false, login = usuario
     const b = viewers.find(v => v.nome === usuario);
     if (!b) return;
     if (!temPoder(b, cmd)) { avisarFaltaBatidas(b, cmd, agora); return; }
-    if (podeUsarAgora(b, agora)) usarPoder(b, cmd, agora);
+    if (poderLiberado(b, cmd, agora)) usarPoder(b, cmd, agora);
     else {
       if (!b.fila.includes(cmd)) b.fila.push(cmd); // repetido na fila não entra
       b.usouNaFase = true; // pediu o poder: está presente, mesmo se a fase acabar antes de ele sair

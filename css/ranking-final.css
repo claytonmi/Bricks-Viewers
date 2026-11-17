@@ -11,22 +11,24 @@
 }
 
 #rankingLista li {
-  padding: 6px 8px;
-  border-bottom: 1px solid #3a3a44;
+  margin: 4px 0;
+  padding: 7px 10px;
+  background: var(--fundo-linha);
+  border-radius: 8px;
 }
 
 .top3 {
-  color: #facc15;
+  color: var(--ouro);
   font-weight: bold;
 }
 
 .streamer {
-  color: #22d3ee;
+  color: var(--destaque);
 }
 
 /* Aberto pelo link do OBS: avisos no lugar dos botões */
 .aviso-voltei {
-  color: #bbb;
+  color: var(--texto-suave);
   font-size: 14px;
 }
 .aviso-voltei b,
@@ -35,7 +37,7 @@
 }
 .ranking-dica {
   margin: 8px 0 0;
-  color: #ccc;
+  color: var(--texto-suave);
 }
 
 /* Sem clique também não dá para rolar: a lista mostra os 10 primeiros inteiros */
@@ -44,6 +46,33 @@
   overflow: visible;
 }
 #rankingLista .mais-jogadores {
-  color: #aaa;
+  color: var(--texto-suave);
   text-align: center;
+  background: none;
+}
+
+/* Botões embaixo do ranking */
+.ranking-botoes {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.ranking-botoes button {
+  padding: 9px 18px;
+  font-size: 15px;
+}
+
+/* Aviso grande de desempate em cima do ranking */
+.desempate-aviso {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--ouro);
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid var(--ouro);
+  border-radius: 12px;
 }

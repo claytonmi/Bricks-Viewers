@@ -71,6 +71,7 @@ function prepararGrupo(agora) {
     b.buraco = null;
     b.atraidaAte = 0;
     b.velExtraAte = 0;
+    velTodasAte = 0; // o item velocidade da partida não continua no desempate
     b.impulsoAte = 0;
     b.atordoadaAte = 0;
     b.efeitoAte = 0;

@@ -2,10 +2,15 @@
 
 /* Tela pequena: o jogo fica na mesma linha, mas o layout encolhe sozinho */
 @media (max-width: 520px) {
-  .caixa {
+  .caixa,
+  #menu > .caixa {
     min-width: 0;
     width: 90vw;
     box-sizing: border-box;
+  }
+  #faseImg {
+    width: 160px;
+    height: 90px;
   }
 }
 

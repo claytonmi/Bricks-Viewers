@@ -6,39 +6,137 @@
               url('../assets/imagens/interface/menu.png') center / cover no-repeat;
 }
 
-/* Bloco do chat dentro do menu */
-.bloco-chat {
-  margin-bottom: 12px;
-}
-.bloco-chat input {
-  width: 100%;
-  padding: 6px;
-  margin: 4px 0;
+/* Caixa do menu com largura fixa: textos longos (status da conexão) quebram a linha */
+#menu > .caixa {
+  width: 440px;
   box-sizing: border-box;
 }
-.bloco-chat h3 {
-  margin: 0 0 6px;
+
+/* Título pequeno em cima de cada campo */
+.rotulo {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-suave);
+  text-align: left;
+}
+.rotulo #qtdTexto {
+  color: var(--texto);
 }
 
-/* Seleção de fase */
+/* Bloco do chat: campo do canal e Conectar na mesma linha */
+.bloco-chat {
+  margin-bottom: 14px;
+}
+.campo-canal {
+  display: flex;
+  gap: 8px;
+}
+.campo-canal input {
+  flex: 1;
+  min-width: 0;
+}
+#status {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--texto-suave);
+  text-align: left;
+}
+
+/* Seleção de fase: cartão com a miniatura e as setas */
 .linha {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
 }
-
+.cartao-fase {
+  padding: 12px;
+  background: var(--fundo-linha);
+  border: 1px solid var(--linha);
+  border-radius: 14px;
+}
+.seta {
+  position: relative;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+}
+/* A seta é desenhada (não é letra), para ficar bem no centro do círculo em qualquer fonte */
+.seta::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: translate(-70%, -50%) rotate(45deg);   /* a ponta fica à direita: puxa para a esquerda */
+}
+#faseAnt::before {
+  transform: translate(-30%, -50%) rotate(-135deg);
+}
 #faseImg {
-  width: 200px;
-  height: 120px;
+  display: block;
+  width: 220px;
+  height: 124px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 10px;
+}
+#faseNome {
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* Quantidade de viewers */
+.bloco-viewers {
+  margin: 14px 0 6px;
+}
+.bloco-viewers input {
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+
+/* Opções com chave de ligar e desligar */
+.opcao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 2px;
+  border-bottom: 1px solid var(--linha);
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Botões do menu */
+.btn-iniciar {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 11px;
+  font-size: 17px;
+  border-radius: 12px;
+}
+.botoes-menu {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.botoes-menu button {
+  flex: 1;
 }
 
 /* Menu: o que falta para liberar o link do OBS */
 .dica-link-obs {
   margin: 6px 0 0;
-  color: #aaa;
+  color: var(--texto-suave);
   font-size: 12px;
 }
 .dica-link-obs:empty {

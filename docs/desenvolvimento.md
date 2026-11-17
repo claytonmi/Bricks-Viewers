@@ -17,7 +17,8 @@ Bricks-Viewers/
 │       ├── interface/      imagens do menu
 │       └── sprites/        bola, raquete e tijolos
 ├── css/
-│   ├── base.css            variáveis, página e utilitários
+│   ├── base.css            variáveis (inclusive as cores das telas), página e utilitários
+│   ├── controles.css       botões, campos e chaves de ligar e desligar
 │   ├── layout.css          colunas, tela do jogo, camadas e rodapé
 │   ├── paineis.css         Como jogar e ranking ao lado do jogo
 │   ├── simulador.css       painel do simulador
@@ -95,6 +96,8 @@ Para trocar a arte, é só editar ou substituir esses PNGs, mantendo os mesmos n
 - As trincas que aparecem quando o meteoro grande perde vida são desenhadas pelo jogo por cima da imagem.
 
 Se uma imagem faltar ou não carregar, o jogo desenha o meteoro sozinho, então ele nunca fica invisível.
+
+A mesma pasta tem `raquete-disco.png`, a raquete da Fase 6 (disco voador). No jogo ela ocupa 150 × 36 (a imagem atual tem o dobro, 300 × 72). A linha onde a bola rebate fica 10 px abaixo do topo da imagem, no alto da borda do disco; a cúpula sobe acima dela. Ao editar, mantenha a borda do disco nessa altura. O rastro de velocidade é desenhado pelo jogo.
 
 ## Imagens da Fase Natalina
 

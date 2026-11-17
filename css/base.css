@@ -13,13 +13,27 @@
   --alt: 100vh;
   --jogo: min(calc(var(--larg) - 2 * var(--lateral) - 4 * var(--vao)),
               calc((var(--alt) - var(--rodape) - 3 * var(--vao)) * 1200 / 680));
+
+  /* Cores das telas e painéis (estilo vidro escuro) */
+  --vidro: rgba(26, 30, 42, 0.9);        /* fundo das caixas e painéis */
+  --vidro-borda: rgba(255, 255, 255, 0.12);
+  --fundo-linha: rgba(10, 13, 20, 0.7);  /* linhas do ranking, campos e cartões dentro das caixas */
+  --linha: rgba(255, 255, 255, 0.08);    /* divisórias */
+  --botao: #334155;
+  --botao-hover: #475569;
+  --destaque: #22d3ee;                   /* ação principal, streamer, abas */
+  --destaque-hover: #67e8f9;
+  --destaque-texto: #083344;             /* texto em cima do ciano */
+  --texto: #e5e7eb;
+  --texto-suave: #94a3b8;
+  --ouro: #facc15;                       /* pódio e avisos de desempate */
 }
 
 body {
   margin: 0;
-  background: #1b1b1f;
-  color: #eee;
-  font-family: sans-serif;
+  background: #14171f;
+  color: var(--texto);
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;  /* fonte do próprio computador, sem baixar nada */
 }
 
 .escondido {

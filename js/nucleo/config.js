@@ -49,8 +49,12 @@ const ITEM_VEL = 160;            // velocidade de queda do item (px por segundo)
 const ITEM_TAM = 16;             // tamanho do item na tela
 const ITEM_PONTOS = 1;
 const ITENS_PONTOS_PARTIDA = 5; // quantos itens de pontos caem em cada partida, sempre (não importa o número de viewers)           // pontos do streamer ao pegar um item com a raquete
-const REBATIDAS_POR_PONTO = 10;  // "Streamer pontua": a cada 10 rebatidas na raquete, +1 ponto do streamer
-const MULTIBOLA_CHANCE = 0.25;   // dos itens que caem, 1 em 4 é multibola (os outros dão pontos ao streamer)
+// "Streamer pontua": rebatidas na raquete para +1 ponto, conforme os jogadores da partida.
+// Pares [jogadores, rebatidas]: até 10 são 7; com 25, 14; com 75 ou mais, 25. Entre eles, sobe aos poucos.
+const REBATIDAS_PONTO_TABELA = [[10, 7], [25, 14], [75, 25]];
+const MULTIBOLA_CHANCE = 0.25;   // dos itens que caem, 1 em 4 é multibola
+const ITEM_VELOCIDADE_CHANCE = 0.25; // 1 em 4 é velocidade (os outros 2 em 4 dão pontos ao streamer)
+const ITEM_VELOCIDADE_TEMPO = 5000;  // velocidade: todas as bolas ficam 2x mais rápidas por 5 s (ver MULT_SPEED)
 const ITEM_MENOS_CHANCE = 0.33;  // dos itens de pontos, 1 em 3 é a bomba preta: tira 1 ponto do streamer (nunca fica abaixo de 0)
 const MULTIBOLA_TEMPO = 8000;    // multibola: cada bola ganha uma cópia por 8 s (os pontos da cópia vão para o dono)
 
@@ -113,7 +117,10 @@ const TELA_MIN_ESCALA = 900;     // até esta largura vale o layout de celular, 
 
 // Fase 6: Espaço (ver js/jogo/espaco.js). Timers do buraco em milissegundos.
 const ESPACO_MIN = 100;             // meteoros com até 15 jogadores (com 100, é o total da fase)
-const ESPACO_INICIAL = 20;          // meteoros já na tela no começo
+const ESPACO_INICIAL = 14;          // meteoros já na tela no começo
+const ESPACO_MAX_TELA = 18;         // no máximo isso de meteoros na tela (pedaços contam): os outros esperam vaga
+const ESPACO_EMPURRAO = 60;         // meteoro que encosta em outro: empurrãozinho (px por segundo no começo)
+const ESPACO_ATRITO = 30;           // e vai parando (px/s por segundo): com 60 e 30, anda uns 60 px em 2 s
 const ESPACO_PEQ = [18, 28];        // raio do meteoro pequeno (px)
 const ESPACO_GRD = [38, 48];        // raio do meteoro grande (px)
 const ESPACO_CHANCE_GRANDE = 0.4;   // dos meteoros que chegam, quantos são grandes

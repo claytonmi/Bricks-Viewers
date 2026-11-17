@@ -2,7 +2,7 @@
 .simulador {
   margin-top: 12px;
   padding-top: 8px;
-  border-top: 1px solid #3a3a44;
+  border-top: 1px solid var(--linha);
 }
 .simulador h4 {
   margin: 0 0 6px;
@@ -51,6 +51,6 @@
 .sim-info {
   margin: 2px 0;
   font-size: 12px;
-  color: #aaa;
+  color: var(--texto-suave);
   min-height: 15px;
 }

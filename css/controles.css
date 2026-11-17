@@ -1,0 +1,104 @@
+/* ===== Botões, campos e chaves (estilo vidro escuro) ===== */
+
+button {
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--texto);
+  background: var(--botao);
+  border: 1px solid var(--vidro-borda);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+button:hover:not(:disabled) {
+  background: var(--botao-hover);
+}
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--destaque);
+  outline-offset: 2px;
+}
+
+/* Ação principal da tela (Iniciar, Continuar, Voltar ao menu...) */
+button.btn-principal {
+  color: var(--destaque-texto);
+  background: var(--destaque);
+  border-color: transparent;
+  font-weight: 600;
+}
+button.btn-principal:hover:not(:disabled) {
+  background: var(--destaque-hover);
+}
+
+/* Campos de texto e listas */
+input[type="text"],
+input:not([type]),
+select {
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--texto);
+  background: var(--fundo-linha);
+  border: 1px solid var(--botao);
+  border-radius: 10px;
+}
+input[type="text"]:focus,
+input:not([type]):focus,
+select:focus {
+  border-color: var(--destaque);
+  outline: none;
+}
+input::placeholder {
+  color: #64748b;
+}
+
+/* Barra deslizante (quantidade de viewers) */
+input[type="range"] {
+  accent-color: var(--destaque);
+  cursor: pointer;
+}
+
+/* Chave de ligar e desligar (checkbox com a classe "chave") */
+input.chave {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 38px;
+  height: 22px;
+  margin: 0;
+  background: var(--botao);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+input.chave::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+input.chave:checked {
+  background: var(--destaque);
+}
+input.chave:checked::before {
+  transform: translateX(16px);
+}
+input.chave:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

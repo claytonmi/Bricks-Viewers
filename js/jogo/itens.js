@@ -2,15 +2,18 @@
 // Tijolos marcados soltam um item e a raquete pode pegar.
 
 // Tijolo marcado quebrou: solta um item no centro dele.
-// 1 em 4 é multibola; os outros dão pontos ao streamer, e 1 em 3 deles é a bomba preta (tira ponto).
-// Só caem com "Streamer pontua" marcado.
+// 1 em 4 é multibola, 1 em 4 é velocidade; os outros dão pontos ao streamer, e 1 em 3 deles é a bomba preta
+// (tira ponto). Os de pontos só caem com "Streamer pontua" marcado.
 function soltarItem(t) {
   if (modoIntervalo) return; // modo intervalo: sem raquete, não cai item nenhum
   let tipo = 'pontos';
-  if (Math.random() < MULTIBOLA_CHANCE) tipo = 'multibola';
+  const sorteio = Math.random();
+  if (sorteio < MULTIBOLA_CHANCE) tipo = 'multibola';
+  else if (sorteio < MULTIBOLA_CHANCE + ITEM_VELOCIDADE_CHANCE) tipo = 'velocidade';
   else if (Math.random() < ITEM_MENOS_CHANCE) tipo = 'menos';
-  if (tipo !== 'multibola' && (!streamerPontua || itensPontosRestantes <= 0)) return; // os de pontos têm número fixo por partida
-  if (tipo !== 'multibola') itensPontosRestantes--;
+  const dePontos = tipo === 'pontos' || tipo === 'menos';
+  if (dePontos && (!streamerPontua || itensPontosRestantes <= 0)) return; // os de pontos têm número fixo por partida
+  if (dePontos) itensPontosRestantes--;
   itensCaindo.push({ x: (t.x + t.w / 2) % W, y: t.y + t.h, tipo }); // % W: tijolo da esteira passando da borda
 }
 
@@ -42,6 +45,10 @@ function atualizarItens(dt, agora) {
     if (pegou) {
       if (it.tipo === 'multibola') {
         ativarMultibola(agora);
+        paddleBrilhoAte = agora + 600;
+      } else if (it.tipo === 'velocidade') { // todas as bolas 2x mais rápidas por um tempo
+        velTodasAte = agora + ITEM_VELOCIDADE_TEMPO;
+        anunciar('Velocidade!', agora);
         paddleBrilhoAte = agora + 600;
       } else if (it.tipo === 'menos') { // bomba preta: tira 1 ponto do streamer, sem passar de 0
         if (streamerPontua) streamerPts = Math.max(0, streamerPts - ITEM_PONTOS);

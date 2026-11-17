@@ -53,14 +53,28 @@ function rebaterNaRaquete(b) {
   b.vx = Math.sin(ang) * VEL_BASE;
   b.vy = -Math.cos(ang) * VEL_BASE;
   b.y = PADDLE_Y - RAIO;
-  // streamer: a cada REBATIDAS_POR_PONTO rebatidas na raquete, +1 ponto (só com "Streamer pontua" marcado).
-  // Com mais viewers já há mais bolas para rebater, então o número é o mesmo para qualquer quantidade.
+  // streamer: a cada rebatidasPorPonto rebatidas na raquete, +1 ponto (só com "Streamer pontua" marcado).
+  // Com mais viewers há mais bolas para rebater, então precisa de mais rebatidas (ver calcularRebatidasPorPonto).
   // no desempate a raquete só rebate: não conta para o streamer
-  if (estado !== 'desempate' && streamerPontua && ++rebatidasStreamer >= REBATIDAS_POR_PONTO) {
+  if (estado !== 'desempate' && streamerPontua && ++rebatidasStreamer >= rebatidasPorPonto) {
     rebatidasStreamer = 0;
     streamerPts++;
     paddleBrilhoAte = agoraJogo() + 600; // raquete brilha quando o streamer ganha ponto
   }
+}
+
+// Rebatidas para o streamer ganhar 1 ponto, conforme os jogadores (fixado quando a partida começa).
+// Segue REBATIDAS_PONTO_TABELA: abaixo do primeiro par vale o primeiro, acima do último vale o último,
+// e entre dois pares sobe em linha reta.
+function calcularRebatidasPorPonto(jogadores) {
+  const t = REBATIDAS_PONTO_TABELA;
+  if (jogadores <= t[0][0]) return t[0][1];
+  for (let i = 1; i < t.length; i++) {
+    const [j0, r0] = t[i - 1];
+    const [j1, r1] = t[i];
+    if (jogadores <= j1) return Math.round(r0 + (r1 - r0) * (jogadores - j0) / (j1 - j0));
+  }
+  return t[t.length - 1][1];
 }
 
 // Batidas para ganhar um poder: quanto mais jogadores, menos batidas (cada bola acerta menos tijolos).
@@ -256,8 +270,9 @@ function atualizarBola(b, dt, agora) {
     return;
   }
 
-  // !speed dobra a velocidade; empurrada por !bomb fica mais rápida; atordoada pelo !shock anda a 1%
-  const mult = (agora < b.velExtraAte ? MULT_SPEED : 1) * (agora < b.impulsoAte ? BOMBA_IMPULSO : 1) *
+  // !speed (ou o item velocidade) dobra a velocidade, sem somar os dois; empurrada por !bomb fica mais rápida;
+  // atordoada pelo !shock anda a 1%
+  const mult = (agora < b.velExtraAte || agora < velTodasAte ? MULT_SPEED : 1) * (agora < b.impulsoAte ? BOMBA_IMPULSO : 1) *
     (agora < b.atordoadaAte ? ATORDOADA_VEL : 1);
   if (b.atraidaAte > agora) atrairParaTijolo(b); // fim de fase travado: anda para o tijolo mais perto
   b.x += b.vx * mult * dt;

@@ -273,6 +273,7 @@ function desenharRaquete(agora) {
     ctx.shadowBlur = 30;
   }
   if (faseNatal()) desenharBengala(paddleX - PADDLE_W / 2, PADDLE_Y); // Natal: a raquete vira bengala doce
+  else if (espacoAtiva()) desenharDisco(paddleX - PADDLE_W / 2, agora); // Fase 6: disco voador (espaco.js)
   else ctx.drawImage(imgs.paddle, paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H);
   ctx.shadowBlur = 0;
 }
@@ -398,10 +399,12 @@ function desenharAvisos(agora) {
   }
 }
 
-// Itens caindo (a raquete pega): amarelo com "+" = pontos do streamer; bomba preta brilhando = tira ponto; azul com "×2" = multibola
+// Itens caindo (a raquete pega): amarelo com "+" = pontos do streamer; bomba preta brilhando = tira ponto;
+// azul com "×2" = multibola; laranja com raio = velocidade
 function desenharItens() {
   for (const it of itensCaindo) {
     if (it.tipo === 'menos') { desenharBombaItem(it.x, it.y); continue; }
+    if (it.tipo === 'velocidade') { desenharVelocidadeItem(it.x, it.y); continue; }
     const multi = it.tipo === 'multibola';
     ctx.fillStyle = multi ? '#22d3ee' : '#facc15';
     ctx.beginPath();
@@ -413,6 +416,25 @@ function desenharItens() {
     ctx.fillText(multi ? '×2' : '+', it.x, it.y + (multi ? 4 : 5));
     ctx.textAlign = 'left';
   }
+}
+
+// Item velocidade: bolinha laranja com um raio escuro
+function desenharVelocidadeItem(x, y) {
+  const r = ITEM_TAM / 2;
+  ctx.fillStyle = '#f97316';
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#1c1917';
+  ctx.beginPath();
+  ctx.moveTo(x + 1.5, y - 6);
+  ctx.lineTo(x - 3.5, y + 1);
+  ctx.lineTo(x - 0.2, y + 1);
+  ctx.lineTo(x - 1.5, y + 6);
+  ctx.lineTo(x + 3.5, y - 1);
+  ctx.lineTo(x + 0.2, y - 1);
+  ctx.closePath();
+  ctx.fill();
 }
 
 // Item que tira ponto: bomba preta com pavio e faísca laranja, com brilho pulsando

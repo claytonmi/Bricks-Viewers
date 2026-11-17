@@ -64,7 +64,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(6, 8, 14, 0.55);
+  backdrop-filter: blur(3px);        /* o jogo fica desfocado atrás da caixa */
   border-radius: 8px;
   overflow-y: auto;   /* se a caixa for maior que o jogo, rola em vez de cortar */
 }
@@ -73,11 +74,18 @@
 }
 
 .caixa {
-  background: #2c2c34;
-  padding: 20px;
-  border-radius: 10px;
+  background: var(--vidro);
+  border: 1px solid var(--vidro-borda);
+  padding: 22px 26px;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
   min-width: 320px;
   text-align: center;
+}
+.caixa h2 {
+  margin: 0 0 14px;
+  font-size: 26px;
+  letter-spacing: 0.5px;
 }
 
 /* Modo intervalo: botão do streamer para parar o jogo (fora da tela do jogo) */
@@ -89,10 +97,10 @@
   color: #000;
   background: #22d3ee;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
 }
-.btn-voltei:hover {
+.btn-voltei:hover:not(:disabled) {
   background: #67e8f9;
 }
 
@@ -100,6 +108,6 @@
 .rodape {
   text-align: center;
   font-size: 11px;
-  color: #777;
+  color: #64748b;
   padding: 0;
 }

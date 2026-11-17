@@ -93,6 +93,85 @@ function carregarImagensEspaco() {
   for (const corNome of METEORO_CORES_NOMES) {
     for (let v = 1; v <= METEORO_VARIANTES; v++) imagemDoMeteoro({ corNome, variante: v });
   }
+  imagemEspaco('raquete-disco');
+}
+
+// Outras imagens da pasta (ex: a raquete). null enquanto não carregou ou se faltar.
+function imagemEspaco(nome) {
+  if (!imagensMeteoro.has(nome)) {
+    const img = new Image();
+    img.src = 'assets/imagens/espaco/' + nome + '.png';
+    imagensMeteoro.set(nome, img);
+  }
+  const img = imagensMeteoro.get(nome);
+  return img.complete && img.naturalWidth > 0 ? img : null;
+}
+
+// ----- Raquete da Fase 6: disco voador -----
+// raquete-disco.png ocupa 150 x 36 no jogo; a linha que rebate (topo da raquete) fica 10 px abaixo do topo dela,
+// então a cúpula aparece um pouco acima. Correndo para um lado, deixa um rastro do outro (linhas e cópias apagando).
+const DISCO_TOPO = 10;
+const DISCO_ALTURA = 36;
+const DISCO_RASTRO_MS = 160;    // quanto tempo as cópias do rastro ficam
+const DISCO_VEL_RASTRO = 120;   // a partir dessa velocidade (px/s) aparece o rastro
+let discoRastro = [];
+let discoVel = 0;
+let discoAnterior = null;
+
+function desenharDisco(xEsq, agora) {
+  // velocidade da raquete, suavizada (o rastro não pisca quando o mouse dá trancos)
+  if (discoAnterior && agora > discoAnterior.agora) {
+    const v = (paddleX - discoAnterior.x) / ((agora - discoAnterior.agora) / 1000);
+    discoVel += (v - discoVel) * 0.3;
+  }
+  discoAnterior = { x: paddleX, agora };
+  discoRastro.push({ x: xEsq, agora });
+  discoRastro = discoRastro.filter(p => agora - p.agora < DISCO_RASTRO_MS);
+
+  const y = PADDLE_Y - DISCO_TOPO;
+  const img = imagemEspaco('raquete-disco');
+  const rapido = Math.abs(discoVel) > DISCO_VEL_RASTRO;
+  if (rapido) {
+    ctx.save();
+    // cópias apagando nas posições de antes
+    if (img) {
+      for (const p of discoRastro) {
+        ctx.globalAlpha = 0.22 * (1 - (agora - p.agora) / DISCO_RASTRO_MS);
+        ctx.drawImage(img, p.x, y, PADDLE_W, DISCO_ALTURA);
+      }
+    }
+    // linhas de velocidade saindo da parte de trás
+    const atras = discoVel > 0 ? -1 : 1;
+    const borda = discoVel > 0 ? xEsq + 8 : xEsq + PADDLE_W - 8;
+    const comp = Math.min(110, Math.abs(discoVel) * 0.12);
+    ctx.strokeStyle = '#7dd3fc';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 2;
+    for (const [dy, f] of [[2, 1], [9, 0.75], [16, 0.5]]) {
+      ctx.globalAlpha = 0.65 * f;
+      ctx.beginPath();
+      ctx.moveTo(borda + atras * 4, PADDLE_Y + dy);
+      ctx.lineTo(borda + atras * (4 + comp * f), PADDLE_Y + dy);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  if (img) ctx.drawImage(img, xEsq, y, PADDLE_W, DISCO_ALTURA);
+  else desenharDiscoPorCodigo(xEsq, y);
+}
+
+// Disco pelo código (enquanto a imagem não carrega ou se ela faltar)
+function desenharDiscoPorCodigo(x, y) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(125, 211, 252, 0.9)';
+  ctx.beginPath();
+  ctx.ellipse(x + PADDLE_W / 2, y + 12, 27, 11, 0, Math.PI, 0);
+  ctx.fill();
+  ctx.fillStyle = '#9ca3af';
+  ctx.beginPath();
+  ctx.ellipse(x + PADDLE_W / 2, y + 18, PADDLE_W / 2, 9, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 function atualizarCaixa(t) {
@@ -154,11 +233,70 @@ function andarMeteoro(t, dt) {
     return;
   }
   if (bolaPerto(nx, ny, t.r)) return;
-  // passa por trás dos outros meteoros (não para ao encostar): só a reserva do buraco e as bolas bloqueiam
+  // não para ao encostar em outro meteoro: empurra de leve os que já estão no lugar (ver colidirMeteoros);
+  // só a reserva do buraco e as bolas bloqueiam
   t.cx = nx;
   t.cy = ny;
   atualizarCaixa(t);
   if (chegou) { t.entrando = false; t.destino = null; }
+}
+
+// ----- Meteoros se encostando -----
+// Dois meteoros que se encostam se afastam devagar: um empurrãozinho que vai parando (uns 60 px), sem dano.
+// O meteoro que ainda está entrando não é empurrado (segue para o lugar dele), só empurra os outros.
+function colidirMeteoros() {
+  const ms = tijolos.filter(t => t.circ && t.vivo);
+  for (let i = 0; i < ms.length; i++) {
+    for (let j = i + 1; j < ms.length; j++) {
+      const a = ms[i], b = ms[j];
+      const dx = b.cx - a.cx;
+      const dy = b.cy - a.cy;
+      const dist = Math.hypot(dx, dy);
+      const minimo = a.r + b.r + 2;
+      if (dist >= minimo) continue;
+      const nx = dist ? dx / dist : 1;
+      const ny = dist ? dy / dist : 0;
+      // quem é maior anda menos; quem está entrando não anda
+      const pa = a.entrando ? 0 : a.r * a.r;
+      const pb = b.entrando ? 0 : b.r * b.r;
+      if (pa + pb === 0) continue; // dois entrando: passam um pelo outro e se acertam quando chegarem
+      const fa = b.entrando ? 1 : a.entrando ? 0 : pb / (pa + pb); // parte do empurrão que vai para o a
+      const fb = 1 - fa;
+      empurrarMeteoro(a, -nx, -ny, fa);
+      empurrarMeteoro(b, nx, ny, fb);
+    }
+  }
+}
+
+function empurrarMeteoro(t, nx, ny, parte) {
+  if (!parte || t.entrando) return;
+  t.mvx = (t.mvx || 0) + nx * ESPACO_EMPURRAO * parte;
+  t.mvy = (t.mvy || 0) + ny * ESPACO_EMPURRAO * parte;
+  const v = Math.hypot(t.mvx, t.mvy);
+  if (v > ESPACO_EMPURRAO) { t.mvx *= ESPACO_EMPURRAO / v; t.mvy *= ESPACO_EMPURRAO / v; } // nunca sai voando
+}
+
+// Move os meteoros empurrados e vai freando. Não sai da área, não entra no buraco nem em cima de uma bola.
+function deslizarMeteoros(dt) {
+  const a = ESPACO_AREA;
+  for (const t of tijolos) {
+    if (!t.circ || !t.vivo || t.entrando || (!t.mvx && !t.mvy)) continue;
+    const v = Math.hypot(t.mvx, t.mvy);
+    const nova = Math.max(0, v - ESPACO_ATRITO * dt);
+    if (nova === 0) { t.mvx = 0; t.mvy = 0; continue; }
+    t.mvx *= nova / v;
+    t.mvy *= nova / v;
+    let nx = t.cx + t.mvx * dt;
+    let ny = t.cy + t.mvy * dt;
+    // na borda da área: para naquela direção
+    if (nx < a.x0 + t.r || nx > a.x1 - t.r) { nx = Math.max(a.x0 + t.r, Math.min(a.x1 - t.r, nx)); t.mvx = 0; }
+    if (ny < a.y0 + t.r || ny > a.y1 - t.r) { ny = Math.max(a.y0 + t.r, Math.min(a.y1 - t.r, ny)); t.mvy = 0; }
+    // buraco de minhoca ou bola no caminho: para (não entra na reserva e não esmaga bola parada)
+    if (emReservaBuraco(nx, ny, t.r) || bolaPerto(nx, ny, t.r)) { t.mvx = 0; t.mvy = 0; continue; }
+    t.cx = nx;
+    t.cy = ny;
+    atualizarCaixa(t);
+  }
 }
 
 // Um meteoro novo entra pela parte de cima da área, no lugar que já foi sorteado
@@ -304,8 +442,13 @@ function atualizarEspaco(dt, agora) {
     if (!t.entrando && t.cy - t.r < 0) { t.entrando = true; t.destino = pontoLivre(t.r, t); }
     if (t.entrando) andarMeteoro(t, dt);
   }
-  // até 6 meteoros viajando ao mesmo tempo: a viagem é lenta, e a reposição não pode ficar esperando um por vez
+  colidirMeteoros();
+  deslizarMeteoros(dt);
+  // até 6 meteoros viajando ao mesmo tempo (a viagem é lenta) e no máximo ESPACO_MAX_TELA na tela
   const viajando = tijolos.filter(t => t.entrando).length;
-  if (chuvaRestante > 0 && agora >= proximaGota && viajando < ESPACO_MAX_VIAJANDO) spawnarMeteoro(agora);
+  const naTela = tijolos.filter(t => t.circ && t.vivo).length;
+  if (chuvaRestante > 0 && agora >= proximaGota && viajando < ESPACO_MAX_VIAJANDO && naTela < ESPACO_MAX_TELA) {
+    spawnarMeteoro(agora);
+  }
   if (buraco) atualizarBuraco(dt);
 }
