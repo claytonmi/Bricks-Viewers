@@ -276,16 +276,60 @@ function desenharChao() {
   }
 }
 
-// Barra do modo intervalo com a skin: um desenho só, esticado na largura do jogo.
-// As pontas (10% de cada lado da imagem) ficam no tamanho da raquete, para não deformar;
-// o meio estica até a outra ponta.
+// Barra do modo intervalo com a skin, no mesmo tamanho da raquete (sem esticar nada).
+// As pontas (com os enfeites de cada lado) e o desenho do centro (coroa, flor, sol) ficam fixos;
+// o espaço entre eles é preenchido repetindo um pedaço liso da skin, um normal e um espelhado
+// (assim as emendas se encaixam). A barra é montada uma vez por imagem e guardada.
+const barrasSkin = new WeakMap();
 function desenharBarraSkin(img, y) {
-  const p = img.width * 0.1;           // ponta na imagem
-  const pd = PADDLE_W * 0.1;           // ponta no jogo
-  const h = PADDLE_H;
-  ctx.drawImage(img, 0, 0, p, img.height, 0, y, pd, h);
-  ctx.drawImage(img, img.width - p, 0, p, img.height, W - pd, y, pd, h);
-  ctx.drawImage(img, p, 0, img.width - 2 * p, img.height, pd, y, W - 2 * pd, h);
+  let barra = barrasSkin.get(img);
+  if (!barra) { barra = montarBarraSkin(img); barrasSkin.set(img, barra); }
+  ctx.drawImage(barra, 0, y, W, PADDLE_H);
+}
+
+function montarBarraSkin(img) {
+  const iw = img.width, ih = img.height;
+  const escala = ih / PADDLE_H;                        // monta na resolução da imagem (fica nítido)
+  const bw = Math.round(W * escala);
+  const cv = document.createElement('canvas');
+  cv.width = bw;
+  cv.height = ih;
+  const c = cv.getContext('2d');
+  const ponta = Math.round(iw * 0.33);                 // ponta de cada lado, com o enfeite
+  const cIni = Math.round(iw * 0.4), cFim = iw - cIni; // desenho do centro
+  const tIni = ponta, tFim = cIni;                     // pedaço que se repete (entre a ponta e o centro)
+  const centroX = Math.round((bw - (cFim - cIni)) / 2);
+  c.drawImage(img, 0, 0, ponta, ih, 0, 0, ponta, ih);
+  c.drawImage(img, iw - ponta, 0, ponta, ih, bw - ponta, 0, ponta, ih);
+  c.drawImage(img, cIni, 0, cFim - cIni, ih, centroX, 0, cFim - cIni, ih);
+  // preenche da ponta esquerda até o centro e do centro até a ponta direita
+  repetirPedaco(c, img, tIni, tFim, ponta, centroX, false);
+  repetirPedaco(c, img, tIni, tFim, centroX + (cFim - cIni), bw - ponta, true);
+  return cv;
+}
+
+// Repete o pedaço [sIni, sFim) da imagem entre x0 e x1, alternando normal e espelhado.
+// Do lado direito começa encostado na ponta direita, vai para a esquerda e fica espelhado:
+// as skins não são iguais dos dois lados (brilho, desenho), e assim os dois lados da barra ficam iguais.
+function repetirPedaco(c, img, sIni, sFim, x0, x1, daDireita) {
+  const tw = sFim - sIni, ih = img.height;
+  c.save();
+  c.beginPath();
+  c.rect(x0, 0, x1 - x0, ih);
+  c.clip();
+  for (let k = 0; k * tw < x1 - x0; k++) {
+    const x = daDireita ? x1 - (k + 1) * tw : x0 + k * tw;
+    const espelhado = (k % 2 === 1) !== daDireita;
+    if (!espelhado) c.drawImage(img, sIni, 0, tw, ih, x, 0, tw, ih);
+    else {
+      c.save();
+      c.translate(x + tw, 0);
+      c.scale(-1, 1);
+      c.drawImage(img, sIni, 0, tw, ih, 0, 0, tw, ih);
+      c.restore();
+    }
+  }
+  c.restore();
 }
 
 // Raquete do streamer (brilha quando ele ganha ponto; no modo intervalo não tem)
@@ -647,6 +691,20 @@ function desenhar(agora) {
   if (estado === 'pausa') desenharRankingPausa(agora);
 }
 
+// Selo de fundador no canto de cima, à direita, de uma caixa desenhada na tela
+// (o mesmo das telas do menu, que usam o CSS de body.fundador)
+function desenharSeloFundador(direita, topo) {
+  if (!document.body.classList.contains('fundador') || !imgs.seloFundador) return;
+  ctx.save();
+  ctx.translate(direita + 18, topo + 18); // centro do selo: 88 px, 26 px para fora da caixa
+  ctx.rotate(12 * Math.PI / 180);
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+  ctx.shadowBlur = 8;
+  ctx.shadowOffsetY = 4;
+  ctx.drawImage(imgs.seloFundador, -44, -44, 88, 88);
+  ctx.restore();
+}
+
 // Modo intervalo: ranking entre as fases (top 10, pontos de todas as fases) com a contagem em cima.
 // Cabe dentro da tela do jogo.
 function desenharRankingPausa(agora) {
@@ -669,6 +727,7 @@ function desenharRankingPausa(agora) {
   ctx.strokeStyle = '#facc15';
   ctx.lineWidth = 2;
   ctx.strokeRect(x, y, caixaW, caixaH);
+  desenharSeloFundador(x + caixaW, y);
 
   // contagem para a próxima fase (em cima do ranking)
   const falta = Math.max(0, Math.ceil((pausaAte - agora) / 1000));

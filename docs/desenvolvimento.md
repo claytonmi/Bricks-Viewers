@@ -111,7 +111,7 @@ As skins ficam em `assets/imagens/skins/<id>.png`, com 300 × 32 (o dobro da raq
 
 Essas ficam no jogo e são de todos. Skins que não podem ficar públicas (Fundador, por tempo limitado e, no futuro, pagas) ficam só no servidor: o jogo pergunta ao conectar quais o canal pode usar e baixa as imagens de lá (`js/interface/aparencia.js`). Elas não vão para este repositório.
 
-No modo intervalo, a skin vira a barra de baixo: as pontas (10% de cada lado da imagem) ficam no tamanho da raquete e o meio estica na largura do jogo. Desenhos no meio da imagem ficam esticados nessa barra.
+No modo intervalo, a skin vira a barra de baixo, no mesmo tamanho da raquete (nada estica). As pontas (33% de cada lado da imagem, com os enfeites) e o desenho do centro (40% a 60% da imagem) aparecem inteiros; o espaço entre eles é preenchido repetindo o pedaço de 33% a 40%, um normal e um espelhado. Então desenhos do centro devem caber entre 40% e 60% da largura, e o pedaço de 33% a 40% deve ser liso ou com um padrão que se repete.
 
 ## Imagens da Fase Natalina
 
