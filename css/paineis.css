@@ -76,13 +76,13 @@
 .painel-comandos h3 {
   margin: 0 0 6px;
   text-align: center;
-  font-size: 17px;
+  font-size: 1.3em;       /* em: acompanha a letra do painel, que diminui se o texto não couber (escala.js) */
 }
 .painel-comandos h4 {
   margin: 10px 0 4px;
   padding-top: 8px;
   border-top: 1px solid var(--linha);
-  font-size: 15px;
+  font-size: 1.15em;
   text-align: center;
 }
 .painel-comandos p {
@@ -104,7 +104,7 @@
 }
 .painel-comandos .obs {
   color: var(--texto-suave);
-  font-size: 12px;
+  font-size: 0.92em;
 }
 /* Depois do Pronto não dá mais para entrar: o !entrar fica apagado */
 .painel-comandos li.fechado {

@@ -57,7 +57,7 @@ Bricks-Viewers/
     │   ├── imagens.js      carrega e pinta as imagens
     │   └── desenho.js      desenho na tela
     ├── interface/
-    │   ├── escala.js       tamanho da tela
+    │   ├── escala.js       tamanho da tela (e letra do painel de comandos, que diminui para caber)
     │   ├── menu.js         menu, fases e informações
     │   ├── aparencia.js    cor e skin da raquete
     │   ├── obs.js          link e cena do OBS
