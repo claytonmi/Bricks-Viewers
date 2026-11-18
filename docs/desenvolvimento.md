@@ -36,7 +36,8 @@ Bricks-Viewers/
     ├── servicos/
     │   ├── audio.js        música e botão de som
     │   ├── twitch.js       conexão com o chat
-    │   └── contador.js     contador de acessos (GoatCounter)
+    │   ├── contador.js     contador de acessos (GoatCounter)
+    │   └── fundador.js     selo de fundador
     ├── jogo/
     │   ├── fisica.js       bola, rebotes e colisões
     │   ├── itens.js        itens que caem

@@ -111,3 +111,37 @@
   color: #64748b;
   padding: 0;
 }
+
+/* Selo de fundador no canto de cima, à direita, das telas (menu, informações, ranking e pausa) */
+body.fundador .caixa,
+body.fundador .menu-pausa-caixa {
+  position: relative;
+}
+body.fundador .caixa::after,
+body.fundador .menu-pausa-caixa::after {
+  content: '';
+  position: absolute;
+  top: -26px;
+  right: -26px;
+  width: 88px;
+  height: 88px;
+  background: url('../assets/imagens/interface/selo-fundador.png') center / contain no-repeat;
+  transform: rotate(12deg);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+/* Espaço em volta para o selo não ser cortado quando a caixa encosta na borda */
+body.fundador .sobreposicao {
+  padding: 28px 28px 0;
+}
+body.fundador .menu-pausa-caixa {
+  overflow: visible;
+  max-height: none;
+}
+body.fundador .menu-pausa {
+  overflow-y: auto;
+  padding: 28px;
+}
+body.fundador .menu-pausa-caixa {
+  margin: auto;
+}

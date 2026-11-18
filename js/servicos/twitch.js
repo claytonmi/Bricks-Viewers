@@ -85,6 +85,7 @@ function abrirConexao(canal) {
       if (linha.includes(' JOIN #') || linha.includes(' 366 ')) {
         status.textContent = 'Conectado no chat de ' + canal + '. Pode digitar !entrar.';
         btIniciar.disabled = false;
+        verificarFundador(canal);
         tentativasReconexao = 0;
         chatReconectando = false;
         // link do OBS: conectou, já começa
