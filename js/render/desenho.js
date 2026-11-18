@@ -297,6 +297,8 @@ function desenharRaquete(agora) {
   }
   if (faseNatal()) desenharBengala(paddleX - PADDLE_W / 2, PADDLE_Y); // Natal: a raquete vira bengala doce
   else if (espacoAtiva()) desenharDisco(paddleX - PADDLE_W / 2, agora); // Fase 6: disco voador (espaco.js)
+  else if (desenhoDaSkin() === 'bengala') desenharBengala(paddleX - PADDLE_W / 2, PADDLE_Y); // skin Bengala Doce: a bengala com a curva
+  else if (desenhoDaSkin() === 'disco') desenharDisco(paddleX - PADDLE_W / 2, agora); // skin Disco Voador em qualquer fase
   else ctx.drawImage(skinRaquete && imgs['skin_' + skinRaquete] || raqueteColorida(corRaquete),
     paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H);
   ctx.shadowBlur = 0;

@@ -100,14 +100,16 @@ Para trocar a arte, é só editar ou substituir esses PNGs, mantendo os mesmos n
 
 Se uma imagem faltar ou não carregar, o jogo desenha o meteoro sozinho, então ele nunca fica invisível.
 
-A mesma pasta tem `raquete-disco.png`, a raquete da Fase 6 (disco voador). No jogo ela ocupa 150 × 36 (a imagem atual tem o dobro, 300 × 72). A linha onde a bola rebate fica 10 px abaixo do topo da imagem, no alto da borda do disco; a cúpula sobe acima dela. Ao editar, mantenha a borda do disco nessa altura. O rastro de velocidade é desenhado pelo jogo.
+A raquete da Fase 6 (disco voador) não fica nesta pasta: ela é a skin "Disco Voador" e vem do servidor, que também deixa usar o disco em outras fases. No jogo ela ocupa 150 × 36 (a imagem da partida tem o dobro, 300 × 72). A linha onde a bola rebate fica 10 px abaixo do topo da imagem, no alto da borda do disco; a cúpula sobe acima dela. Ao editar, mantenha a borda do disco nessa altura. O rastro de velocidade é desenhado pelo jogo. Sem o servidor, o jogo desenha o disco pelo código.
 
 ## Skins da raquete
 
 As skins ficam em `assets/imagens/skins/<id>.png`, com 300 × 32 (o dobro da raquete, que no jogo tem 150 × 16), fundo transparente. Para criar uma nova:
 
 1. Salve a imagem nessa pasta, com nome em minúsculas (ex: `gelo.png`).
-2. Acrescente uma linha em `SKINS_RAQUETE`, em `js/nucleo/config.js` (ex: `{ id: 'gelo', nome: 'Gelo' }`). Com `soFundador: true`, só canais fundadores usam.
+2. Acrescente uma linha em `SKINS_RAQUETE`, em `js/nucleo/config.js` (ex: `{ id: 'gelo', nome: 'Gelo' }`).
+
+Essas ficam no jogo e são de todos. Skins que não podem ficar públicas (Fundador, por tempo limitado e, no futuro, pagas) ficam só no servidor: o jogo pergunta ao conectar quais o canal pode usar e baixa as imagens de lá (`js/interface/aparencia.js`). Elas não vão para este repositório.
 
 No modo intervalo, a skin vira a barra de baixo: as pontas (10% de cada lado da imagem) ficam no tamanho da raquete e o meio estica na largura do jogo. Desenhos no meio da imagem ficam esticados nessa barra.
 
@@ -119,8 +121,9 @@ As artes da fase de Natal vêm de `assets/imagens/natal/` e carregam quando a fa
 |---|---|---|
 | `rena-treno.png` | rena puxando o trenó (olhando para a direita; o jogo espelha quando ela vai para a esquerda) | 132 × 52 |
 | `papai-noel-saco.png` | chefão saco do Papai Noel (a vida aparece por cima) | 110 × 84 |
-| `bengala-doce.png` | raquete da fase (a parte reta, em cima, é a que rebate) | 158 × 46 |
 | `presente-<cor>.png` | presentinhos que caem do saco (`vermelho`, `verde`, `dourado`, `azul`, `rosa`) | 14 × 14 |
+
+A raquete da fase (a bengala) não fica nesta pasta: ela vem do servidor, como a skin "Bengala Doce".
 
 A imagem é encaixada nesse tamanho sem distorcer (centralizada e apoiada embaixo), então dá para desenhar maior, por exemplo no dobro. O ideal é manter a mesma proporção da tabela: uma imagem bem mais alta ou mais larga aparece menor dentro do espaço. Use PNG com fundo transparente. Se uma imagem faltar ou não carregar, o jogo usa o desenho do próprio código.
 

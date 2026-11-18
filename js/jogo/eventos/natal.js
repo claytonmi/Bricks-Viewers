@@ -50,7 +50,7 @@ function imagemNatal(nome) {
 }
 
 function carregarImagensNatal() {
-  ['rena-treno', 'papai-noel-saco', 'bengala-doce', ...Object.values(PRESENTE_IMAGEM)].forEach(imagemNatal);
+  ['rena-treno', 'papai-noel-saco', ...Object.values(PRESENTE_IMAGEM)].forEach(imagemNatal);
 }
 
 // Encaixa a imagem na caixa sem distorcer: centralizada na largura e apoiada embaixo
@@ -399,7 +399,7 @@ function desenharBengala(x, y) {
   const m = BENGALA_MARGEM;
   const bx = x - m;
   const by = y + PADDLE_H / 2 - (m + BENGALA_GROSSURA / 2);
-  const img = imagemNatal('bengala-doce');
+  const img = arteDaSkin('bengala'); // a imagem vem do servidor (skin Bengala Doce); sem ela, a bengala é desenhada pelo código
   if (img) { // mesma caixa do desenho do código: a parte reta fica no lugar da raquete
     const w = PADDLE_W + m * 2;
     const h = BENGALA_RAIO * 2 + BENGALA_GROSSURA + m * 2;

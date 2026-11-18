@@ -27,6 +27,7 @@ function conectarChat() {
   desativarModoSimulacao();
   pararReconexao();
   liberarAparencia(false); // cor e skin só depois de conectar
+  if (canal !== canalSkins) limparSkinsServidor();
   // outro canal: o selo do anterior some até o servidor responder pelo novo
   if (canal !== fundadorCanalPedido) {
     fundadorCanalPedido = '';

@@ -155,6 +155,7 @@ function atualizarContagem(agora) {
 // Solta todas as bolas
 function iniciarJogo(agora) {
   estado = 'jogando';
+  revalidarSkinsServidor(); // a skin do servidor ainda vale para o canal? (aparencia.js)
   rebatidasStreamer = 0;
   rebatidasPorPonto = calcularRebatidasPorPonto(viewers.length);
   velTodasAte = 0;

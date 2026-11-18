@@ -93,7 +93,6 @@ function carregarImagensEspaco() {
   for (const corNome of METEORO_CORES_NOMES) {
     for (let v = 1; v <= METEORO_VARIANTES; v++) imagemDoMeteoro({ corNome, variante: v });
   }
-  imagemEspaco('raquete-disco');
 }
 
 // Outras imagens da pasta (ex: a raquete). null enquanto não carregou ou se faltar.
@@ -129,7 +128,7 @@ function desenharDisco(xEsq, agora) {
   discoRastro = discoRastro.filter(p => agora - p.agora < DISCO_RASTRO_MS);
 
   const y = PADDLE_Y - DISCO_TOPO;
-  const img = imagemEspaco('raquete-disco');
+  const img = arteDaSkin('disco'); // a imagem vem do servidor (skin Disco Voador); sem ela, o disco é desenhado pelo código
   const rapido = Math.abs(discoVel) > DISCO_VEL_RASTRO;
   if (rapido) {
     ctx.save();

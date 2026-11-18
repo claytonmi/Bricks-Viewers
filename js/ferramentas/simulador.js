@@ -26,10 +26,12 @@ function ativarModoSimulacao(nome) {
     'Modo simulação ligado (sem chat da Twitch). Clique em Iniciar: o painel do simulador aparece ao lado do jogo.';
   document.getElementById('btIniciar').disabled = false;
   mostrarFase(); // no simulador, as fases de evento ficam liberadas para testar
-  // simulação não é canal de verdade: sem selo, mas com todas as skins liberadas para testar
+  // simulação não é canal de verdade: sem selo, e do servidor só as skins grátis
   fundadorCanalPedido = '';
   mostrarSeloFundador(false);
-  liberarAparencia(true, true);
+  limparSkinsServidor(); // skins do servidor são do canal: no simulador, só as grátis
+  carregarSkinsServidor('');
+  liberarAparencia(true);
 }
 
 // Desliga o modo simulação ao conectar num canal de verdade: esconde o painel e para o automático

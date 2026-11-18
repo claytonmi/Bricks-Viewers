@@ -23,7 +23,7 @@ function inicioPeloLink() {
   const cor = p.get('cor') || '';
   if (/^[0-9a-f]{6}$/i.test(cor)) escolherCorRaquete('#' + cor, false); // cor da barra escolhida no menu
   const skin = p.get('skin') || '';
-  if (SKINS_RAQUETE.some(s => s.id && s.id === skin)) escolherSkin(skin, false); // Fundador só vale se o canal for
+  if (/^[a-z0-9_-]{1,40}$/.test(skin)) escolherSkin(skin, false); // skin do servidor só aparece se o canal puder usar
   const vagas = Number(p.get('vagas'));
   if (Number.isInteger(vagas) && vagas >= 1 && vagas <= MAX_VIEWERS) {
     document.getElementById('qtd').value = vagas;
@@ -138,7 +138,7 @@ document.getElementById('btLinkObs').onclick = () => {
   const link = `${location.origin}${location.pathname}?canal=${canal}` +
     `&modo=intervalo&fase=${indiceFase + 1}&vagas=${document.getElementById('qtd').value}` +
     (corRaquete !== COR_RAQUETE_PADRAO ? `&cor=${corRaquete.slice(1)}` : '') +
-    (SKINS_RAQUETE[skinIndice].id ? `&skin=${SKINS_RAQUETE[skinIndice].id}` : '');
+    (skinRaquete ? `&skin=${skinRaquete}` : '');
   contarEvento('copiou-link-obs'); // contador de acessos: só o evento, sem o canal
   copiarAntigo(link, () => {
     status.textContent = 'Link copiado! No OBS: fonte Navegador, cole o link e use o tamanho da sua live (1280x720 ou 1920x1080).';

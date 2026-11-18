@@ -13,7 +13,6 @@ let fundadorCanalPedido = '';
 // Mostra ou esconde o selo em todas as telas (menu, informações, ranking e pausa)
 function mostrarSeloFundador(sim) {
   document.body.classList.toggle('fundador', !!sim);
-  definirFundador(sim); // a skin Fundador só vale para fundador (aparencia.js)
 }
 
 // Chamado ao conectar no chat
@@ -35,4 +34,6 @@ async function verificarFundador(canal) {
   } catch (e) {
     // servidor fora do ar: o jogo segue normal, só sem o selo
   }
+  // depois do registro (que guarda o ID do canal), pede as skins do servidor que o canal pode usar
+  if (canal === fundadorCanalPedido) carregarSkinsServidor(canal);
 }
