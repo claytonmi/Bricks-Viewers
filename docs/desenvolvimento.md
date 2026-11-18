@@ -14,7 +14,8 @@ Bricks-Viewers/
 │   └── imagens/
 │       ├── espaco/         meteoros da Fase 6
 │       ├── fases/          fundos das fases
-│       ├── interface/      imagens do menu
+│       ├── interface/      imagens do menu e selo de fundador
+│       ├── skins/          skins da raquete
 │       └── sprites/        bola, raquete e tijolos
 ├── css/
 │   ├── base.css            variáveis (inclusive as cores das telas), página e utilitários
@@ -58,6 +59,7 @@ Bricks-Viewers/
     ├── interface/
     │   ├── escala.js       tamanho da tela
     │   ├── menu.js         menu, fases e informações
+    │   ├── aparencia.js    cor e skin da raquete
     │   ├── obs.js          link e cena do OBS
     │   ├── entrada.js      teclado e mouse
     │   └── ranking.js      ranking lateral e "Copiar top 3"
@@ -99,6 +101,15 @@ Para trocar a arte, é só editar ou substituir esses PNGs, mantendo os mesmos n
 Se uma imagem faltar ou não carregar, o jogo desenha o meteoro sozinho, então ele nunca fica invisível.
 
 A mesma pasta tem `raquete-disco.png`, a raquete da Fase 6 (disco voador). No jogo ela ocupa 150 × 36 (a imagem atual tem o dobro, 300 × 72). A linha onde a bola rebate fica 10 px abaixo do topo da imagem, no alto da borda do disco; a cúpula sobe acima dela. Ao editar, mantenha a borda do disco nessa altura. O rastro de velocidade é desenhado pelo jogo.
+
+## Skins da raquete
+
+As skins ficam em `assets/imagens/skins/<id>.png`, com 300 × 32 (o dobro da raquete, que no jogo tem 150 × 16), fundo transparente. Para criar uma nova:
+
+1. Salve a imagem nessa pasta, com nome em minúsculas (ex: `gelo.png`).
+2. Acrescente uma linha em `SKINS_RAQUETE`, em `js/nucleo/config.js` (ex: `{ id: 'gelo', nome: 'Gelo' }`). Com `soFundador: true`, só canais fundadores usam.
+
+No modo intervalo, a skin vira a barra de baixo: as pontas (10% de cada lado da imagem) ficam no tamanho da raquete e o meio estica na largura do jogo. Desenhos no meio da imagem ficam esticados nessa barra.
 
 ## Imagens da Fase Natalina
 

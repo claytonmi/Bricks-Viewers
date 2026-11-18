@@ -103,6 +103,17 @@ const NEVE_FLOCOS = 90;          // flocos de neve caindo na tela
 
 // Modo intervalo (o streamer sai e só o chat joga)
 const PISO_Y = PADDLE_Y;         // chão-parede no lugar da raquete: as bolas quicam e nunca caem
+const COR_RAQUETE_PADRAO = '#ffffff'; // cor original da raquete e da barra do modo intervalo
+// Skins da raquete (imagens em assets/imagens/skins/<id>.png, 300 x 32: o dobro da raquete).
+// A primeira é "sem skin": vale a cor escolhida. soFundador: só para canais fundadores.
+const SKINS_RAQUETE = [
+  { id: '', nome: 'Sem skin (cor)' },
+  { id: 'fundador', nome: 'Fundador', soFundador: true },
+  { id: 'real', nome: 'Real' },
+  { id: 'lava', nome: 'Lava' },
+  { id: 'pixel', nome: 'Pixel' },
+  { id: 'neon', nome: 'Neon' },
+];
 const VAGAS_INTERVALO = 75;      // limite de jogadores ao marcar o modo intervalo (o streamer ainda pode mudar)
 const INTERVALO_ESPERA = 20000;  // lobby: a partida começa sozinha 20 s depois do Iniciar
 const RANKING_ESPERA = 30000;    // link do OBS: ao voltar para a cena, o ranking fica 30 s antes do jogo novo

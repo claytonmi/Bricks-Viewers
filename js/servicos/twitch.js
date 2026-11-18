@@ -26,6 +26,12 @@ function conectarChat() {
   }
   desativarModoSimulacao();
   pararReconexao();
+  liberarAparencia(false); // cor e skin só depois de conectar
+  // outro canal: o selo do anterior some até o servidor responder pelo novo
+  if (canal !== fundadorCanalPedido) {
+    fundadorCanalPedido = '';
+    mostrarSeloFundador(false);
+  }
   nomeStreamer = canal; // modo intervalo: a bola do streamer leva o nome do canal
   document.getElementById('btIniciar').disabled = true; // só libera depois de conectar
   status.textContent = 'Conectando no chat de ' + canal + '...';
@@ -86,6 +92,7 @@ function abrirConexao(canal) {
         status.textContent = 'Conectado no chat de ' + canal + '. Pode digitar !entrar.';
         btIniciar.disabled = false;
         verificarFundador(canal);
+        liberarAparencia(true);
         tentativasReconexao = 0;
         chatReconectando = false;
         // link do OBS: conectou, já começa

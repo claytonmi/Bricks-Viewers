@@ -261,8 +261,31 @@ function desenharChao() {
   if (!modoIntervalo || estado === 'menu') return;
   ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
   ctx.fillRect(0, PISO_Y, W, H - PISO_Y);
-  ctx.fillStyle = '#ffffff';
+  // com skin, a barra onde as bolas quicam vira a skin; sem skin, a cor escolhida no menu
+  const skin = skinRaquete && imgs['skin_' + skinRaquete];
+  if (skin) {
+    desenharBarraSkin(skin, PISO_Y);
+    return;
+  }
+  // cor escura ganha uma linha clara em cima
+  ctx.fillStyle = corRaquete;
   ctx.fillRect(0, PISO_Y, W, 6);
+  if (corEscura(corRaquete)) {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.fillRect(0, PISO_Y, W, 1.5);
+  }
+}
+
+// Barra do modo intervalo com a skin: um desenho só, esticado na largura do jogo.
+// As pontas (10% de cada lado da imagem) ficam no tamanho da raquete, para não deformar;
+// o meio estica até a outra ponta.
+function desenharBarraSkin(img, y) {
+  const p = img.width * 0.1;           // ponta na imagem
+  const pd = PADDLE_W * 0.1;           // ponta no jogo
+  const h = PADDLE_H;
+  ctx.drawImage(img, 0, 0, p, img.height, 0, y, pd, h);
+  ctx.drawImage(img, img.width - p, 0, p, img.height, W - pd, y, pd, h);
+  ctx.drawImage(img, p, 0, img.width - 2 * p, img.height, pd, y, W - 2 * pd, h);
 }
 
 // Raquete do streamer (brilha quando ele ganha ponto; no modo intervalo não tem)
@@ -274,7 +297,8 @@ function desenharRaquete(agora) {
   }
   if (faseNatal()) desenharBengala(paddleX - PADDLE_W / 2, PADDLE_Y); // Natal: a raquete vira bengala doce
   else if (espacoAtiva()) desenharDisco(paddleX - PADDLE_W / 2, agora); // Fase 6: disco voador (espaco.js)
-  else ctx.drawImage(imgs.paddle, paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H);
+  else ctx.drawImage(skinRaquete && imgs['skin_' + skinRaquete] || raqueteColorida(corRaquete),
+    paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H);
   ctx.shadowBlur = 0;
 }
 

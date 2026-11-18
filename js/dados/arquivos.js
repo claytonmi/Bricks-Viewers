@@ -7,3 +7,4 @@ const ARQUIVOS = {
   tijolo4: 'assets/imagens/sprites/tijolo-vida-1.png'
 };
 FASES.forEach((f, i) => { ARQUIVOS['fundo' + i] = f.fundo; });
+SKINS_RAQUETE.forEach(s => { if (s.id) ARQUIVOS['skin_' + s.id] = 'assets/imagens/skins/' + s.id + '.png'; });

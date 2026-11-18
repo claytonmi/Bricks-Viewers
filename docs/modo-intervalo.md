@@ -4,7 +4,7 @@
 
 Para quando o streamer sai da live por um tempo. No menu, marque **Modo intervalo**, escolha a fase inicial e clique em **Iniciar**.
 
-- Não tem raquete. O chão vira uma parede branca (na altura da raquete): as bolas quicam nos 4 lados e nunca caem.
+- Não tem raquete. O chão vira uma parede (na altura da raquete), branca ou com a skin ou a cor escolhida no menu ("Skin da barra" e "Cor da barra"): as bolas quicam nos 4 lados e nunca caem. O link do OBS leva essa escolha junto.
 - O streamer entra como uma bola (com o nome do canal, em azul-claro). Ela só ajuda a quebrar tijolos: fica fora do ranking e da regra do ausente.
 - Não tem botão Pronto: a partida começa sozinha 20 s depois do Iniciar. As bolas esperam em linhas de 20, logo acima do chão.
 - `!entrar` funciona a qualquer momento, até o limite de jogadores do menu (marcar Modo intervalo já coloca o limite em 75, e dá para mudar). Durante a fase, o canto da tela mostra as vagas. No meio da fase, a bola nasce no chão e já sai jogando. Não tem lançar nem mirar: as bolas saem sozinhas.

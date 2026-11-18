@@ -51,6 +51,27 @@
 
           <label class="opcao"><span>Streamer pontua no ranking</span><input type="checkbox" class="chave" id="pontuaStreamer"></label>
           <label class="opcao" title="Sem raquete: só o chat joga, as fases seguem em carrossel a partir da escolhida até você clicar em Voltei"><span>Modo intervalo (só o chat joga)</span><input type="checkbox" class="chave" id="modoIntervalo"></label>
+          <div id="aparenciaRaquete" class="aparencia bloqueada">
+            <div class="opcao" title="No modo intervalo, a skin vai para a barra de baixo, onde as bolas quicam">
+              <span id="skinRotulo">Skin da raquete</span>
+              <span class="skin-raquete">
+                <button id="skinAnt" class="seta seta-pequena" type="button" aria-label="Skin anterior"></button>
+                <span class="skin-previa">
+                  <canvas id="skinPrevia" width="300" height="32"></canvas>
+                  <small id="skinNome">Sem skin (cor)</small>
+                </span>
+                <button id="skinProx" class="seta seta-pequena" type="button" aria-label="Próxima skin"></button>
+              </span>
+            </div>
+            <div id="linhaCorRaquete" class="opcao" title="No modo intervalo, a cor vai para a barra de baixo, onde as bolas quicam">
+              <span id="corRaqueteRotulo">Cor da raquete</span>
+              <span class="cor-raquete">
+                <button id="btCorPadrao" class="btn-cor-padrao" type="button">Padrão</button>
+                <input type="color" id="corRaquete" value="#ffffff" aria-label="Escolher a cor da raquete">
+              </span>
+            </div>
+            <p class="aparencia-aviso">Conecte o canal para escolher a raquete.</p>
+          </div>
           <button id="btIniciar" class="btn-principal btn-iniciar" disabled>Iniciar</button>
           <div class="botoes-menu">
             <button id="btInfo">Informações</button>
@@ -305,6 +326,7 @@
   <script src="js/servicos/fundador.js"></script>
   <script src="js/interface/escala.js"></script>
   <script src="js/interface/menu.js"></script>
+  <script src="js/interface/aparencia.js"></script>
   <script src="js/interface/obs.js"></script>
   <script src="js/interface/entrada.js"></script>
   <script src="js/interface/ranking.js"></script>

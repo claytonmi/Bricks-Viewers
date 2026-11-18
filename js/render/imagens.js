@@ -36,6 +36,39 @@ function bolaColorida(cor) {
   return c;
 }
 
+// Raquete pintada com a cor escolhida no menu (a imagem é branca: vira a cor inteira, guarda em cache).
+// Cor escura ganha um contorno claro para não sumir no fundo.
+function raqueteColorida(cor) {
+  const src = imgs.paddle;
+  if (!src || !cor || cor === COR_RAQUETE_PADRAO) return src;
+  const k = 'raquete|' + cor;
+  if (cacheCor.has(k)) return cacheCor.get(k);
+  const borda = corEscura(cor) ? Math.max(2, Math.round(src.height * 0.12)) : 0;
+  const c = document.createElement('canvas');
+  c.width = src.width;
+  c.height = src.height;
+  const cx = c.getContext('2d');
+  cx.drawImage(src, 0, 0);
+  if (borda) {
+    // por baixo fica a raquete branca (o contorno); por cima, a pintada um pouco menor
+    const t = document.createElement('canvas');
+    t.width = src.width;
+    t.height = src.height;
+    const tx = t.getContext('2d');
+    tx.drawImage(src, 0, 0);
+    tx.globalCompositeOperation = 'source-in';
+    tx.fillStyle = cor;
+    tx.fillRect(0, 0, t.width, t.height);
+    cx.drawImage(t, borda, borda, c.width - borda * 2, c.height - borda * 2);
+  } else {
+    cx.globalCompositeOperation = 'source-in';
+    cx.fillStyle = cor;
+    cx.fillRect(0, 0, c.width, c.height);
+  }
+  cacheCor.set(k, c);
+  return c;
+}
+
 // A cor é escura demais para aparecer no fundo? (brilho percebido abaixo de 60, numa escala de 0 a 255)
 const cxCor = document.createElement('canvas').getContext('2d');
 function corEscura(cor) {

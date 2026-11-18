@@ -65,6 +65,8 @@ let camposGrav = [];          // campos do !gravity ativos (puxando bolas até e
 let raiosChoque = [];         // raios do !shock entre a bola eletrizada e a atingida (só para desenhar)
 
 const imgs = {};              // imagens carregadas
+let skinRaquete = '';         // skin em uso ('' = sem skin, vale a cor)
+let corRaquete = COR_RAQUETE_PADRAO; // cor que o streamer escolheu no menu (raquete, ou a barra do modo intervalo)
 const cacheCor = new Map();   // bolas e tijolos já pintados com cada cor
 let clienteTwitch = null;     // conexão com o chat da Twitch
 let chatReconectando = false; // true quando o chat caiu e o jogo está reconectando (aviso na tela)

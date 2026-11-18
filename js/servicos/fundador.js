@@ -13,6 +13,7 @@ let fundadorCanalPedido = '';
 // Mostra ou esconde o selo em todas as telas (menu, informações, ranking e pausa)
 function mostrarSeloFundador(sim) {
   document.body.classList.toggle('fundador', !!sim);
+  definirFundador(sim); // a skin Fundador só vale para fundador (aparencia.js)
 }
 
 // Chamado ao conectar no chat

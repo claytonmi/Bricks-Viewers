@@ -69,7 +69,11 @@ document.getElementById('modoIntervalo').onchange = e => {
     qtd.value = qtdAntesDoIntervalo;
   }
   document.getElementById('qtdTexto').textContent = qtd.value;
+  // no modo intervalo não tem raquete: a cor vai para a barra de baixo, onde as bolas quicam
+  document.getElementById('corRaqueteRotulo').textContent = e.target.checked ? 'Cor da barra' : 'Cor da raquete';
+  document.getElementById('skinRotulo').textContent = e.target.checked ? 'Skin da barra' : 'Skin da raquete';
 };
+
 
 // Abas da tela de informações
 function mostrarAba(id) {

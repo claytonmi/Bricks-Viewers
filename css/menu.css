@@ -77,7 +77,8 @@
   border-right: 2px solid currentColor;
   transform: translate(-70%, -50%) rotate(45deg);   /* a ponta fica à direita: puxa para a esquerda */
 }
-#faseAnt::before {
+#faseAnt::before,
+#skinAnt::before {
   transform: translate(-30%, -50%) rotate(-135deg);
 }
 #faseImg {
@@ -149,4 +150,81 @@
   margin-top: 8px;
   font-size: 13px;
   color: #22d3ee;
+}
+
+/* Cor e skin da raquete (ou da barra, no modo intervalo) */
+.aparencia.bloqueada .opcao {
+  opacity: 0.45;
+}
+.aparencia-aviso {
+  display: none;
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--texto-suave);
+}
+.aparencia.bloqueada .aparencia-aviso {
+  display: block;
+}
+.cor-raquete {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+button.btn-cor-padrao {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+.cor-raquete input[type="color"] {
+  width: 64px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--vidro-borda);
+  border-radius: 10px;
+  background: none;
+  cursor: pointer;
+}
+.cor-raquete input[type="color"]:disabled {
+  cursor: not-allowed;
+}
+.cor-raquete input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 3px;
+}
+.cor-raquete input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 7px;
+}
+.cor-raquete input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 7px;
+}
+
+/* Escolha da skin: setas e prévia */
+.skin-raquete {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.seta.seta-pequena {
+  width: 28px;
+  height: 28px;
+}
+.seta.seta-pequena::before {
+  width: 6px;
+  height: 6px;
+}
+.skin-previa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 160px;
+}
+.skin-previa canvas {
+  width: 150px;
+  height: 16px;
+}
+.skin-previa small {
+  font-size: 11px;
+  color: var(--texto-suave);
+  white-space: nowrap;
 }
