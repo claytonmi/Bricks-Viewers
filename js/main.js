@@ -96,6 +96,7 @@ function loop() {
 carregarImagens()
   .then(() => {
     mostrarFase();
+    iniciarIdioma(); // idioma guardado ou o do navegador
     iniciarAparencia(); // cor e skin da raquete guardadas
     inicioPeloLink(); // link do OBS: já conecta e começa sozinho
     if (document.hidden) ligarTimerEscondido(); // a página pode abrir já escondida
