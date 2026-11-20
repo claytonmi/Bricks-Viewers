@@ -42,7 +42,7 @@
           <div class="linha cartao-fase">
             <button id="faseAnt" class="seta" aria-label="Fase anterior" data-t-aria="menu.faseAnt"></button>
             <div>
-              <img id="faseImg" alt="Miniatura da fase" data-t-aria="menu.faseMiniatura">
+              <img id="faseImg" alt="Miniatura da fase" data-t-alt="menu.faseMiniatura" data-t-aria="menu.faseMiniatura">
               <div id="faseNome">Fase 1</div>
             </div>
             <button id="faseProx" class="seta" aria-label="Próxima fase" data-t-aria="menu.faseProx"></button>
@@ -90,110 +90,110 @@
       <div id="info" class="sobreposicao escondido">
         <div class="caixa texto-info">
           <h2>Bricks Viewers</h2>
-          <p><b>Desenvolvimento:</b> Clayton M.</p>
-          <p><b>Arte:</b> Daru</p>
+          <p data-t="info.desenv" data-t-html="1"><b>Desenvolvimento:</b> Clayton M.</p>
+          <p data-t="info.arte" data-t-html="1"><b>Arte:</b> Daru</p>
 
           <!-- Abas da tela de informações (ver menu.js) -->
           <div class="abas">
-            <button class="aba ativa" data-aba="abaJogo">Como jogar</button>
-            <button class="aba" data-aba="abaObs">Usar no OBS</button>
+            <button class="aba ativa" data-aba="abaJogo" data-t="info.abaJogo">Como jogar</button>
+            <button class="aba" data-aba="abaObs" data-t="info.abaObs">Usar no OBS</button>
           </div>
 
           <div id="abaJogo">
-          <p><b>Como funciona:</b> o streamer controla a raquete. Cada viewer entra no jogo com uma bola pelo chat e tenta quebrar os tijolos. Quem quebrar mais tijolos fica no topo do ranking.</p>
-          <p><b>Comandos no chat:</b></p>
+          <p data-t="info.como" data-t-html="1"><b>Como funciona:</b> o streamer controla a raquete. Cada viewer entra no jogo com uma bola pelo chat e tenta quebrar os tijolos. Quem quebrar mais tijolos fica no topo do ranking.</p>
+          <p data-t="info.cmdTitulo" data-t-html="1"><b>Comandos no chat:</b></p>
           <ul>
-            <li><b>!entrar</b>: entra no jogo (antes de começar)</li>
-            <li><b>!azul, !vermelho, !amarelo...</b>: muda a cor da sua bola</li>
-            <li><b>!speed</b>: bola mais rápida por 5 segundos</li>
-            <li><b>!bomb</b>: empurra as bolas perto da sua e deixa elas mais rápidas por 1,5 segundo</li>
-            <li><b>!gravity</b>: puxa as bolas perto da sua por 2 segundos e depois lança todas para longe</li>
-            <li><b>!shock</b>: sua bola fica elétrica por 1,5 segundo e atordoa (deixa quase paradas por 2 segundos) as bolas que passar perto</li>
+            <li data-t="info.cmdEntrar" data-t-html="1"><b>!entrar</b>: entra no jogo (antes de começar)</li>
+            <li data-t="info.cmdCor" data-t-html="1"><b>!azul, !vermelho, !amarelo...</b>: muda a cor da sua bola</li>
+            <li data-t="info.cmdSpeed" data-t-html="1"><b>!speed</b>: bola mais rápida por 5 segundos</li>
+            <li data-t="info.cmdBomb" data-t-html="1"><b>!bomb</b>: empurra as bolas perto da sua e deixa elas mais rápidas por 1,5 segundo</li>
+            <li data-t="info.cmdGravity" data-t-html="1"><b>!gravity</b>: puxa as bolas perto da sua por 2 segundos e depois lança todas para longe</li>
+            <li data-t="info.cmdShock" data-t-html="1"><b>!shock</b>: sua bola fica elétrica por 1,5 segundo e atordoa (deixa quase paradas por 2 segundos) as bolas que passar perto</li>
           </ul>
-          <p><b>Extras:</b></p>
+          <p data-t="info.extrasTitulo" data-t-html="1"><b>Extras:</b></p>
           <ul>
-            <li>Na Fase 1, os tijolos caem do céu como chuva e se empilham: 135 na partida com até 15 jogadores, aumentando até 250 com 100 jogadores. Quanto mais tijolos na tela, mais devagar a chuva.</li>
-            <li><b>Tijolo chefão:</b> na Fase 1, quando a chuva acaba e sobram 4 tijolos ou menos, cai um tijolo grande e dourado com 40 de vida. Quem der a última batida ganha 5 pontos e derruba os tijolos que ainda sobravam. A partida só acaba depois que ele quebra.</li>
-            <li><b>Fim de fase travado:</b> se nenhuma bola encostar nos tijolos que sobraram por 10 s, uma bola escolhida ao acaso é atraída para o tijolo mais perto por 3 s.</li>
-            <li><b>Pausa:</b> aperte <b>Esc</b> para pausar. Aparece o ranking atual com os botões Continuar e Voltar ao menu; o tempo do jogo para junto. Aperte Esc de novo (ou Continuar) para voltar. Funciona no lobby, na contagem, durante a partida e no desempate; nas telas de ranking não tem pausa. No OBS, a tecla não chega ao jogo.</li>
-            <li><b>Desempate no pódio:</b> quando o empate envolve o pódio (1º, 2º ou 3º lugar, inclusive 3º com 4º), os empatados jogam um mini-jogo no fim da partida. Só as bolas empatadas jogam, e um tijolo anda no alto da tela; cada batida dá 1 ponto de desempate, e o tijolo tem vida igual ao número de bolas. Quem ganhar uma posição leva +1 ponto e fica na frente. Se com isso ele empatar com alguém que já estava na frente, esse alguém também ganha +1 e continua na frente. Empates fora do pódio (4º com 5º, por exemplo) não jogam: ficam juntos, na mesma posição.</li>
-            <li><b>Fase 5 (fábrica):</b> as linhas de tijolos andam como esteiras, cada uma para um lado, e o tijolo que sai por uma borda volta pela outra. Durante a partida, entram mais tijolos pela borda: 100 no total com até 15 jogadores, até 150 com 100 jogadores. Quando sobram 4 tijolos ou menos, o chefão desce e fica indo e voltando, cada vez mais rápido conforme perde vida.</li>
-            <li><b>Fase 6 (espaço):</b> meteoros redondos espalhados pela tela. Os grandes precisam de 5 batidas e viram dois pedaços ao quebrar. Quando um acaba, outro entra pela parte de cima (no máximo 18 na tela). Meteoros que se encostam se empurram de leve. A raquete vira um disco voador. Um buraco de minhoca aparece de tempos em tempos: a bola que chega perto da entrada escura sai pela saída clara, na mesma direção em que entrou. Com 100 jogadores, são 150 meteoros.</li>
-            <li data-evento="Fase Natalina" class="escondido"><b>Fase Natalina:</b> os tijolos são presentes e a neve cai. Quando sobram 4 tijolos ou menos, desce o saco do Papai Noel (40 de vida, balançando de um lado para o outro): quem der a última batida ganha 5 pontos e ele solta presentinhos que valem 1 ponto para a bola que pegar. De vez em quando passa uma rena voando lá em cima: acertar vale 10 pontos.</li>
-            <li data-evento="Fase Ano Novo Chinês" class="escondido"><b>Fase Ano Novo Chinês:</b> lanternas soltam moedas da sorte ao quebrar, envelopes vermelhos dão 2 pontos extras e fogos explodem e quebram os tijolos em volta. Moedas caem do céu (1 ponto para a bola que pegar) e fogos sobem do chão: a bola que passar por um ganha um poder pronto. Quando os tijolos acabam, entra o dragão com 40 de vida: quem der a última batida ganha 5 pontos. O fogo que ele solta atordoa as bolas, e se ele sair da tela a fase acaba.</li>
-            <li><b>Modo intervalo:</b> para quando você sai da live. Sem raquete, o chão vira parede e as bolas nunca caem. Você entra como uma bola (fora do ranking), a partida começa sozinha em 20 s e o chat entra com !entrar a qualquer momento. Não cai item nenhum. As fases seguem em carrossel a partir da escolhida, com o ranking (top 10) por 15 s entre elas; os pontos somam, mas os poderes zeram a cada fase. Na Fase 3, no fim cai um chefão com 40 de vida na parede do meio. Quem tinha poder pronto há mais de 1 min 30 s e não usou nenhum na fase perde os pontos daquela fase. Clique em <b>Voltei!</b> (embaixo do jogo) ou digite <b>!voltei</b> no chat (só você e os moderadores) para parar e ver o ranking. Vocês também controlam o som pelo chat: <b>!mudo</b>, <b>!som</b> e <b>!volume 30</b>.</li>
-            <li>Quanto mais jogadores, mais rápido saem os poderes: até 15 jogadores, os números abaixo; com 50 ou mais, !speed com 3 batidas, bomba com 6, !gravity com 7 e !shock com 8.</li>
-            <li>A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba (use com <b>!bomb</b>). Dá para guardar no máximo 2.</li>
-            <li>A cada 5 vezes que a sua bola bate em tijolos, você ganha uma carga de velocidade (use com <b>!speed</b>).</li>
-            <li>A cada 12 vezes que a sua bola bate em tijolos, você ganha o campo gravitacional (use com <b>!gravity</b>). Não acumula: depois de usar, precisa de mais 12 batidas.</li>
-            <li>A cada 13 vezes que a sua bola bate em tijolos, você ganha o choque (use com <b>!shock</b>). Também não acumula.</li>
-            <li>Enquanto um poder seu está ativo, os poderes dos outros não pegam na sua bola. Se mandar outro poder nesse tempo, ele espera na fila e sai quando o primeiro acabar. Se a sua bola estiver sob o poder de outra (presa, atordoada ou empurrada), o seu comando também espera e sai 1,5 segundo depois que o efeito acabar.</li>
+            <li data-t="info.f1">Na Fase 1, os tijolos caem do céu como chuva e se empilham: 135 na partida com até 15 jogadores, aumentando até 250 com 100 jogadores. Quanto mais tijolos na tela, mais devagar a chuva.</li>
+            <li data-t="info.chefao" data-t-html="1"><b>Tijolo chefão:</b> na Fase 1, quando a chuva acaba e sobram 4 tijolos ou menos, cai um tijolo grande e dourado com 40 de vida. Quem der a última batida ganha 5 pontos e derruba os tijolos que ainda sobravam. A partida só acaba depois que ele quebra.</li>
+            <li data-t="info.travado" data-t-html="1"><b>Fim de fase travado:</b> se nenhuma bola encostar nos tijolos que sobraram por 10 s, uma bola escolhida ao acaso é atraída para o tijolo mais perto por 3 s.</li>
+            <li data-t="info.pausa" data-t-html="1"><b>Pausa:</b> aperte <b>Esc</b> para pausar. Aparece o ranking atual com os botões Continuar e Voltar ao menu; o tempo do jogo para junto. Aperte Esc de novo (ou Continuar) para voltar. Funciona no lobby, na contagem, durante a partida e no desempate; nas telas de ranking não tem pausa. No OBS, a tecla não chega ao jogo.</li>
+            <li data-t="info.desempate" data-t-html="1"><b>Desempate no pódio:</b> quando o empate envolve o pódio (1º, 2º ou 3º lugar, inclusive 3º com 4º), os empatados jogam um mini-jogo no fim da partida. Só as bolas empatadas jogam, e um tijolo anda no alto da tela; cada batida dá 1 ponto de desempate, e o tijolo tem vida igual ao número de bolas. Quem ganhar uma posição leva +1 ponto e fica na frente. Se com isso ele empatar com alguém que já estava na frente, esse alguém também ganha +1 e continua na frente. Empates fora do pódio (4º com 5º, por exemplo) não jogam: ficam juntos, na mesma posição.</li>
+            <li data-t="info.f5" data-t-html="1"><b>Fase 5 (fábrica):</b> as linhas de tijolos andam como esteiras, cada uma para um lado, e o tijolo que sai por uma borda volta pela outra. Durante a partida, entram mais tijolos pela borda: 100 no total com até 15 jogadores, até 150 com 100 jogadores. Quando sobram 4 tijolos ou menos, o chefão desce e fica indo e voltando, cada vez mais rápido conforme perde vida.</li>
+            <li data-t="info.f6" data-t-html="1"><b>Fase 6 (espaço):</b> meteoros redondos espalhados pela tela. Os grandes precisam de 5 batidas e viram dois pedaços ao quebrar. Quando um acaba, outro entra pela parte de cima (no máximo 18 na tela). Meteoros que se encostam se empurram de leve. A raquete vira um disco voador. Um buraco de minhoca aparece de tempos em tempos: a bola que chega perto da entrada escura sai pela saída clara, na mesma direção em que entrou. Com 100 jogadores, são 150 meteoros.</li>
+            <li data-evento="Fase Natalina" class="escondido" data-t="info.natal" data-t-html="1"><b>Fase Natalina:</b> os tijolos são presentes e a neve cai. Quando sobram 4 tijolos ou menos, desce o saco do Papai Noel (40 de vida, balançando de um lado para o outro): quem der a última batida ganha 5 pontos e ele solta presentinhos que valem 1 ponto para a bola que pegar. De vez em quando passa uma rena voando lá em cima: acertar vale 10 pontos.</li>
+            <li data-evento="Fase Ano Novo Chinês" class="escondido" data-t="info.anoNovo" data-t-html="1"><b>Fase Ano Novo Chinês:</b> lanternas soltam moedas da sorte ao quebrar, envelopes vermelhos dão 2 pontos extras e fogos explodem e quebram os tijolos em volta. Moedas caem do céu (1 ponto para a bola que pegar) e fogos sobem do chão: a bola que passar por um ganha um poder pronto. Quando os tijolos acabam, entra o dragão com 40 de vida: quem der a última batida ganha 5 pontos. O fogo que ele solta atordoa as bolas, e se ele sair da tela a fase acaba.</li>
+            <li data-t="info.intervalo" data-t-html="1"><b>Modo intervalo:</b> para quando você sai da live. Sem raquete, o chão vira parede e as bolas nunca caem. Você entra como uma bola (fora do ranking), a partida começa sozinha em 20 s e o chat entra com !entrar a qualquer momento. Não cai item nenhum. As fases seguem em carrossel a partir da escolhida, com o ranking (top 10) por 15 s entre elas; os pontos somam, mas os poderes zeram a cada fase. Na Fase 3, no fim cai um chefão com 40 de vida na parede do meio. Quem tinha poder pronto há mais de 1 min 30 s e não usou nenhum na fase perde os pontos daquela fase. Clique em <b>Voltei!</b> (embaixo do jogo) ou digite <b>!voltei</b> no chat (só você e os moderadores) para parar e ver o ranking. Vocês também controlam o som pelo chat: <b>!mudo</b>, <b>!som</b> e <b>!volume 30</b>.</li>
+            <li data-t="info.maisJogadores">Quanto mais jogadores, mais rápido saem os poderes: até 15 jogadores, os números abaixo; com 50 ou mais, !speed com 3 batidas, bomba com 6, !gravity com 7 e !shock com 8.</li>
+            <li data-t="info.bomba" data-t-html="1">A cada 10 vezes que a sua bola bate em tijolos, você ganha uma bomba (use com <b>!bomb</b>). Dá para guardar no máximo 2.</li>
+            <li data-t="info.speedCarga" data-t-html="1">A cada 5 vezes que a sua bola bate em tijolos, você ganha uma carga de velocidade (use com <b>!speed</b>).</li>
+            <li data-t="info.gravidade" data-t-html="1">A cada 12 vezes que a sua bola bate em tijolos, você ganha o campo gravitacional (use com <b>!gravity</b>). Não acumula: depois de usar, precisa de mais 12 batidas.</li>
+            <li data-t="info.choque" data-t-html="1">A cada 13 vezes que a sua bola bate em tijolos, você ganha o choque (use com <b>!shock</b>). Também não acumula.</li>
+            <li data-t="info.fila">Enquanto um poder seu está ativo, os poderes dos outros não pegam na sua bola. Se mandar outro poder nesse tempo, ele espera na fila e sai quando o primeiro acabar. Se a sua bola estiver sob o poder de outra (presa, atordoada ou empurrada), o seu comando também espera e sai 1,5 segundo depois que o efeito acabar.</li>
           </ul>
-          <p><b>Pontos do streamer</b> (só com "Streamer pontua no ranking" marcado): você aparece no ranking como "Streamer" e ganha 1 ponto a cada tantas bolas que rebater com a raquete. Quanto mais viewers, mais rebatidas: até 10 viewers, 7 rebatidas; com 25, 14; com 75 ou mais, 25 (entre esses números, sobe aos poucos). O item Pontos (abaixo) dá mais 1 ponto, e o Menos ponto tira 1.</p>
-          <p><b>Itens para o streamer</b> (20% dos tijolos são sorteados para soltar um item ao quebrar; pegue com a raquete antes que passe dela). Com "Streamer pontua no ranking" marcado, cada partida tem 5 itens de pontos (Pontos ou Menos ponto), sempre, não importa o número de viewers. Desmarcado, só cai o Multibola:</p>
+          <p data-t="info.pontosStreamer" data-t-html="1"><b>Pontos do streamer</b> (só com "Streamer pontua no ranking" marcado): você aparece no ranking como "Streamer" e ganha 1 ponto a cada tantas bolas que rebater com a raquete. Quanto mais viewers, mais rebatidas: até 10 viewers, 7 rebatidas; com 25, 14; com 75 ou mais, 25 (entre esses números, sobe aos poucos). O item Pontos (abaixo) dá mais 1 ponto, e o Menos ponto tira 1.</p>
+          <p data-t="info.itens" data-t-html="1"><b>Itens para o streamer</b> (20% dos tijolos são sorteados para soltar um item ao quebrar; pegue com a raquete antes que passe dela). Com "Streamer pontua no ranking" marcado, cada partida tem 5 itens de pontos (Pontos ou Menos ponto), sempre, não importa o número de viewers. Desmarcado, só cai o Multibola:</p>
           <ul class="lista-itens">
-            <li><span class="icone-item multibola">×2</span><b>Multibola</b>: cada bola do chat ganha uma cópia por 8 segundos. Os pontos da cópia vão para o dono. Pegar outro enquanto as cópias estão na tela renova o tempo.</li>
-            <li><span class="icone-item velocidade"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M1.5 -6 L-3.5 1 L-0.2 1 L-1.5 6 L3.5 -1 L0.2 -1 Z" fill="#1c1917"/></svg></span><b>Velocidade</b> (laranja com um raio): todas as bolas ficam 2× mais rápidas por 5 segundos. Bola que já está com !speed continua 2×. Enquanto ele vale, o !speed do chat espera e sai quando ele acabar. Cai mesmo sem "Streamer pontua" marcado.</li>
-            <li><span class="icone-item pontos">+</span><b>Pontos</b>: o streamer ganha 1 ponto. Só cai com "Streamer pontua no ranking" marcado.</li>
+            <li><span class="icone-item multibola">×2</span><span data-t="info.itemMultibola" data-t-html="1"><b>Multibola</b>: cada bola do chat ganha uma cópia por 8 segundos. Os pontos da cópia vão para o dono. Pegar outro enquanto as cópias estão na tela renova o tempo.</span></li>
+            <li><span class="icone-item velocidade"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M1.5 -6 L-3.5 1 L-0.2 1 L-1.5 6 L3.5 -1 L0.2 -1 Z" fill="#1c1917"/></svg></span><span data-t="info.itemVelocidade" data-t-html="1"><b>Velocidade</b> (laranja com um raio): todas as bolas ficam 2× mais rápidas por 5 segundos. Bola que já está com !speed continua 2×. Enquanto ele vale, o !speed do chat espera e sai quando ele acabar. Cai mesmo sem "Streamer pontua" marcado.</span></li>
+            <li><span class="icone-item pontos">+</span><span data-t="info.itemPontos" data-t-html="1"><b>Pontos</b>: o streamer ganha 1 ponto. Só cai com "Streamer pontua no ranking" marcado.</span></li>
             <li><svg class="icone-item menos" viewBox="-10 -12 22 22" aria-hidden="true">
                 <circle class="corpo" cx="0" cy="1" r="8"/>
                 <circle cx="-2.8" cy="-0.6" r="1.8" fill="rgba(255,255,255,0.35)"/>
                 <path d="M3.2 -4.6 Q7.2 -10.2 8.8 -7.8" fill="none" stroke="#d6d3d1" stroke-width="2"/>
                 <circle class="faisca" cx="8.8" cy="-7.8" r="2.2"/>
-              </svg><b>Menos ponto</b> (bomba preta com brilho laranja): tira 1 ponto do streamer, sem passar de zero. Também só cai com "Streamer pontua no ranking" marcado.</li>
+              </svg><span data-t="info.itemMenos" data-t-html="1"><b>Menos ponto</b> (bomba preta com brilho laranja): tira 1 ponto do streamer, sem passar de zero. Também só cai com "Streamer pontua no ranking" marcado.</span></li>
           </ul>
           </div>
 
           <div id="abaObs" class="escondido">
-            <h3>Modo intervalo: tela de "já volto"</h3>
-            <p>O jogo funciona sozinho enquanto você está fora, e ninguém precisa clicar em nada.</p>
+            <h3 data-t="info.obsT1">Modo intervalo: tela de "já volto"</h3>
+            <p data-t="info.obsIntro">O jogo funciona sozinho enquanto você está fora, e ninguém precisa clicar em nada.</p>
             <ol>
-              <li>Neste menu, conecte o canal, marque <b>Modo intervalo</b>, escolha a fase e clique em <b>Copiar link para o OBS</b>.</li>
-              <li>No OBS, crie uma cena de "já volto" e adicione uma fonte <b>Navegador</b>.</li>
-              <li>Cole o link no campo <b>URL</b>.</li>
-              <li>Em <b>Largura</b> e <b>Altura</b>, use o tamanho da sua transmissão: <b>1280 x 720</b> ou <b>1920 x 1080</b>. O jogo se ajusta sozinho. Em PC fraco, 1280 x 720 pesa menos.</li>
-              <li>Ligue <b>Controlar áudio via OBS</b>. Sem isso, o jogo não aparece no mixer e você não consegue mutar nem regular o som dele.</li>
-              <li>Deixe <b>desligadas</b> as opções <b>Desligar fonte quando não visível</b> e <b>Atualizar navegador quando a cena se tornar ativa</b>. Com elas ligadas, a página recarrega e o ranking se perde.</li>
-              <li>Ao trocar para essa cena, o jogo começa sozinho em 20 segundos. O chat só precisa digitar <b>!entrar</b>.</li>
-              <li>Quando voltar, é só trocar de cena: o jogo para e guarda o ranking, sem pesar no PC. Se preferir ficar na cena, digite <b>!voltei</b> para mostrar o ranking na hora.</li>
-              <li>Ao abrir a cena de novo, o ranking aparece com uma contagem de 30 segundos, e depois começa um intervalo novo, com o chat entrando de novo. Se sair de cena durante a contagem, ela para e recomeça quando você voltar.</li>
-              <li>Fechar o OBS apaga tudo, então a próxima live começa do zero.</li>
+              <li data-t="info.obs1" data-t-html="1">Neste menu, conecte o canal, marque <b>Modo intervalo</b>, escolha a fase e clique em <b>Copiar link para o OBS</b>.</li>
+              <li data-t="info.obs2" data-t-html="1">No OBS, crie uma cena de "já volto" e adicione uma fonte <b>Navegador</b>.</li>
+              <li data-t="info.obs3" data-t-html="1">Cole o link no campo <b>URL</b>.</li>
+              <li data-t="info.obs4" data-t-html="1">Em <b>Largura</b> e <b>Altura</b>, use o tamanho da sua transmissão: <b>1280 x 720</b> ou <b>1920 x 1080</b>. O jogo se ajusta sozinho. Em PC fraco, 1280 x 720 pesa menos.</li>
+              <li data-t="info.obs5" data-t-html="1">Ligue <b>Controlar áudio via OBS</b>. Sem isso, o jogo não aparece no mixer e você não consegue mutar nem regular o som dele.</li>
+              <li data-t="info.obs6" data-t-html="1">Deixe <b>desligadas</b> as opções <b>Desligar fonte quando não visível</b> e <b>Atualizar navegador quando a cena se tornar ativa</b>. Com elas ligadas, a página recarrega e o ranking se perde.</li>
+              <li data-t="info.obs7" data-t-html="1">Ao trocar para essa cena, o jogo começa sozinho em 20 segundos. O chat só precisa digitar <b>!entrar</b>.</li>
+              <li data-t="info.obs8" data-t-html="1">Quando voltar, é só trocar de cena: o jogo para e guarda o ranking, sem pesar no PC. Se preferir ficar na cena, digite <b>!voltei</b> para mostrar o ranking na hora.</li>
+              <li data-t="info.obs9">Ao abrir a cena de novo, o ranking aparece com uma contagem de 30 segundos, e depois começa um intervalo novo, com o chat entrando de novo. Se sair de cena durante a contagem, ela para e recomeça quando você voltar.</li>
+              <li data-t="info.obs10">Fechar o OBS apaga tudo, então a próxima live começa do zero.</li>
             </ol>
 
-            <h3>Partida normal, com a raquete</h3>
-            <p>Você precisa do mouse ou do teclado, então o mais simples é abrir o jogo no navegador em tela cheia (F11) e usar a <b>Captura de janela</b> no OBS. Não minimize a janela nem troque de aba, porque o jogo pode parar.</p>
+            <h3 data-t="info.obsT2">Partida normal, com a raquete</h3>
+            <p data-t="info.obsPartida" data-t-html="1">Você precisa do mouse ou do teclado, então o mais simples é abrir o jogo no navegador em tela cheia (F11) e usar a <b>Captura de janela</b> no OBS. Não minimize a janela nem troque de aba, porque o jogo pode parar.</p>
 
-            <h3>Som do jogo</h3>
+            <h3 data-t="info.obsT3">Som do jogo</h3>
             <ul>
-              <li><b>Mutar ou regular:</b> com <b>Controlar áudio via OBS</b> marcado, o jogo aparece no <b>Mixer de áudio</b> com o nome da fonte. Use a barra para o volume e o ícone de alto-falante para mutar. Se ele não aparecer, abra a fonte e confira se essa opção está marcada.</li>
-              <li><b>Para você ouvir também:</b> com essa opção, o som vai para a live, mas pode não sair nos seus fones. No mixer, clique nos três pontinhos, abra <b>Propriedades avançadas de áudio</b> e, em <b>Monitoramento de áudio</b>, escolha <b>Monitorar e enviar</b>.</li>
-              <li><b>Sem essa opção:</b> o jogo toca direto no computador e entra na live pelo <b>Áudio do desktop</b>. Mutar esse canal também muta o resto do computador na live.</li>
+              <li data-t="info.somMutar" data-t-html="1"><b>Mutar ou regular:</b> com <b>Controlar áudio via OBS</b> marcado, o jogo aparece no <b>Mixer de áudio</b> com o nome da fonte. Use a barra para o volume e o ícone de alto-falante para mutar. Se ele não aparecer, abra a fonte e confira se essa opção está marcada.</li>
+              <li data-t="info.somOuvir" data-t-html="1"><b>Para você ouvir também:</b> com essa opção, o som vai para a live, mas pode não sair nos seus fones. No mixer, clique nos três pontinhos, abra <b>Propriedades avançadas de áudio</b> e, em <b>Monitoramento de áudio</b>, escolha <b>Monitorar e enviar</b>.</li>
+              <li data-t="info.somSem" data-t-html="1"><b>Sem essa opção:</b> o jogo toca direto no computador e entra na live pelo <b>Áudio do desktop</b>. Mutar esse canal também muta o resto do computador na live.</li>
             </ul>
 
-            <h3>Comandos no chat (só streamer e moderadores)</h3>
+            <h3 data-t="info.obsT4">Comandos no chat (só streamer e moderadores)</h3>
             <table class="tabela-comandos">
-              <tr><th>Comando</th><th>O que faz</th></tr>
-              <tr><td><b>!voltei</b></td><td>Para o modo intervalo e mostra o ranking, sem contagem</td></tr>
-              <tr><td><b>!recomecar</b></td><td>Na tela do ranking, começa outro intervalo na hora, com os pontos zerados (só aberto pelo link)</td></tr>
-              <tr><td><b>!mudo</b></td><td>Desliga o som do jogo</td></tr>
-              <tr><td><b>!som</b></td><td>Liga o som do jogo</td></tr>
-              <tr><td><b>!volume 30</b></td><td>Muda o volume, de 0 a 100. O padrão é 15</td></tr>
+              <tr><th data-t="info.thComando">Comando</th><th data-t="info.thFaz">O que faz</th></tr>
+              <tr><td><b>!voltei</b></td><td data-t="info.tabVoltei">Para o modo intervalo e mostra o ranking, sem contagem</td></tr>
+              <tr><td><b>!recomecar</b></td><td data-t="info.tabRecomecar">Na tela do ranking, começa outro intervalo na hora, com os pontos zerados (só aberto pelo link)</td></tr>
+              <tr><td><b>!mudo</b></td><td data-t="info.tabMudo">Desliga o som do jogo</td></tr>
+              <tr><td><b>!som</b></td><td data-t="info.tabSom">Liga o som do jogo</td></tr>
+              <tr><td><b>!volume 30</b></td><td data-t="info.tabVolume">Muda o volume, de 0 a 100. O padrão é 15</td></tr>
             </table>
-            <p>Ao fechar o OBS, o som do jogo volta ao padrão. Para um ajuste que fica guardado, use o mixer do OBS.</p>
+            <p data-t="info.obsSomPadrao">Ao fechar o OBS, o som do jogo volta ao padrão. Para um ajuste que fica guardado, use o mixer do OBS.</p>
 
-            <h3>Sugestões de configuração</h3>
+            <h3 data-t="info.obsT5">Sugestões de configuração</h3>
             <ul>
-              <li><b>Tela cheia:</b> clique com o botão direito na fonte e escolha <b>Transformar &gt; Ajustar à tela</b>.</li>
-              <li><b>Live em 60 FPS:</b> nas propriedades da fonte, marque <b>Usar FPS personalizado</b> e coloque 60.</li>
-              <li><b>Vagas:</b> ao marcar o Modo intervalo, o limite já vem em 75 jogadores. Se quiser outro número, mude antes de copiar o link, porque você estará fora para aumentar.</li>
-              <li><b>Jogo novo não apareceu?</b> Abra as propriedades da fonte e clique em <b>Atualizar</b>.</li>
-              <li><b>Teste antes da live:</b> troque para a cena, digite !entrar e depois !voltei.</li>
+              <li data-t="info.dicaTela" data-t-html="1"><b>Tela cheia:</b> clique com o botão direito na fonte e escolha <b>Transformar &gt; Ajustar à tela</b>.</li>
+              <li data-t="info.dica60" data-t-html="1"><b>Live em 60 FPS:</b> nas propriedades da fonte, marque <b>Usar FPS personalizado</b> e coloque 60.</li>
+              <li data-t="info.dicaVagas" data-t-html="1"><b>Vagas:</b> ao marcar o Modo intervalo, o limite já vem em 75 jogadores. Se quiser outro número, mude antes de copiar o link, porque você estará fora para aumentar.</li>
+              <li data-t="info.dicaAtualizar" data-t-html="1"><b>Jogo novo não apareceu?</b> Abra as propriedades da fonte e clique em <b>Atualizar</b>.</li>
+              <li data-t="info.dicaTeste" data-t-html="1"><b>Teste antes da live:</b> troque para a cena, digite !entrar e depois !voltei.</li>
             </ul>
-            <p class="obs-versao">Os nomes das opções podem mudar um pouco conforme a versão e o idioma do OBS.</p>
+            <p class="obs-versao" data-t="info.obsVersao">Os nomes das opções podem mudar um pouco conforme a versão e o idioma do OBS.</p>
           </div>
 
-          <a class="btn-feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSd-vS0iptBB_gezDnBC4j9xURUAn8eALuvJGB8ZbTT05ws64w/viewform" target="_blank" rel="noopener">Enviar feedback ou bug</a>
-          <button id="btFecharInfo">Voltar</button>
+          <a class="btn-feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSd-vS0iptBB_gezDnBC4j9xURUAn8eALuvJGB8ZbTT05ws64w/viewform" target="_blank" rel="noopener" data-t="menu.feedback">Enviar feedback ou bug</a>
+          <button id="btFecharInfo" data-t="info.voltar">Voltar</button>
         </div>
       </div>
 
