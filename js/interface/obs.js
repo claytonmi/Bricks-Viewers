@@ -23,7 +23,7 @@ function inicioPeloLink() {
   const cor = p.get('cor') || '';
   if (/^[0-9a-f]{6}$/i.test(cor)) escolherCorRaquete('#' + cor, false); // cor da barra escolhida no menu
   const idioma = p.get('idioma') || '';
-  if (/^(pt|en)$/.test(idioma)) escolherIdioma(idioma, false); // o link manda no idioma, sem mudar o guardado
+  if (idiomaValido(idioma)) escolherIdioma(idioma, false); // o link manda no idioma, sem mudar o guardado
   const skin = p.get('skin') || '';
   if (/^[a-z0-9_-]{1,40}$/.test(skin)) escolherSkin(skin, false); // skin do servidor só aparece se o canal puder usar
   const vagas = Number(p.get('vagas'));

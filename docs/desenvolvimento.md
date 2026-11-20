@@ -80,7 +80,13 @@ Para acrescentar uma frase:
 
 Se uma chave faltar em inglês, o jogo mostra o texto em português. O idioma fica salvo no navegador (`bricksIdioma`) e as bandeiras do menu e da pausa trocam na hora.
 
-Para um terceiro idioma: acrescente uma coluna nova em `textos.js` com todas as chaves e uma bandeira nova no menu e na pausa.
+Para um terceiro idioma:
+
+1. Em `js/dados/textos.js`, acrescente o id (por exemplo `'es'`) em `IDIOMAS` e o código de `<html lang>` em `LANG_HTML`.
+2. Na mesma tabela `TEXTOS`, crie a coluna nova com todas as chaves (as que faltarem aparecem em português).
+3. Em `index.html`, acrescente a bandeira nova (`.bandeira` com `data-idioma="es"`) no menu e na pausa.
+
+O link do OBS (`&idioma=`) e o idioma guardado passam a aceitar o id novo sozinhos, porque a validação lê `IDIOMAS`.
 
 ## Decisões de arquitetura
 

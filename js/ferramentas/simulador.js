@@ -191,5 +191,4 @@ document.getElementById('btSimAuto').addEventListener('click', () => {
 document.getElementById('btSimLimpar').addEventListener('click', () => {
   if (estado !== 'lobby') return; // só limpa antes de começar
   viewers = viewers.filter(b => !b.simulado); // tira só os falsos
-  atualizarContador();
 });

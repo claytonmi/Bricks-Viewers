@@ -6,7 +6,7 @@ function carregarImagens() {
   return Promise.all(Object.entries(ARQUIVOS).map(([chave, src]) => new Promise((ok, erro) => {
     const im = new Image();
     im.onload = () => { imgs[chave] = im; ok(); };
-    im.onerror = () => erro(new Error('Não achei a imagem: ' + src));
+    im.onerror = () => erro(new Error(t('erro.imagem', { src })));
     im.src = src;
   })));
 }

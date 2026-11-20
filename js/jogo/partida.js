@@ -59,7 +59,6 @@ function iniciarPartida() {
   // botão Voltei só onde dá para clicar; aberto pelo link, vira um aviso do comando no chat
   document.getElementById('btVoltei').classList.toggle('escondido', !modoIntervalo || modoAutomatico);
   document.getElementById('avisoVoltei').classList.toggle('escondido', !modoAutomatico);
-  atualizarContador();
 }
 
 document.getElementById('btContinuar').onclick = () => continuarJogo();
@@ -123,7 +122,6 @@ function voltarMenu() {
   document.getElementById('ranking').classList.add('escondido');
   document.getElementById('menu').classList.remove('escondido');
   mostrarFase(); // a fase escolhida pode ter sido escondida nesse meio-tempo (mês mudou, simulador)
-  atualizarContador();
 }
 
 // Contagem regressiva ao clicar em Pronto (modo intervalo: sozinha, com o nome da fase)
@@ -196,12 +194,6 @@ function finalizar(semDesempate = false) {
   mostrarRankingFinal(linhas); // tela: ver ranking.js
 }
 
-// Atualiza o contador de viewers (campo opcional na página)
-function atualizarContador() {
-  const el = document.getElementById('contador');
-  if (el) definirTexto(el, 'partida.viewers', { n: viewers.length, max: maxViewers });
-}
 aoTrocarIdioma(() => {
-  atualizarContador();
   if (!document.getElementById('menuPausa').classList.contains('escondido')) mostrarMenuPausa(); // pausa aberta: refaz a lista
 });

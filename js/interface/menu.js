@@ -36,7 +36,9 @@ function mostrarFase() {
   });
 }
 
-aoTrocarIdioma(mostrarFase); // o nome da fase troca junto com o idioma
+aoTrocarIdioma(() => { // só o nome da fase muda de idioma: a fase escolhida continua a mesma
+  document.getElementById('faseNome').textContent = nomeFase(FASES[indiceFase]);
+});
 
 // Setas do menu: andam só pelas fases liberadas
 function trocarFase(passo) {

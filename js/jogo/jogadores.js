@@ -56,7 +56,6 @@ function entrar(nome, streamer = false, login = nome) {
     b.aviso = { chave: 'jogo.avisoEntrou', valores: { nome: b.nome } };
     b.avisoAte = agora + DURACAO_AVISO + AVISO_SOME;
   }
-  atualizarContador();
 }
 
 // Tira a bola de um viewer banido ou em timeout (a Twitch avisa pelo CLEARCHAT): ele some do jogo e do ranking.
@@ -77,7 +76,6 @@ function removerViewer(nome) {
     c.presas = c.presas.filter(p => p.b !== b);
     if (c.dono === b) c.fim = 0; // o campo que ele criou explode já e solta as bolas presas
   });
-  atualizarContador();
 }
 
 // Ponto para o viewer (modo intervalo: também guarda os pontos da fase, para a regra do ausente)

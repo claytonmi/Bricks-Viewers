@@ -93,9 +93,9 @@ function loop() {
   agendarFrame();
 }
 
+iniciarIdioma(); // idioma guardado ou o do navegador: já na primeira tela, sem esperar as imagens
 carregarImagens()
   .then(() => {
-    iniciarIdioma(); // idioma guardado ou o do navegador (antes da fase, para não piscar em português)
     mostrarFase();
     iniciarAparencia(); // cor e skin da raquete guardadas
     inicioPeloLink(); // link do OBS: já conecta e começa sozinho

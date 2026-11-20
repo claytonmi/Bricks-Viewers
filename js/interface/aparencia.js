@@ -155,7 +155,10 @@ function atualizarAparencia() {
   for (const el of caixa.querySelectorAll('button, input')) el.disabled = !aparenciaLiberada;
   if (aparenciaLiberada) document.getElementById('btCorPadrao').disabled = corRaquete === COR_RAQUETE_PADRAO;
 
-  document.getElementById('skinNome').textContent = nomeSkin(s);
+  const nomeEl = document.getElementById('skinNome');
+  delete nomeEl.dataset.t; // o nome vem de nomeSkin (pode ser de skin do servidor), não de uma chave fixa
+  delete nomeEl.dataset.tv;
+  nomeEl.textContent = nomeSkin(s);
   document.getElementById('linhaCorRaquete').classList.toggle('escondido', !!skinRaquete);
 
   // prévia: a skin, ou a raquete pintada com a cor
