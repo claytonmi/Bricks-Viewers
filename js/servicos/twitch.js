@@ -16,10 +16,10 @@ function conectarChat() {
     status.textContent = 'Digite o nome do canal (ex: hercules_sc).';
     return;
   }
-  // Nome especial para testes: não conecta na Twitch, entra no modo simulação
+  // Nome especial para testes (só no próprio computador): não conecta na Twitch, entra no modo simulação
   // (o que vem depois, ex: "simulador Hercules_SC", vira o nome dos viewers falsos)
   const [primeira, ...resto] = document.getElementById('canal').value.trim().split(/\s+/);
-  if (MODOS_SIMULACAO.includes(primeira.toLowerCase())) {
+  if (SIMULADOR_LIBERADO && MODOS_SIMULACAO.includes(primeira.toLowerCase())) {
     pararReconexao();
     ativarModoSimulacao(resto.join(' '));
     return;

@@ -5,6 +5,9 @@
 // Não conecta no chat, mostra o painel e cria viewers falsos com o mesmo processarComando.
 
 const MODOS_SIMULACAO = ['simulador', 'simulacao', 'simulação', 'dev'];
+// Só abrindo pelo próprio computador (localhost ou o index.html com duplo clique). No site publicado,
+// esses nomes são tratados como canal normal da Twitch.
+const SIMULADOR_LIBERADO = ['localhost', '127.0.0.1', '[::1]', ''].includes(location.hostname);
 let intervaloAuto = null;          // roda os comandos sozinho quando o automático está ligado
 let contadorSimulado = 0;
 let nomeSimulado = 'Streamer';     // base dos nomes dos viewers falsos

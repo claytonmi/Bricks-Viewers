@@ -21,7 +21,7 @@ Também dá para baixar o projeto e abrir o `index.html` com um duplo clique. N�
 - [Comandos no chat](docs/comandos.md)
 - [Regras do jogo](docs/regras.md): pontos, poderes, itens e fases
 - [Modo intervalo](docs/modo-intervalo.md): só o chat joga, enquanto o streamer está fora
-- [Simulador](docs/simulador.md): testar sem a Twitch
+- [Simulador](docs/simulador.md): testar sem a Twitch (só abrindo o jogo pelo próprio computador)
 - [Desenvolvimento](docs/desenvolvimento.md): estrutura do projeto e como criar uma fase nova
 
 ## Hospedagem
@@ -32,3 +32,7 @@ O jogo é só HTML, CSS, JS e imagens. Pode ser publicado no GitHub Pages sem se
 
 - Arte: Daru
 - Desenvolvimento: Clayton M.
+
+## Licença
+
+O código (HTML, CSS e JavaScript) é aberto, na [licença MIT](LICENSE). As artes e o áudio da pasta `assets/` não entram nela: todos os direitos reservados. As artes são da Daru, licenciadas para uso só no Bricks Viewers. Para fazer o seu próprio jogo a partir deste código, use as suas artes.
