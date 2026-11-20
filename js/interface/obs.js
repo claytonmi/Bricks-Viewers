@@ -4,7 +4,7 @@
 // ----- Link para o OBS -----
 // Abrindo com ?canal=NOME o jogo já conecta no chat. Com &modo=intervalo também começa sozinho,
 // sem nenhum clique (para deixar numa cena de "já volto"). &fase=2 escolhe a fase inicial, &vagas=50 o limite
-// &cor=ff8800 a cor da barra e &skin=lava a skin dela.
+// &cor=ff8800 a cor da barra, &skin=lava a skin dela e &idioma=pt|en o idioma.
 function inicioPeloLink() {
   const p = new URLSearchParams(location.search);
   const canal = (p.get('canal') || '').trim().toLowerCase();
@@ -22,6 +22,8 @@ function inicioPeloLink() {
   }
   const cor = p.get('cor') || '';
   if (/^[0-9a-f]{6}$/i.test(cor)) escolherCorRaquete('#' + cor, false); // cor da barra escolhida no menu
+  const idioma = p.get('idioma') || '';
+  if (/^(pt|en)$/.test(idioma)) escolherIdioma(idioma, false); // o link manda no idioma, sem mudar o guardado
   const skin = p.get('skin') || '';
   if (/^[a-z0-9_-]{1,40}$/.test(skin)) escolherSkin(skin, false); // skin do servidor só aparece se o canal puder usar
   const vagas = Number(p.get('vagas'));
@@ -138,7 +140,8 @@ document.getElementById('btLinkObs').onclick = () => {
   const link = `${location.origin}${location.pathname}?canal=${canal}` +
     `&modo=intervalo&fase=${indiceFase + 1}&vagas=${document.getElementById('qtd').value}` +
     (corRaquete !== COR_RAQUETE_PADRAO ? `&cor=${corRaquete.slice(1)}` : '') +
-    (skinRaquete ? `&skin=${skinRaquete}` : '');
+    (skinRaquete ? `&skin=${skinRaquete}` : '') +
+    `&idioma=${idiomaAtual}`;
   contarEvento('copiou-link-obs'); // contador de acessos: só o evento, sem o canal
   copiarAntigo(link, () => {
     status.textContent = 'Link copiado! No OBS: fonte Navegador, cole o link e use o tamanho da sua live (1280x720 ou 1920x1080).';

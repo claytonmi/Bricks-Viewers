@@ -228,3 +228,40 @@ button.btn-cor-padrao {
   color: var(--texto-suave);
   white-space: nowrap;
 }
+
+/* Bandeiras de idioma no canto de cima à esquerda (o selo de fundador fica à direita) */
+#menu > .caixa,
+.menu-pausa-caixa {
+  position: relative;
+}
+.bandeiras {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  display: flex;
+  gap: 6px;
+}
+.bandeira {
+  display: block;
+  width: 28px;
+  height: 20px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  background: none;
+  cursor: pointer;
+  opacity: 0.7;
+  box-sizing: content-box;
+  line-height: 0;
+}
+.bandeira:hover {
+  opacity: 1;
+}
+.bandeira.ativa {
+  border-color: #facc15;
+  opacity: 1;
+}
+.bandeira svg {
+  display: block;
+  border-radius: 1px;
+}

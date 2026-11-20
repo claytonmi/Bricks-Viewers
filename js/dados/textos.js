@@ -75,7 +75,9 @@ function aplicarIdioma() {
   document.querySelectorAll('.bandeira[data-idioma]').forEach(el => {
     el.classList.toggle('ativa', el.dataset.idioma === idiomaAtual);
   });
-  aoTrocarIdiomaFns.forEach(fn => fn());
+  aoTrocarIdiomaFns.forEach(fn => {
+    try { fn(); } catch (e) { console.error(e); } // um aviso com erro não impede os outros
+  });
 }
 
 function escolherIdioma(id, guardar) {
@@ -86,8 +88,11 @@ function escolherIdioma(id, guardar) {
   aplicarIdioma();
 }
 
-// Chamada uma vez ao iniciar (main.js); as bandeiras entram na etapa do menu
+// Chamada uma vez ao iniciar (main.js): liga as bandeiras e escreve tudo no idioma atual
 function iniciarIdioma() {
+  document.querySelectorAll('.bandeira[data-idioma]').forEach(el => {
+    el.onclick = () => escolherIdioma(el.dataset.idioma, true);
+  });
   aplicarIdioma();
 }
 
