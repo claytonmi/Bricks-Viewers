@@ -130,6 +130,11 @@ body.fundador .menu-pausa-caixa::after {
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
   pointer-events: none;
 }
+/* Em inglês, o selo com "FOUNDER" (só quando a imagem existe: ver fundador.js) */
+html.selo-en[lang="en"] body.fundador .caixa::after,
+html.selo-en[lang="en"] body.fundador .menu-pausa-caixa::after {
+  background-image: url('../assets/imagens/interface/selo-fundador-en.png');
+}
 /* Espaço em volta para o selo não ser cortado quando a caixa encosta na borda */
 body.fundador .sobreposicao {
   padding: 28px 28px 0;

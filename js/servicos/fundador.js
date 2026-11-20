@@ -10,6 +10,23 @@ const FUNDADOR_SERVIDOR = location.hostname === 'localhost'
 
 let fundadorCanalPedido = '';
 
+// Selo em inglês ("FOUNDER"). Enquanto a arte não existir, fica vazio e o inglês usa o selo em português.
+// Quando a imagem chegar: salvar em assets/imagens/interface/selo-fundador-en.png e colocar o caminho aqui.
+const SELO_FUNDADOR_EN = '';
+if (SELO_FUNDADOR_EN) {
+  const img = new Image();
+  img.onload = () => {
+    imgs.seloFundadorEn = img;
+    document.documentElement.classList.add('selo-en'); // o CSS troca o selo das telas
+  };
+  img.src = SELO_FUNDADOR_EN;
+}
+
+// Selo do idioma atual, para o que é desenhado no jogo (ranking entre as fases)
+function seloFundadorAtual() {
+  return idiomaAtual === 'en' && imgs.seloFundadorEn ? imgs.seloFundadorEn : imgs.seloFundador;
+}
+
 // Mostra ou esconde o selo em todas as telas (menu, informações, ranking e pausa)
 function mostrarSeloFundador(sim) {
   document.body.classList.toggle('fundador', !!sim);

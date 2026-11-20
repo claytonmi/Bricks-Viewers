@@ -698,14 +698,15 @@ function desenhar(agora) {
 // Selo de fundador no canto de cima, à direita, de uma caixa desenhada na tela
 // (o mesmo das telas do menu, que usam o CSS de body.fundador)
 function desenharSeloFundador(direita, topo) {
-  if (!document.body.classList.contains('fundador') || !imgs.seloFundador) return;
+  const selo = seloFundadorAtual();
+  if (!document.body.classList.contains('fundador') || !selo) return;
   ctx.save();
   ctx.translate(direita + 18, topo + 18); // centro do selo: 88 px, 26 px para fora da caixa
   ctx.rotate(12 * Math.PI / 180);
   ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
   ctx.shadowBlur = 8;
   ctx.shadowOffsetY = 4;
-  ctx.drawImage(imgs.seloFundador, -44, -44, 88, 88);
+  ctx.drawImage(selo, -44, -44, 88, 88);
   ctx.restore();
 }
 
