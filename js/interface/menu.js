@@ -6,16 +6,17 @@ function atualizarPainelComandos() {
   // modo intervalo: dá para entrar a qualquer momento
   const fechado = !modoIntervalo && (estado === 'contagem' || estado === 'jogando' || estado === 'fim');
   document.getElementById('cmdEntrar').classList.toggle('fechado', fechado);
-  document.getElementById('obsEntrar').textContent =
-    modoIntervalo ? `(a qualquer momento, até ${maxViewers} jogadores)` : '(antes de começar)';
+  const obsEntrar = document.getElementById('obsEntrar');
+  if (modoIntervalo) atualizarTexto(obsEntrar, 'cmd.obsEntrarIntervalo', { max: maxViewers });
+  else atualizarTexto(obsEntrar, 'cmd.obsEntrarAntes');
   // regra do ausente: só vale no modo intervalo
   document.getElementById('cmdAusente').classList.toggle('escondido', !modoIntervalo);
 
   // números dos poderes: mudam sozinhos quando o número de viewers cruza o limite (ver batidasPara)
-  document.getElementById('obsSpeed').textContent = `(a cada ${batidasPara(CARGA_SPEED)} batidas em tijolos)`;
-  document.getElementById('obsBomb').textContent = `(1 bomba a cada ${batidasPara(BOMBA_CADA)} batidas, até ${BOMBA_MAX})`;
-  document.getElementById('obsGrav').textContent = `(a cada ${batidasPara(GRAV_CADA)} batidas, só 1)`;
-  document.getElementById('obsShock').textContent = `(a cada ${batidasPara(CHOQUE_CADA)} batidas, só 1)`;
+  atualizarTexto(document.getElementById('obsSpeed'), 'cmd.obsSpeed', { n: batidasPara(CARGA_SPEED) });
+  atualizarTexto(document.getElementById('obsBomb'), 'cmd.obsBomb', { n: batidasPara(BOMBA_CADA), max: BOMBA_MAX });
+  atualizarTexto(document.getElementById('obsGrav'), 'cmd.obsGrav', { n: batidasPara(GRAV_CADA) });
+  atualizarTexto(document.getElementById('obsShock'), 'cmd.obsShock', { n: batidasPara(CHOQUE_CADA) });
 }
 
 // Fase de evento fora do mês dela (ex: Natal fora de dezembro) fica escondida: não aparece no menu,
@@ -26,7 +27,7 @@ function mostrarFase() {
     faseIndex = 0;
   }
   const f = FASES[indiceFase];
-  document.getElementById('faseNome').textContent = f.nome;
+  document.getElementById('faseNome').textContent = nomeFase(f);
   document.getElementById('faseImg').src = f.fundo;
   // textos da tela de informações que só aparecem quando a fase de evento está liberada
   document.querySelectorAll('[data-evento]').forEach(el => {
@@ -34,6 +35,8 @@ function mostrarFase() {
     el.classList.toggle('escondido', i < 0 || !faseLiberada(i));
   });
 }
+
+aoTrocarIdioma(mostrarFase); // o nome da fase troca junto com o idioma
 
 // Setas do menu: andam só pelas fases liberadas
 function trocarFase(passo) {
@@ -70,8 +73,8 @@ document.getElementById('modoIntervalo').onchange = e => {
   }
   document.getElementById('qtdTexto').textContent = qtd.value;
   // no modo intervalo não tem raquete: a cor vai para a barra de baixo, onde as bolas quicam
-  document.getElementById('corRaqueteRotulo').textContent = e.target.checked ? 'Cor da barra' : 'Cor da raquete';
-  document.getElementById('skinRotulo').textContent = e.target.checked ? 'Skin da barra' : 'Skin da raquete';
+  definirTexto(document.getElementById('corRaqueteRotulo'), e.target.checked ? 'menu.corBarra' : 'menu.corRaquete');
+  definirTexto(document.getElementById('skinRotulo'), e.target.checked ? 'menu.skinBarra' : 'menu.skinRaquete');
 };
 
 

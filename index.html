@@ -31,58 +31,58 @@
           <h2>Bricks Viewers</h2>
 
           <div class="bloco-chat">
-            <label class="rotulo" for="canal">Chat da Twitch</label>
+            <label class="rotulo" for="canal" data-t="menu.chat">Chat da Twitch</label>
             <div class="campo-canal">
-              <input id="canal" placeholder="nome do canal (ex: hercules_sc)">
-              <button id="btConectar">Conectar</button>
+              <input id="canal" placeholder="nome do canal (ex: hercules_sc)" data-t-placeholder="menu.canalPlaceholder">
+              <button id="btConectar" data-t="menu.conectar">Conectar</button>
             </div>
-            <p id="status">Não conectado. Conecte o canal para liberar o Iniciar.</p>
+            <p id="status" data-t="status.inicial">Não conectado. Conecte o canal para liberar o Iniciar.</p>
           </div>
 
           <div class="linha cartao-fase">
-            <button id="faseAnt" class="seta" aria-label="Fase anterior"></button>
+            <button id="faseAnt" class="seta" aria-label="Fase anterior" data-t-aria="menu.faseAnt"></button>
             <div>
-              <img id="faseImg" alt="Miniatura da fase">
+              <img id="faseImg" alt="Miniatura da fase" data-t-aria="menu.faseMiniatura">
               <div id="faseNome">Fase 1</div>
             </div>
-            <button id="faseProx" class="seta" aria-label="Próxima fase"></button>
+            <button id="faseProx" class="seta" aria-label="Próxima fase" data-t-aria="menu.faseProx"></button>
           </div>
 
           <div class="bloco-viewers">
-            <label class="rotulo" for="qtd">Quantidade de viewers: <span id="qtdTexto">5</span></label>
+            <label class="rotulo" for="qtd"><span data-t="menu.qtdViewers">Quantidade de viewers</span>: <span id="qtdTexto">5</span></label>
             <input id="qtd" type="range" min="1" max="100" value="5">
           </div>
 
-          <label class="opcao"><span>Streamer pontua no ranking</span><input type="checkbox" class="chave" id="pontuaStreamer"></label>
-          <label class="opcao" title="Sem raquete: só o chat joga, as fases seguem em carrossel a partir da escolhida até você clicar em Voltei"><span>Modo intervalo (só o chat joga)</span><input type="checkbox" class="chave" id="modoIntervalo"></label>
+          <label class="opcao"><span data-t="menu.pontua">Streamer pontua no ranking</span><input type="checkbox" class="chave" id="pontuaStreamer"></label>
+          <label class="opcao" title="Sem raquete: só o chat joga, as fases seguem em carrossel a partir da escolhida até você clicar em Voltei" data-t-title="menu.intervaloDica"><span data-t="menu.intervalo">Modo intervalo (só o chat joga)</span><input type="checkbox" class="chave" id="modoIntervalo"></label>
           <div id="aparenciaRaquete" class="aparencia bloqueada">
-            <div class="opcao" title="No modo intervalo, a skin vai para a barra de baixo, onde as bolas quicam">
-              <span id="skinRotulo">Skin da raquete</span>
+            <div class="opcao" title="No modo intervalo, a skin vai para a barra de baixo, onde as bolas quicam" data-t-title="menu.skinDica">
+              <span id="skinRotulo" data-t="menu.skinRaquete">Skin da raquete</span>
               <span class="skin-raquete">
-                <button id="skinAnt" class="seta seta-pequena" type="button" aria-label="Skin anterior"></button>
+                <button id="skinAnt" class="seta seta-pequena" type="button" aria-label="Skin anterior" data-t-aria="menu.skinAnt"></button>
                 <span class="skin-previa">
                   <canvas id="skinPrevia" width="300" height="32"></canvas>
-                  <small id="skinNome">Sem skin (cor)</small>
+                  <small id="skinNome" data-t="skin.nenhuma">Sem skin (cor)</small>
                 </span>
-                <button id="skinProx" class="seta seta-pequena" type="button" aria-label="Próxima skin"></button>
+                <button id="skinProx" class="seta seta-pequena" type="button" aria-label="Próxima skin" data-t-aria="menu.skinProx"></button>
               </span>
             </div>
-            <div id="linhaCorRaquete" class="opcao" title="No modo intervalo, a cor vai para a barra de baixo, onde as bolas quicam">
-              <span id="corRaqueteRotulo">Cor da raquete</span>
+            <div id="linhaCorRaquete" class="opcao" title="No modo intervalo, a cor vai para a barra de baixo, onde as bolas quicam" data-t-title="menu.corDica">
+              <span id="corRaqueteRotulo" data-t="menu.corRaquete">Cor da raquete</span>
               <span class="cor-raquete">
-                <button id="btCorPadrao" class="btn-cor-padrao" type="button">Padrão</button>
-                <input type="color" id="corRaquete" value="#ffffff" aria-label="Escolher a cor da raquete">
+                <button id="btCorPadrao" class="btn-cor-padrao" type="button" data-t="menu.padrao">Padrão</button>
+                <input type="color" id="corRaquete" value="#ffffff" aria-label="Escolher a cor da raquete" data-t-aria="menu.corEscolher">
               </span>
             </div>
-            <p class="aparencia-aviso">Conecte o canal para escolher a raquete.</p>
+            <p class="aparencia-aviso" data-t="menu.aparenciaAviso">Conecte o canal para escolher a raquete.</p>
           </div>
-          <button id="btIniciar" class="btn-principal btn-iniciar" disabled>Iniciar</button>
+          <button id="btIniciar" class="btn-principal btn-iniciar" disabled data-t="menu.iniciar">Iniciar</button>
           <div class="botoes-menu">
-            <button id="btInfo">Informações</button>
-            <button id="btLinkObs" disabled title="Copia um link para deixar o modo intervalo numa cena do OBS: o jogo conecta e começa sozinho.">Copiar link para o OBS</button>
+            <button id="btInfo" data-t="menu.info">Informações</button>
+            <button id="btLinkObs" disabled title="Copia um link para deixar o modo intervalo numa cena do OBS: o jogo conecta e começa sozinho." data-t-title="menu.linkObsDica" data-t="menu.linkObs">Copiar link para o OBS</button>
           </div>
           <p id="dicaLinkObs" class="dica-link-obs"></p>
-          <a class="btn-feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSd-vS0iptBB_gezDnBC4j9xURUAn8eALuvJGB8ZbTT05ws64w/viewform" target="_blank" rel="noopener">Enviar feedback ou bug</a>
+          <a class="btn-feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSd-vS0iptBB_gezDnBC4j9xURUAn8eALuvJGB8ZbTT05ws64w/viewform" target="_blank" rel="noopener" data-t="menu.feedback">Enviar feedback ou bug</a>
         </div>
       </div>
 

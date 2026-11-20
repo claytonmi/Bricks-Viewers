@@ -155,7 +155,7 @@ function atualizarAparencia() {
   for (const el of caixa.querySelectorAll('button, input')) el.disabled = !aparenciaLiberada;
   if (aparenciaLiberada) document.getElementById('btCorPadrao').disabled = corRaquete === COR_RAQUETE_PADRAO;
 
-  document.getElementById('skinNome').textContent = s.nome;
+  document.getElementById('skinNome').textContent = nomeSkin(s);
   document.getElementById('linhaCorRaquete').classList.toggle('escondido', !!skinRaquete);
 
   // prévia: a skin, ou a raquete pintada com a cor
@@ -167,6 +167,7 @@ function atualizarAparencia() {
 }
 
 function iniciarAparencia() {
+  aoTrocarIdioma(atualizarAparencia); // o nome da skin troca junto com o idioma
   document.getElementById('corRaquete').oninput = e => escolherCorRaquete(e.target.value, true);
   document.getElementById('btCorPadrao').onclick = () => escolherCorRaquete(COR_RAQUETE_PADRAO, true);
   document.getElementById('skinAnt').onclick = () => mostrarSkin(skinIndice - 1, true);

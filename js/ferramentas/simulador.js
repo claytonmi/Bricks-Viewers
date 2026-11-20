@@ -25,6 +25,7 @@ function ativarModoSimulacao(nome) {
     clienteTwitch = null;
   }
   document.getElementById('simulador').classList.remove('escondido');
+  delete document.getElementById('status').dataset.t; // texto fixo em português: não é refeito ao trocar de idioma
   document.getElementById('status').textContent =
     'Modo simulação ligado (sem chat da Twitch). Clique em Iniciar: o painel do simulador aparece ao lado do jogo.';
   document.getElementById('btIniciar').disabled = false;

@@ -33,6 +33,7 @@ const PADRAO_TIJOLOS = [
 const FASES = [
   {
     nome: 'Fase 1',
+    chave: 'f1', // nome traduzido: fase.f1 em textos.js
     fundo: 'assets/imagens/fases/fase-1.png',
     escurecer: 0.55, // véu preto sobre o fundo (padrão 0.35): a Fase 1 é cheia de tijolo vermelho
     cores: null,
@@ -42,6 +43,7 @@ const FASES = [
   },
   {
     nome: 'Fase 2',
+    chave: 'f2', // nome traduzido: fase.f2 em textos.js
     fundo: 'assets/imagens/fases/fase-2.png',
     cores: ['#facc15', '#ef4444', '#3b82f6'], // amarelo, vermelho, azul
     paredes: [
@@ -55,6 +57,7 @@ const FASES = [
   },
   {
     nome: 'Fase 3',
+    chave: 'f3', // nome traduzido: fase.f3 em textos.js
     fundo: 'assets/imagens/fases/fase-3.png',
     cores: ['#22c55e', '#a855f7', '#f97316'], // verde, roxo, laranja
     paredes: [
@@ -67,6 +70,7 @@ const FASES = [
   },
   {
     nome: 'Fase 4',
+    chave: 'f4', // nome traduzido: fase.f4 em textos.js
     fundo: 'assets/imagens/fases/fase-4.png',
     cores: ['#22d3ee', '#ec4899', '#facc15'], // ciano, rosa, amarelo
     paredes: [
@@ -79,6 +83,7 @@ const FASES = [
   },
   {
     nome: 'Fase 5',
+    chave: 'f5', // nome traduzido: fase.f5 em textos.js
     fundo: 'assets/imagens/fases/fase-5.png',
     cores: ['#f97316', '#94a3b8', '#facc15'], // laranja, aço, amarelo
     paredes: [],
@@ -88,6 +93,7 @@ const FASES = [
   {
     // Fase 6: meteoros redondos que se partem e um buraco de minhoca (ver espaco.js)
     nome: 'Fase 6: Espaço',
+    chave: 'f6', // nome traduzido: fase.f6 em textos.js
     fundo: 'assets/imagens/fases/fase-6.png',
     cores: null,
     paredes: [],
@@ -97,6 +103,7 @@ const FASES = [
   {
     // Evento de Natal: só aparece liberada em dezembro (no simulador fica liberada para testar)
     nome: 'Fase Natalina',
+    chave: 'natal', // nome traduzido: fase.natal em textos.js
     fundo: 'assets/imagens/fases/fase-natal.png',
     cores: ['#dc2626', '#16a34a', '#facc15', '#3b82f6', '#ec4899'], // presentes: vermelho, verde, dourado, azul, rosa
     paredes: [],
@@ -114,6 +121,7 @@ const FASES = [
   {
     // Ano Novo Chinês: só liberada perto da data (ver anonovo.js)
     nome: 'Fase Ano Novo Chinês',
+    chave: 'anoNovo', // nome traduzido: fase.anoNovo em textos.js
     fundo: 'assets/imagens/fases/fase-ano-novo.png',
     cores: ['#dc2626', '#facc15'], // vermelho e dourado
     paredes: [],

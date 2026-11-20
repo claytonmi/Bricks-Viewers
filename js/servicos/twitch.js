@@ -13,7 +13,7 @@ function conectarChat() {
     .split('?')[0].split('/').filter(Boolean).pop()?.replace(/^#+/, '') || '';
   const status = document.getElementById('status');
   if (!canal) {
-    status.textContent = 'Digite o nome do canal (ex: hercules_sc).';
+    definirTexto(status, 'status.digiteCanal');
     return;
   }
   // Nome especial para testes (só no próprio computador): não conecta na Twitch, entra no modo simulação
@@ -35,7 +35,7 @@ function conectarChat() {
   }
   nomeStreamer = canal; // modo intervalo: a bola do streamer leva o nome do canal
   document.getElementById('btIniciar').disabled = true; // só libera depois de conectar
-  status.textContent = 'Conectando no chat de ' + canal + '...';
+  definirTexto(status, 'status.conectando', { canal });
   abrirConexao(canal);
 }
 
@@ -90,7 +90,7 @@ function abrirConexao(canal) {
         continue;
       }
       if (linha.includes(' JOIN #') || linha.includes(' 366 ')) {
-        status.textContent = 'Conectado no chat de ' + canal + '. Pode digitar !entrar.';
+        definirTexto(status, 'status.conectado', { canal });
         btIniciar.disabled = false;
         verificarFundador(canal);
         liberarAparencia(true);
@@ -109,12 +109,12 @@ function abrirConexao(canal) {
         continue;
       }
       if (linha.includes('NOTICE') && linha.includes('Login authentication failed')) {
-        status.textContent = 'Não consegui entrar no chat. Tente de novo.';
+        definirTexto(status, 'status.falhaLogin');
       }
     }
   };
   ws.onerror = () => {
-    status.textContent = 'Erro de conexão com a Twitch. Tentando de novo...';
+    definirTexto(status, 'status.erroConexao');
   };
   ws.onclose = () => {
     // conexão antiga fechada de propósito (outro canal ou simulador): não faz nada
@@ -123,7 +123,7 @@ function abrirConexao(canal) {
     chatReconectando = true;
     tentativasReconexao++;
     const espera = Math.min(3000 * tentativasReconexao, 30000);
-    status.textContent = 'Chat desconectado. Reconectando em ' + Math.round(espera / 1000) + ' s...';
+    definirTexto(status, 'status.reconectando', { s: Math.round(espera / 1000) });
     timerReconexao = setTimeout(() => abrirConexao(canal), espera);
   };
 }

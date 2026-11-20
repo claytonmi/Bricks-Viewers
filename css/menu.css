@@ -257,6 +257,10 @@ button.btn-cor-padrao {
 .bandeira:hover {
   opacity: 1;
 }
+.bandeira:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
 .bandeira.ativa {
   border-color: #facc15;
   opacity: 1;

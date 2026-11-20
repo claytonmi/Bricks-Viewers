@@ -108,10 +108,8 @@ function atualizarReinicio(agora) {
 
 function atualizarDicaRanking(agora) {
   const dica = document.getElementById('rankingDica');
-  const texto = reinicioEm
-    ? `Novo intervalo em ${Math.ceil((reinicioEm - agora) / 1000)} s. Para começar já, o streamer ou um moderador digita !recomecar.`
-    : 'Para jogar de novo, o streamer ou um moderador digita !recomecar no chat.';
-  if (dica.textContent !== texto) dica.textContent = texto;
+  if (reinicioEm) atualizarTexto(dica, 'obs.novoIntervalo', { s: Math.ceil((reinicioEm - agora) / 1000) });
+  else atualizarTexto(dica, 'obs.jogarDeNovo');
 }
 
 // O link do OBS só serve para o modo intervalo, em que tudo funciona por comando no chat.
@@ -121,11 +119,12 @@ function atualizarBotaoLink() {
   const intervalo = document.getElementById('modoIntervalo').checked;
   document.getElementById('btLinkObs').disabled = !(conectado && intervalo);
   let dica = '';
-  if (!conectado && !intervalo) dica = 'Para gerar o link do OBS, conecte o canal e marque o Modo intervalo.';
-  else if (!conectado) dica = 'Para gerar o link do OBS, conecte o canal.';
-  else if (!intervalo) dica = 'Para gerar o link do OBS, marque o Modo intervalo.';
+  if (!conectado && !intervalo) dica = 'obs.dicaAmbos';
+  else if (!conectado) dica = 'obs.dicaConectar';
+  else if (!intervalo) dica = 'obs.dicaIntervalo';
   const el = document.getElementById('dicaLinkObs');
-  if (el.textContent !== dica) el.textContent = dica;
+  if (dica) atualizarTexto(el, dica);
+  else if (el.textContent) { delete el.dataset.t; el.textContent = ''; }
 }
 
 // Monta o link com o que está escolhido no menu e copia
@@ -134,7 +133,7 @@ document.getElementById('btLinkObs').onclick = () => {
   const canal = document.getElementById('canal').value.trim().toLowerCase()
     .split('?')[0].split('/').filter(Boolean).pop()?.replace(/^#+/, '') || '';
   if (!/^[a-z0-9_]{1,25}$/.test(canal)) {
-    status.textContent = 'Digite o nome do canal para gerar o link do OBS.';
+    definirTexto(status, 'status.canalParaLink');
     return;
   }
   const link = `${location.origin}${location.pathname}?canal=${canal}` +
@@ -144,6 +143,6 @@ document.getElementById('btLinkObs').onclick = () => {
     `&idioma=${idiomaAtual}`;
   contarEvento('copiou-link-obs'); // contador de acessos: só o evento, sem o canal
   copiarAntigo(link, () => {
-    status.textContent = 'Link copiado! No OBS: fonte Navegador, cole o link e use o tamanho da sua live (1280x720 ou 1920x1080).';
+    definirTexto(status, 'status.linkCopiado');
   });
 };
