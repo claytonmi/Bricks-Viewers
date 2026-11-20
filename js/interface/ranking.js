@@ -6,8 +6,8 @@ const MEDALHAS = ['🥇', '🥈', '🥉'];   // ouro, prata, bronze
 // Texto do top 3 para o streamer colar no chat (viewers e, se marcado, o streamer)
 function textoTop3() {
   const itens = montarLinhas(); // mesma ordem do ranking, com o desempate
-  const linhas = itens.slice(0, 3).map((j, i) => `${MEDALHAS[i]} ${j.nome} - ${j.pontos} pts`);
-  return ['🏆 Bricks Viewers - Top 3', ...linhas].join('\n');
+  const linhas = itens.slice(0, 3).map((j, i) => t('ranking.top3Linha', { medalha: MEDALHAS[i], nome: j.nome, pts: j.pontos }));
+  return [t('ranking.top3Titulo'), ...linhas].join('\n');
 }
 
 // Copia o top 3 para a área de transferência
@@ -15,8 +15,8 @@ function copiarTop3() {
   const texto = textoTop3();
   const botao = document.getElementById('btCopiar');
   const feedback = () => {
-    botao.textContent = 'Copiado!';
-    setTimeout(() => { botao.textContent = 'Copiar top 3'; }, 2000);
+    definirTexto(botao, 'ranking.copiado');
+    setTimeout(() => definirTexto(botao, 'ranking.copiar'), 2000);
   };
   // navigator.clipboard só funciona em https; se falhar, usa o método antigo
   if (navigator.clipboard && window.isSecureContext) {
@@ -55,14 +55,16 @@ function mostrarAvisoEntrada(nome) {
 }
 
 // Ranking final (ao lado do jogo): a lista e os botões. Aberto pelo link do OBS, sem botões e com a dica do comando.
+let listaRankingFinal = [];             // a última lista mostrada, para refazer quando o idioma mudar
 function mostrarRankingFinal(lista) {
+  listaRankingFinal = lista;
   document.getElementById('btVoltei').classList.add('escondido');
   document.getElementById('avisoVoltei').classList.add('escondido');
   document.getElementById('btCopiar').classList.toggle('escondido', modoAutomatico);
   document.getElementById('btVoltar').classList.toggle('escondido', modoAutomatico);
   document.getElementById('rankingDica').classList.toggle('escondido', !modoAutomatico);
   atualizarDicaRanking(agoraJogo());
-  document.querySelector('#ranking h2').textContent = modoIntervalo ? 'Ranking do intervalo' : 'Ranking final';
+  definirTexto(document.getElementById('rankingTitulo'), modoIntervalo ? 'ranking.intervalo' : 'ranking.final');
 
   const ol = document.getElementById('rankingLista');
   ol.innerHTML = '';
@@ -71,7 +73,7 @@ function mostrarRankingFinal(lista) {
   const mostrados = modoAutomatico ? lista.slice(0, 10) : lista;
   mostrados.forEach((j, i) => {
     const li = document.createElement('li');
-    li.textContent = `${j.posicao || i + 1}º  ${j.nome}  -  ${j.pontos} pts`; // textContent: nome vem do chat
+    li.textContent = t('ranking.linha', { pos: ordinal(j.posicao || i + 1), nome: j.nome, pts: j.pontos }); // textContent: nome vem do chat
     if (i < 3) li.classList.add('top3');
     if (j.streamer) li.classList.add('streamer');
     ol.appendChild(li);
@@ -79,7 +81,7 @@ function mostrarRankingFinal(lista) {
   if (lista.length > mostrados.length) {
     const li = document.createElement('li');
     li.classList.add('mais-jogadores');
-    li.textContent = `e mais ${lista.length - mostrados.length} jogadores`;
+    li.textContent = t('ranking.maisJogadores', { n: lista.length - mostrados.length });
     ol.appendChild(li);
   }
   document.getElementById('ranking').classList.remove('escondido');
@@ -122,7 +124,7 @@ function atualizarRankingLateral() {
     }
     li.classList.toggle('streamer', j.streamer);
     // 🥇🥈🥉 só para os três primeiros que já têm ponto
-    const marca = (i < 3 && j.pontos > 0) ? MEDALHAS[i] : `${i + 1}º`;
+    const marca = (i < 3 && j.pontos > 0) ? MEDALHAS[i] : ordinal(i + 1);
     li.children[0].textContent = `${marca} ${j.nome}`; // textContent: nome vem do chat
     li.children[1].textContent = j.pontos;
     return li;
@@ -146,3 +148,10 @@ function atualizarRankingLateral() {
     li.style.transform = '';
   });
 }
+
+// Trocou o idioma: refaz o ranking final aberto e o lateral (sem reiniciar nada)
+aoTrocarIdioma(() => {
+  if (!document.getElementById('ranking').classList.contains('escondido')) mostrarRankingFinal(listaRankingFinal);
+  chaveRankingLateral = '';
+  atualizarRankingLateral();
+});

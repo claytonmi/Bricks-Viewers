@@ -155,6 +155,39 @@ const TEXTOS = {
     'info.dicaTeste': '<b>Teste antes da live:</b> troque para a cena, digite !entrar e depois !voltei.',
     'info.obsVersao': 'Os nomes das opções podem mudar um pouco conforme a versão e o idioma do OBS.',
     'info.voltar': 'Voltar',
+    'painel.intro': 'Entre no jogo pelo chat e ganhe uma bola para jogar com o streamer. Quebre os tijolos: cada tijolo quebrado vale 1 ponto. Quem tiver mais pontos no final vence!',
+    'painel.comandos': 'Comandos do chat',
+    'painel.entrar': 'entra no jogo',
+    'painel.cor': 'muda a cor da bola',
+    'painel.corRgb': '(ou código RGB: <b>!#ff8800</b> ou <b>!cor 255 136 0</b>)',
+    'painel.speed': 'bola 2× mais rápida por 5 s',
+    'painel.bomb': 'empurra as bolas perto da sua',
+    'painel.gravity': 'puxa as bolas perto da sua por 2 s e lança todas para longe',
+    'painel.shock': 'sua bola fica elétrica por 1,5 s e deixa lentas as bolas que encostar',
+    'painel.ausente': '<b>Use seus poderes!</b> Quem tem poder e não usa nenhum perde os pontos da fase.',
+    'ranking.titulo': 'Ranking',
+    'ranking.final': 'Ranking final',
+    'ranking.intervalo': 'Ranking do intervalo',
+    'ranking.linha': '{pos}  {nome}  -  {pts} pts',
+    'ranking.maisJogadores': 'e mais {n} jogadores',
+    'ranking.copiar': 'Copiar top 3',
+    'ranking.copiado': 'Copiado!',
+    'ranking.top3Titulo': '🏆 Bricks Viewers - Top 3',
+    'ranking.top3Linha': '{medalha} {nome} - {pts} pts',
+    'ranking.continuarDesempate': 'Continuar ao desempate',
+    'ranking.cancelar': 'Cancelar',
+    'comum.voltarMenu': 'Voltar ao menu',
+    'comum.continuar': 'Continuar',
+    'pausa.titulo': 'Pausado',
+    'pausa.dica': 'Esc para continuar',
+    'pausa.ninguem': 'Ninguém entrou ainda',
+    'partida.viewers': 'Viewers: {n}/{max}',
+    'desempate.aviso': 'Desempate: {grupo}',
+    'desempate.lugar2': '{a} × {b} lugar',
+    'desempate.lugarN': '{lista} e {ultimo} lugar',
+    'rodape.voltei': 'Voltei! Parar o intervalo',
+    'rodape.avisoVoltei': 'Streamer: digite <b>!voltei</b> no chat para encerrar o intervalo',
+    'rodape.creditos': 'Dev Clayton M. - Arte Daru',
   },
   en: {
     'menu.chat': 'Twitch chat',
@@ -254,7 +287,7 @@ const TEXTOS = {
     'info.f6': '<b>Stage 6 (space):</b> round meteors scattered across the screen. The big ones take 5 hits and split into two pieces when they break. When one is gone, another enters from the top (at most 18 on screen). Meteors that touch push each other gently. The paddle becomes a flying saucer. A wormhole appears from time to time: a ball that gets near the dark entrance comes out of the light exit, in the same direction it went in. With 100 players, there are 150 meteors.',
     'info.natal': '<b>Christmas Stage:</b> the bricks are presents and snow falls. When 4 bricks or fewer are left, Santa\'s sack comes down (40 health, swaying from side to side): whoever lands the last hit gets 5 points and it drops little presents worth 1 point to the ball that catches them. Now and then a reindeer flies by up high: hitting it is worth 10 points.',
     'info.anoNovo': '<b>Chinese New Year Stage:</b> lanterns drop lucky coins when broken, red envelopes give 2 extra points and fireworks explode and break the bricks around them. Coins fall from the sky (1 point for the ball that catches one) and fireworks rise from the ground: a ball that passes through one gets a ready-made power. When the bricks run out, the dragon comes in with 40 health: whoever lands the last hit gets 5 points. The fire it breathes stuns the balls, and if it leaves the screen the stage ends.',
-    'info.intervalo': '<b>Break mode:</b> for when you step away from the stream. With no paddle, the floor becomes a wall and the balls never fall. You join as a ball (off the leaderboard), the match starts by itself in 20 s and the chat joins with !entrar at any time. No items drop. The stages cycle from the selected one, with the leaderboard (top 10) for 15 s between them; points add up, but powers reset every stage. On Stage 3, a boss with 40 health drops at the end on the middle wall. Anyone who had a power ready for more than 1 min 30 s and used none during the stage loses that stage\'s points. Click <b>I\'m back!</b> (below the game) or type <b>!voltei</b> in the chat (only you and the moderators) to stop and see the leaderboard. You and the mods can also control the sound through the chat:<b>!mudo</b>, <b>!som</b> and <b>!volume 30</b>.',
+    'info.intervalo': '<b>Break mode:</b> for when you step away from the stream. With no paddle, the floor becomes a wall and the balls never fall. You join as a ball (off the leaderboard), the match starts by itself in 20 s and the chat joins with !entrar at any time. No items drop. The stages cycle from the selected one, with the leaderboard (top 10) for 15 s between them; points add up, but powers reset every stage. On Stage 3, a boss with 40 health drops at the end on the middle wall. Anyone who had a power ready for more than 1 min 30 s and used none during the stage loses that stage\'s points. Click <b>I\'m back!</b> (below the game) or type <b>!voltei</b> in the chat (only you and the moderators) to stop and see the leaderboard. You and the mods can also control the sound through the chat: <b>!mudo</b>, <b>!som</b> and <b>!volume 30</b>.',
     'info.maisJogadores': 'The more players, the faster the powers come out: up to 15 players, the numbers below; with 50 or more, !speed at 3 hits, bomb at 6, !gravity at 7 and !shock at 8.',
     'info.bomba': 'Every 10 brick hits by your ball, you get a bomb (use it with <b>!bomb</b>). You can keep 2 at most.',
     'info.speedCarga': 'Every 5 brick hits by your ball, you get a speed charge (use it with <b>!speed</b>).',
@@ -302,6 +335,39 @@ const TEXTOS = {
     'info.dicaTeste': '<b>Test before going live:</b> switch to the scene, type !entrar and then !voltei.',
     'info.obsVersao': 'Option names may vary a little depending on your OBS version and language.',
     'info.voltar': 'Back',
+    'painel.intro': 'Join the game through the chat and get a ball to play with the streamer. Break the bricks: each brick broken is worth 1 point. Whoever has the most points at the end wins!',
+    'painel.comandos': 'Chat commands',
+    'painel.entrar': 'joins the game',
+    'painel.cor': 'changes the color of the ball',
+    'painel.corRgb': '(or an RGB code: <b>!#ff8800</b> or <b>!cor 255 136 0</b>)',
+    'painel.speed': 'ball 2× faster for 5 s',
+    'painel.bomb': 'pushes the balls near yours away',
+    'painel.gravity': 'pulls the balls near yours in for 2 s and launches them all away',
+    'painel.shock': 'your ball turns electric for 1.5 s and slows down the balls it touches',
+    'painel.ausente': '<b>Use your powers!</b> Anyone with a power who uses none loses that stage\'s points.',
+    'ranking.titulo': 'Leaderboard',
+    'ranking.final': 'Final leaderboard',
+    'ranking.intervalo': 'Break leaderboard',
+    'ranking.linha': '{pos}  {nome}  -  {pts} pts',
+    'ranking.maisJogadores': 'and {n} more players',
+    'ranking.copiar': 'Copy top 3',
+    'ranking.copiado': 'Copied!',
+    'ranking.top3Titulo': '🏆 Bricks Viewers - Top 3',
+    'ranking.top3Linha': '{medalha} {nome} - {pts} pts',
+    'ranking.continuarDesempate': 'Continue to the tiebreaker',
+    'ranking.cancelar': 'Cancel',
+    'comum.voltarMenu': 'Back to menu',
+    'comum.continuar': 'Continue',
+    'pausa.titulo': 'Paused',
+    'pausa.dica': 'Esc to continue',
+    'pausa.ninguem': 'Nobody has joined yet',
+    'partida.viewers': 'Viewers: {n}/{max}',
+    'desempate.aviso': 'Tiebreaker: {grupo}',
+    'desempate.lugar2': '{a} × {b} place',
+    'desempate.lugarN': '{lista} and {ultimo} place',
+    'rodape.voltei': 'I\'m back! Stop the break',
+    'rodape.avisoVoltei': 'Streamer: type <b>!voltei</b> in the chat to end the break',
+    'rodape.creditos': 'Dev Clayton M. - Art Daru',
   },
 };
 
@@ -392,6 +458,15 @@ function iniciarIdioma() {
     el.onclick = () => escolherIdioma(el.dataset.idioma, true);
   });
   aplicarIdioma();
+}
+
+// Posição em ordinal: 1º em português; 1st, 2nd, 3rd, 4th... em inglês (11, 12 e 13 são th)
+function ordinal(n) {
+  if (idiomaAtual !== 'en') return n + 'º';
+  const resto100 = n % 100;
+  if (resto100 >= 11 && resto100 <= 13) return n + 'th';
+  const sufixo = { 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th';
+  return n + sufixo;
 }
 
 // Nome da fase para mostrar; FASES[i].nome continua em português por dentro

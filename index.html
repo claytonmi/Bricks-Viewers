@@ -200,18 +200,18 @@
       <!-- Ranking final -->
       <div id="ranking" class="sobreposicao escondido">
         <div class="caixa">
-          <h2>Ranking final</h2>
+          <h2 id="rankingTitulo" data-t="ranking.final">Ranking final</h2>
           <p id="desempateAviso" class="desempate-aviso escondido"></p>
           <ol id="rankingLista"></ol>
           <div id="desempateEscolha" class="ranking-botoes escondido">
-            <button id="btDesempateContinuar" class="btn-principal">Continuar ao desempate</button>
-            <button id="btDesempateCancelar">Cancelar</button>
+            <button id="btDesempateContinuar" class="btn-principal" data-t="ranking.continuarDesempate">Continuar ao desempate</button>
+            <button id="btDesempateCancelar" data-t="ranking.cancelar">Cancelar</button>
           </div>
           <div class="ranking-botoes">
-            <button id="btCopiar">Copiar top 3</button>
-            <button id="btVoltar" class="btn-principal">Voltar ao menu</button>
+            <button id="btCopiar" data-t="ranking.copiar">Copiar top 3</button>
+            <button id="btVoltar" class="btn-principal" data-t="comum.voltarMenu">Voltar ao menu</button>
           </div>
-          <p id="rankingDica" class="ranking-dica escondido">Para jogar de novo, o streamer ou um moderador digita <b>!recomecar</b> no chat.</p>
+          <p id="rankingDica" class="ranking-dica escondido" data-t="obs.jogarDeNovo">Para jogar de novo, o streamer ou um moderador digita !recomecar no chat.</p>
         </div>
       </div>
     </main>
@@ -219,22 +219,22 @@
     <!-- Como jogar: texto para o streamer apresentar e comandos do chat (lado esquerdo do jogo) -->
     <aside id="painelComandos" class="painel-comandos">
       <h3>Bricks Viewers</h3>
-      <p>Entre no jogo pelo chat e ganhe uma bola para jogar com o streamer. Quebre os tijolos: cada tijolo quebrado vale 1 ponto. Quem tiver mais pontos no final vence!</p>
-      <h4>Comandos do chat</h4>
+      <p data-t="painel.intro">Entre no jogo pelo chat e ganhe uma bola para jogar com o streamer. Quebre os tijolos: cada tijolo quebrado vale 1 ponto. Quem tiver mais pontos no final vence!</p>
+      <h4 data-t="painel.comandos">Comandos do chat</h4>
       <ul>
-        <li id="cmdEntrar"><b>!entrar</b> entra no jogo <span class="obs" id="obsEntrar">(antes de começar)</span></li>
-        <li><b>!azul</b> <b>!vermelho</b> <b>!amarelo</b> <b>!verde</b> <b>!roxo</b> <b>!laranja</b> <b>!rosa</b> <b>!ciano</b> <b>!branco</b> <b>!preto</b> muda a cor da bola <span class="obs">(ou código RGB: <b>!#ff8800</b> ou <b>!cor 255 136 0</b>)</span></li>
-        <li><b>!speed</b> bola 2× mais rápida por 5 s <span class="obs" id="obsSpeed">(a cada 5 batidas em tijolos)</span></li>
-        <li><b>!bomb</b> empurra as bolas perto da sua <span class="obs" id="obsBomb">(1 bomba a cada 10 batidas, até 2)</span></li>
-        <li><b>!gravity</b> puxa as bolas perto da sua por 2 s e lança todas para longe <span class="obs" id="obsGrav">(a cada 12 batidas, só 1)</span></li>
-        <li><b>!shock</b> sua bola fica elétrica por 1,5 s e deixa lentas as bolas que encostar <span class="obs" id="obsShock">(a cada 13 batidas, só 1)</span></li>
-        <li id="cmdAusente" class="aviso-ausente escondido"><b>Use seus poderes!</b> Quem tem poder e não usa nenhum perde os pontos da fase.</li>
+        <li id="cmdEntrar"><b>!entrar</b> <span data-t="painel.entrar">entra no jogo</span> <span class="obs" id="obsEntrar">(antes de começar)</span></li>
+        <li><b>!azul</b> <b>!vermelho</b> <b>!amarelo</b> <b>!verde</b> <b>!roxo</b> <b>!laranja</b> <b>!rosa</b> <b>!ciano</b> <b>!branco</b> <b>!preto</b> <span data-t="painel.cor">muda a cor da bola</span> <span class="obs" data-t="painel.corRgb" data-t-html="1">(ou código RGB: <b>!#ff8800</b> ou <b>!cor 255 136 0</b>)</span></li>
+        <li><b>!speed</b> <span data-t="painel.speed">bola 2× mais rápida por 5 s</span> <span class="obs" id="obsSpeed">(a cada 5 batidas em tijolos)</span></li>
+        <li><b>!bomb</b> <span data-t="painel.bomb">empurra as bolas perto da sua</span> <span class="obs" id="obsBomb">(1 bomba a cada 10 batidas, até 2)</span></li>
+        <li><b>!gravity</b> <span data-t="painel.gravity">puxa as bolas perto da sua por 2 s e lança todas para longe</span> <span class="obs" id="obsGrav">(a cada 12 batidas, só 1)</span></li>
+        <li><b>!shock</b> <span data-t="painel.shock">sua bola fica elétrica por 1,5 s e deixa lentas as bolas que encostar</span> <span class="obs" id="obsShock">(a cada 13 batidas, só 1)</span></li>
+        <li id="cmdAusente" class="aviso-ausente escondido" data-t="painel.ausente" data-t-html="1"><b>Use seus poderes!</b> Quem tem poder e não usa nenhum perde os pontos da fase.</li>
       </ul>
     </aside>
 
     <!-- Ranking ao lado direito do jogo (todos os jogadores, atualiza durante a partida; rola se for grande) -->
     <aside id="rankingLateral" class="ranking-lateral">
-      <h3>Ranking</h3>
+      <h3 data-t="ranking.titulo">Ranking</h3>
       <ol id="rankingTopo"></ol>
       <!-- Aviso curto quando alguém tenta entrar no meio da partida (some sozinho) -->
       <p id="avisoEntrada" class="aviso-entrada escondido"></p>
@@ -280,10 +280,10 @@
     <!-- Embaixo do jogo: botão do modo intervalo e créditos -->
     <div class="rodape-jogo">
       <!-- Modo intervalo: o streamer voltou, para o jogo e mostra o ranking -->
-      <button id="btVoltei" class="btn-voltei escondido">Voltei! Parar o intervalo</button>
+      <button id="btVoltei" class="btn-voltei escondido" data-t="rodape.voltei">Voltei! Parar o intervalo</button>
       <!-- Aberto pelo link do OBS não dá para clicar: o streamer usa o comando no chat -->
-      <span id="avisoVoltei" class="aviso-voltei escondido">Streamer: digite <b>!voltei</b> no chat para encerrar o intervalo</span>
-      <footer class="rodape">Dev Clayton M. - Arte Daru</footer>
+      <span id="avisoVoltei" class="aviso-voltei escondido" data-t="rodape.avisoVoltei" data-t-html="1">Streamer: digite <b>!voltei</b> no chat para encerrar o intervalo</span>
+      <footer class="rodape" data-t="rodape.creditos">Dev Clayton M. - Arte Daru</footer>
     </div>
     </div>
   </div>
@@ -295,12 +295,12 @@
         <button class="bandeira" data-idioma="pt" aria-label="Português" type="button"><svg viewBox="0 0 28 20" width="28" height="20" aria-hidden="true"><rect width="28" height="20" fill="#16a34a"/><path d="M14 2.5 25 10 14 17.5 3 10Z" fill="#facc15"/><circle cx="14" cy="10" r="4.2" fill="#1d4ed8"/></svg></button>
         <button class="bandeira" data-idioma="en" aria-label="English" type="button"><svg viewBox="0 0 28 20" width="28" height="20" aria-hidden="true"><rect width="28" height="20" fill="#fff"/><g fill="#dc2626"><rect y="0" width="28" height="2.2"/><rect y="4.4" width="28" height="2.2"/><rect y="8.8" width="28" height="2.2"/><rect y="13.2" width="28" height="2.2"/><rect y="17.6" width="28" height="2.4"/></g><rect width="12" height="11" fill="#1e3a8a"/></svg></button>
       </div>
-      <h2>Pausado</h2>
-      <p class="menu-pausa-dica">Esc para continuar</p>
+      <h2 data-t="pausa.titulo">Pausado</h2>
+      <p class="menu-pausa-dica" data-t="pausa.dica">Esc para continuar</p>
       <ol id="pausaRanking"></ol>
       <div class="menu-pausa-botoes">
-        <button id="btContinuar" class="btn-principal">Continuar</button>
-        <button id="btVoltarPausa">Voltar ao menu</button>
+        <button id="btContinuar" class="btn-principal" data-t="comum.continuar">Continuar</button>
+        <button id="btVoltarPausa" data-t="comum.voltarMenu">Voltar ao menu</button>
       </div>
     </div>
   </div>

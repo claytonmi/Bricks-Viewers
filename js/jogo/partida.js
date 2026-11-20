@@ -99,12 +99,12 @@ function mostrarMenuPausa() {
   const lista = montarLinhas().slice(0, 10); // mesma ordem do ranking (inclui o desempate)
   if (lista.length === 0) {
     const li = document.createElement('li');
-    li.textContent = 'Ninguém entrou ainda';
+    li.textContent = t('pausa.ninguem');
     ol.appendChild(li);
   }
   lista.forEach((b, i) => {
     const li = document.createElement('li');
-    li.textContent = `${i + 1}º  ${b.nome}  -  ${b.pontos} pts`; // textContent: nome vem do chat
+    li.textContent = t('ranking.linha', { pos: ordinal(i + 1), nome: b.nome, pts: b.pontos }); // textContent: nome vem do chat
     if (i < 3) li.classList.add('top3');
     ol.appendChild(li);
   });
@@ -199,5 +199,9 @@ function finalizar(semDesempate = false) {
 // Atualiza o contador de viewers (campo opcional na página)
 function atualizarContador() {
   const el = document.getElementById('contador');
-  if (el) el.textContent = `Viewers: ${viewers.length}/${maxViewers}`;
+  if (el) definirTexto(el, 'partida.viewers', { n: viewers.length, max: maxViewers });
 }
+aoTrocarIdioma(() => {
+  atualizarContador();
+  if (!document.getElementById('menuPausa').classList.contains('escondido')) mostrarMenuPausa(); // pausa aberta: refaz a lista
+});

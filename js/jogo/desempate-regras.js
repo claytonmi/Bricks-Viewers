@@ -55,9 +55,9 @@ function gruposDesempate(linhas) {
 // Texto das posições disputadas: "2º × 3º lugar", "1º, 2º e 3º lugar" (usa a posição de cada linha no grupo)
 function rotuloDisputa(inicioIndice, tamanho) {
   const nums = [];
-  for (let k = 0; k < tamanho; k++) nums.push(`${inicioIndice + k + 1}º`);
-  if (nums.length === 2) return `${nums[0]} × ${nums[1]} lugar`;
-  return `${nums.slice(0, -1).join(', ')} e ${nums[nums.length - 1]} lugar`;
+  for (let k = 0; k < tamanho; k++) nums.push(ordinal(inicioIndice + k + 1));
+  if (nums.length === 2) return t('desempate.lugar2', { a: nums[0], b: nums[1] });
+  return t('desempate.lugarN', { lista: nums.slice(0, -1).join(', '), ultimo: nums[nums.length - 1] });
 }
 
 // ----- Disputa de um grupo: o tijolo tem vida igual ao número de jogadores que sobraram -----

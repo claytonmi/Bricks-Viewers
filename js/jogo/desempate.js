@@ -251,9 +251,11 @@ function atualizarTextoDesempate() {
   const el = document.getElementById('desempateAviso');
   if (!el) return;
   const d = desempate;
-  el.textContent = d ? `Desempate: ${textoDoGrupo()}` : '';
+  if (d) definirTexto(el, 'desempate.aviso', { grupo: textoDoGrupo() });
+  else { delete el.dataset.t; el.textContent = ''; }
   el.classList.toggle('escondido', !d || d.fase !== 'aviso');
 }
+aoTrocarIdioma(atualizarTextoDesempate); // o grupo ("2º × 3º lugar") também muda de idioma
 
 // Cartaz no topo do jogo (mata-mata) com a vida do tijolo e o tempo. O tijolo é desenhado pela tela normal.
 function desenharDesempate(agora) {
