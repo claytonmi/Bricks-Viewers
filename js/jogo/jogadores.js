@@ -42,7 +42,7 @@ function entrar(nome, streamer = false, login = nome) {
     poderAte: 0,      // até quando o poder em uso está ativo (enquanto isso, os outros poderes não pegam nela)
     fila: [],         // poderes pedidos enquanto outro estava ativo (rodam um depois do outro)
     brilhoBombaAte: 0, // brilho vermelho depois de usar !bomb
-    aviso: '',         // "Fulano usou !bomb" em cima da bola (o chat aprende vendo os outros)
+    aviso: null,       // "Fulano usou !bomb" em cima da bola: { chave, valores } (o chat aprende vendo os outros)
     avisoAte: 0
   };
   viewers.push(b);
@@ -53,7 +53,7 @@ function entrar(nome, streamer = false, login = nome) {
     b.y = PISO_Y - RAIO - 2;
     b.estado = 'jogando';
     lancar(b);
-    b.aviso = `${b.nome} entrou`;
+    b.aviso = { chave: 'jogo.avisoEntrou', valores: { nome: b.nome } };
     b.avisoAte = agora + DURACAO_AVISO + AVISO_SOME;
   }
   atualizarContador();
@@ -88,6 +88,6 @@ function darPontos(b, n) {
 
 // Texto "Fulano usou !comando" que sobe e some em cima da bola
 function mostrarAviso(b, cmd, agora) {
-  b.aviso = `${b.nome} usou ${cmd}`;
+  b.aviso = { chave: 'jogo.avisoUsou', valores: { nome: b.nome, cmd } };
   b.avisoAte = agora + DURACAO_AVISO + AVISO_SOME;
 }

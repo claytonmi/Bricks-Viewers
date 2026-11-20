@@ -108,5 +108,5 @@ function soltarChefao(colunas, agora) {
   });
   chefaoCaiu = true;
   tijolosVivos++;
-  anunciar('Tijolo chefão!', agora);
+  anunciar('jogo.chefao', agora);
 }

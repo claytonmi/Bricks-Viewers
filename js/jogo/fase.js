@@ -73,9 +73,9 @@ function totalPorJogadores(min, max, jogadores) {
   return Math.round(min + (max - min) * f);
 }
 
-// Texto grande no meio da tela por 2,5 s ("Tijolo chefão!", "Multibola!")
-function anunciar(texto, agora) {
-  anuncio = texto;
+// Texto grande no meio da tela por 2,5 s ("Tijolo chefão!", "Multibola!"): guarda a chave e os valores, o idioma é escolhido ao desenhar
+function anunciar(chave, agora, valores) {
+  anuncio = { chave, valores };
   anuncioAte = agora + 2500;
 }
 

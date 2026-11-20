@@ -31,7 +31,7 @@ function processarComando(usuario, mensagem, autoridade = false, login = usuario
     // quantas vagas tem: o streamer usa no OBS, onde não dá para ver o menu (aparece no painel do ranking)
     if (estado === 'menu') return;
     const jogadores = viewers.filter(b => !b.streamer).length;
-    mostrarAvisoLateral(`Vagas: ${jogadores}/${maxViewers}`, 6000);
+    mostrarAvisoLateral('ranking.vagas', { n: jogadores, max: maxViewers }, 6000);
   } else if (cmd === '!entrar') {
     // modo intervalo: entra a qualquer momento (no meio da fase, no ranking entre as fases...)
     // no desempate ninguém entra: o mini-jogo só tem as bolas que estão disputando
@@ -47,7 +47,7 @@ function processarComando(usuario, mensagem, autoridade = false, login = usuario
       // trocou antes de 5 s: avisa em cima da bola, no máximo uma vez a cada 10 s por viewer
       if (agora >= (b.msgCorAte || 0)) {
         b.msgCorAte = agora + 10000;
-        b.aviso = `${b.nome}, calma! Tá trocando de roupa rápido demais`;
+        b.aviso = { chave: 'jogo.avisoCor', valores: { nome: b.nome } };
         b.avisoAte = agora + 4000 + AVISO_SOME;
       }
       return;

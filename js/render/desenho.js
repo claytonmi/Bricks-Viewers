@@ -461,9 +461,10 @@ function desenharAvisos(agora) {
     ctx.lineWidth = 3;
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#000';
-    ctx.strokeText(b.aviso, b.x, y);
+    const textoAviso = tGuardado(b.aviso);
+    ctx.strokeText(textoAviso, b.x, y);
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(b.aviso, b.x, y);
+    ctx.fillText(textoAviso, b.x, y);
     ctx.textAlign = 'left';
     ctx.globalAlpha = 1;
   }
@@ -574,7 +575,7 @@ function desenharLobby(agora) {
     ctx.fillStyle = '#000';
     ctx.font = 'bold 16px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Pronto', BOTAO_PRONTO.x + BOTAO_PRONTO.w / 2, BOTAO_PRONTO.y + 23);
+    ctx.fillText(t('jogo.pronto'), BOTAO_PRONTO.x + BOTAO_PRONTO.w / 2, BOTAO_PRONTO.y + 23);
     ctx.textAlign = 'left';
   }
 }
@@ -586,36 +587,36 @@ function desenharTextos(agora) {
   if (estado === 'lobby' && modoIntervalo) {
     const jogadores = viewers.filter(b => !b.streamer).length;
     const falta = Math.max(0, Math.ceil((comecaEm - agora) / 1000));
-    ctx.fillText(`Modo intervalo: digite !entrar  (${jogadores}/${maxViewers})`, 20, 30);
+    ctx.fillText(t('jogo.lobbyIntervalo', { n: jogadores, max: maxViewers }), 20, 30);
     ctx.font = 'bold 28px sans-serif';
     ctx.textAlign = 'center';
     ctx.lineWidth = 5;
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#000';
-    const txt = `${FASES[faseIndex].nome} começa em ${falta} s`;
+    const txt = t('jogo.comecaEm', { fase: nomeFase(FASES[faseIndex]), s: falta });
     ctx.strokeText(txt, W / 2, PISO_Y - 170);
     ctx.fillText(txt, W / 2, PISO_Y - 170);
     ctx.textAlign = 'left';
     ctx.font = '16px sans-serif';
   } else if (estado === 'lobby') {
-    ctx.fillText(`Aguardando viewers: digite !entrar  (${viewers.length}/${maxViewers})`, 20, 30);
+    ctx.fillText(t('jogo.aguardando', { n: viewers.length, max: maxViewers }), 20, 30);
     if (agora < avisoAte) {
       ctx.fillStyle = '#facc15';
-      ctx.fillText(aviso, 20, 56);
+      ctx.fillText(tGuardado(aviso), 20, 56);
     }
   }
   if (estado === 'jogando') {
     const noAr = viewers.filter(b => b.estado === 'jogando').length;
-    const extra = streamerPontua ? `   Ponto do streamer: ${streamerPts}` : '';
+    const extra = streamerPontua ? '   ' + t('jogo.pontoStreamer', { n: streamerPts }) : '';
     // na chuva e na esteira, conta os que ainda vão aparecer (e o chefão, até ele cair)
     const chefaoFalta = faseTemChefao() && !chefaoCaiu ? 1 : 0;
-    const fase = modoIntervalo ? `${FASES[faseIndex].nome}   ` : '';
-    const rotulo = espacoAtiva() ? 'Meteoros' : 'Tijolos'; // fase 6: conta meteoros
-    ctx.fillText(`${fase}${rotulo}: ${tijolosVivos + chuvaRestante + chefaoFalta}${extra}`, 20, 30);
+    const fase = modoIntervalo ? `${nomeFase(FASES[faseIndex])}   ` : '';
+    const contador = t(espacoAtiva() ? 'jogo.contaMeteoros' : 'jogo.contaTijolos', { n: tijolosVivos + chuvaRestante + chefaoFalta }); // fase 6: conta meteoros
+    ctx.fillText(`${fase}${contador}${extra}`, 20, 30);
     ctx.textAlign = 'right';
     // no intervalo as bolas nunca caem: mostra as vagas, porque dá para entrar no meio da fase
-    const vagas = `Jogadores: ${viewers.filter(b => !b.streamer).length}/${maxViewers}`;
-    ctx.fillText(modoIntervalo ? vagas : `Bolas no ar: ${noAr}/${viewers.length}`, W - 20, 30);
+    const vagas = t('jogo.jogadores', { n: viewers.filter(b => !b.streamer).length, max: maxViewers });
+    ctx.fillText(modoIntervalo ? vagas : t('jogo.bolasNoAr', { n: noAr, max: viewers.length }), W - 20, 30);
     ctx.textAlign = 'left';
     // "Tijolo chefão!", "Multibola!": grande no meio da tela, some aos poucos
     if (agora < anuncioAte) {
@@ -625,9 +626,10 @@ function desenharTextos(agora) {
       ctx.lineWidth = 5;
       ctx.lineJoin = 'round';
       ctx.strokeStyle = '#000';
-      ctx.strokeText(anuncio, W / 2, H / 2 + 40);
+      const textoAnuncio = anuncio ? t(anuncio.chave, anuncio.valores) : '';
+      ctx.strokeText(textoAnuncio, W / 2, H / 2 + 40);
       ctx.fillStyle = '#facc15';
-      ctx.fillText(anuncio, W / 2, H / 2 + 40);
+      ctx.fillText(textoAnuncio, W / 2, H / 2 + 40);
       ctx.textAlign = 'left';
       ctx.globalAlpha = 1;
     }
@@ -637,7 +639,7 @@ function desenharTextos(agora) {
     ctx.fillStyle = '#f97316';
     ctx.font = 'bold 16px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Chat da Twitch caiu, reconectando...', W / 2, 62);
+    ctx.fillText(t('jogo.chatCaiu'), W / 2, 62);
     ctx.textAlign = 'left';
   }
 }
@@ -651,7 +653,7 @@ function desenharBotaoSom() {
   ctx.fillStyle = '#ffffff';
   ctx.font = '14px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText(somLigado ? '🔊 Som' : '🔇 Mudo', m.x + m.w / 2, m.y + 19);
+  ctx.fillText(somLigado ? t('jogo.somLigado') : t('jogo.somMudo'), m.x + m.w / 2, m.y + 19);
   ctx.textAlign = 'left';
   // barra de volume (aparece com o mouse em cima ou arrastando)
   if (mostrarVolume || arrastandoVolume) desenharBarraVolume();
@@ -663,7 +665,9 @@ function desenharContagem() {
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 64px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText(contagemTexto, W / 2, H / 2);
+  const textoContagem = contagemTexto === 'titulo' ? (modoIntervalo ? nomeFase(FASES[faseIndex]) : t('jogo.iniciando'))
+    : contagemTexto === 'valendo' ? t('jogo.valendo') : contagemTexto;
+  ctx.fillText(textoContagem, W / 2, H / 2);
   ctx.textAlign = 'left';
 }
 
@@ -731,11 +735,11 @@ function desenharRankingPausa(agora) {
 
   // contagem para a próxima fase (em cima do ranking)
   const falta = Math.max(0, Math.ceil((pausaAte - agora) / 1000));
-  const proxima = FASES[proximaFaseLiberada(faseIndex)].nome; // a mesma conta da troca de fase (pula as escondidas)
+  const proxima = nomeFase(FASES[proximaFaseLiberada(faseIndex)]); // a mesma conta da troca de fase (pula as escondidas)
   ctx.textAlign = 'center';
   ctx.fillStyle = '#22d3ee';
   ctx.font = 'bold 22px sans-serif';
-  ctx.fillText(`${proxima} em ${falta} s`, cx, y + 34);
+  ctx.fillText(t('jogo.proximaEm', { fase: proxima, s: falta }), cx, y + 34);
   // barrinha do tempo
   const f = Math.max(0, Math.min(1, (pausaAte - agora) / PAUSA_RANKING));
   ctx.fillStyle = '#3a3a44';
@@ -745,14 +749,14 @@ function desenharRankingPausa(agora) {
 
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 24px sans-serif';
-  ctx.fillText(`${FASES[faseIndex].nome} concluída - Ranking`, cx, y + 88);
+  ctx.fillText(t('jogo.faseConcluida', { fase: nomeFase(FASES[faseIndex]) }), cx, y + 88);
 
   // top 10: 1º ouro, 2º prata, 3º bronze
   const CORES_PODIO = ['#facc15', '#e2e8f0', '#f59e0b'];
   ctx.font = '20px sans-serif';
   if (lista.length === 0) {
     ctx.fillStyle = '#aaa';
-    ctx.fillText('Ninguém entrou ainda: digite !entrar', cx, y + 130);
+    ctx.fillText(t('jogo.ninguemEntrou'), cx, y + 130);
   }
   lista.forEach((b, i) => {
     const ly = y + 128 + i * linhaH;
@@ -763,13 +767,13 @@ function desenharRankingPausa(agora) {
     ctx.fillStyle = i < 3 ? CORES_PODIO[i] : '#ffffff';
     ctx.font = i < 3 ? 'bold 20px sans-serif' : '20px sans-serif';
     ctx.textAlign = 'left';
-    const marca = i < 3 && b.pontos > 0 ? MEDALHAS[i] : `${i + 1}º`;
+    const marca = i < 3 && b.pontos > 0 ? MEDALHAS[i] : ordinal(i + 1);
     let nome = b.nome;
     while (ctx.measureText(`${marca}  ${nome}`).width > caixaW - 160 && nome.length > 3) nome = nome.slice(0, -2);
     if (nome !== b.nome) nome += '…';
     ctx.fillText(`${marca}  ${nome}`, x + 36, ly);
     ctx.textAlign = 'right';
-    ctx.fillText(`${b.pontos} pts`, x + caixaW - 36, ly);
+    ctx.fillText(t('jogo.pts', { n: b.pontos }), x + caixaW - 36, ly);
   });
 
   // quem ficou ausente nesta fase (tinha poder pronto e não usou nenhum): perdeu os pontos da fase
@@ -779,13 +783,13 @@ function desenharRankingPausa(agora) {
     ctx.textAlign = 'center';
     ctx.fillStyle = '#f97316';
     ctx.font = 'bold 16px sans-serif';
-    ctx.fillText('Ausentes: tinham poder pronto e não usaram', cx, primeiraLinha - 24);
+    ctx.fillText(t('jogo.ausentes'), cx, primeiraLinha - 24);
     ctx.font = '16px sans-serif';
     ausentesFase.slice(0, 4).forEach((a, i) => {
-      const txt = a.perdeu ? `${a.nome}: perdeu ${a.perdeu} pts` : `${a.nome}: sem pontos para perder`;
+      const txt = a.perdeu ? t('jogo.perdeu', { nome: a.nome, n: a.perdeu }) : t('jogo.semPontos', { nome: a.nome });
       ctx.fillText(txt, cx, primeiraLinha + i * 22);
     });
-    if (ausentesFase.length > 4) ctx.fillText(`e mais ${ausentesFase.length - 4}`, cx, primeiraLinha + 4 * 22);
+    if (ausentesFase.length > 4) ctx.fillText(t('jogo.emMais', { n: ausentesFase.length - 4 }), cx, primeiraLinha + 4 * 22);
   }
   ctx.textAlign = 'left';
 }

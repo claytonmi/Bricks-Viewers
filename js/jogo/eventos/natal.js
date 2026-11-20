@@ -82,7 +82,7 @@ function atualizarSaco(dt, agora) {
       });
       chefaoCaiu = true;
       tijolosVivos++;
-      anunciar('Saco do Papai Noel!', agora);
+      anunciar('jogo.sacoNoel', agora);
     }
     return;
   }
@@ -167,7 +167,7 @@ function atualizarRena(dt, agora) {
     if ((b.x - cx) ** 2 + (b.y - cy) ** 2 >= RAIO * RAIO) continue;
     const dono = b.dono || b;
     darPontos(dono, RENA_PONTOS);
-    anunciar(`${dono.nome} acertou a rena! +${RENA_PONTOS}`, agora);
+    anunciar('jogo.acertouRena', agora, { nome: dono.nome, n: RENA_PONTOS });
     textosFlutuantes.push({ x: rena.x + RENA_W / 2, y: rena.y, texto: `+${RENA_PONTOS}`, inicio: agora, ate: agora + 1200 });
     b.vy = Math.abs(b.vy) || VEL_BASE * 0.5; // a bola volta para baixo
     rena.fugindo = true;

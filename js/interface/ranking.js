@@ -40,10 +40,10 @@ document.getElementById('btCopiar').addEventListener('click', copiarTop3);
 
 // Aviso curto embaixo do ranking lateral (some sozinho depois de uns segundos)
 let timerAvisoLateral = null;
-function mostrarAvisoLateral(texto, ms = 5000) {
+function mostrarAvisoLateral(chave, valores, ms = 5000) {
   const el = document.getElementById('avisoEntrada');
   if (!el) return;
-  el.textContent = texto;
+  definirTexto(el, chave, valores); // nome de viewer entra como valor (textContent), nunca como HTML
   el.classList.remove('escondido');
   clearTimeout(timerAvisoLateral);
   timerAvisoLateral = setTimeout(() => el.classList.add('escondido'), ms);
@@ -51,7 +51,7 @@ function mostrarAvisoLateral(texto, ms = 5000) {
 
 // Quem tenta entrar no meio da partida (modo normal)
 function mostrarAvisoEntrada(nome) {
-  mostrarAvisoLateral(`${nome} só pode entrar na próxima rodada`);
+  mostrarAvisoLateral('ranking.proximaRodada', { nome });
 }
 
 // Ranking final (ao lado do jogo): a lista e os botões. Aberto pelo link do OBS, sem botões e com a dica do comando.

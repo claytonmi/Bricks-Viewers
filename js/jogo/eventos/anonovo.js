@@ -287,22 +287,22 @@ function alturaDoFogo(f, agora) {
 function abencoar(b, agora) {
   const opcoes = ['bomba', 'gravidade', 'choque', 'velocidade'];
   const escolha = opcoes[Math.floor(Math.random() * opcoes.length)];
-  let texto;
+  let chave;
   if (escolha === 'bomba' && b.bombas < BOMBA_MAX) {
     b.bombas++;
-    texto = 'uma bomba';
+    chave = 'jogo.ganhouBomba';
   } else if (escolha === 'gravidade' && !b.gravidade) {
     b.gravidade = true;
-    texto = '!gravity pronto';
+    chave = 'jogo.ganhouGravity';
   } else if (escolha === 'choque' && !b.choque) {
     b.choque = true;
-    texto = '!shock pronto';
+    chave = 'jogo.ganhouShock';
   } else {
     b.carga = Math.max(b.carga, batidasPara(CARGA_SPEED));
-    texto = '!speed pronto';
+    chave = 'jogo.ganhouSpeed';
   }
   marcarPoderPronto(b, agora);
-  b.aviso = `${b.nome} ganhou ${texto}`;
+  b.aviso = { chave, valores: { nome: b.nome } };
   b.avisoAte = agora + DURACAO_AVISO + AVISO_SOME;
 }
 
@@ -370,7 +370,7 @@ function atualizarDragao(dt, agora) {
     if (!chefaoCaiu && estado === 'jogando' && tijolosVivos === 0) { // só depois que todos os tijolos quebram
       dragao = criarDragao();
       chefaoCaiu = true;
-      anunciar('Dragão do Ano Novo!', agora);
+      anunciar('jogo.dragao', agora);
     }
     return;
   }
@@ -487,7 +487,7 @@ function danoNoDragao(b, agora) {
   }
   dragao.fogos = [];
   viewers.forEach(restaurarFantasma);
-  anunciar('Dragão derrotado!', agora);
+  anunciar('jogo.dragaoDerrotado', agora);
 }
 
 // O dragão sai da tela sem morrer: as partes somem (a fase acaba com o que sobrou)
@@ -499,7 +499,7 @@ function fugirDragao(agora) {
     tijolosVivos--;
   }
   viewers.forEach(restaurarFantasma);
-  anunciar('O dragão fugiu!', agora);
+  anunciar('jogo.dragaoFugiu', agora);
 }
 
 // ----- Desenho em pixel art -----

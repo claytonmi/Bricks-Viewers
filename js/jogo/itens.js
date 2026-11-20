@@ -19,7 +19,7 @@ function soltarItem(t) {
 
 // Multibola: cada bola em jogo ganha uma cópia (se já tem cópias na tela, só renova o tempo)
 function ativarMultibola(agora) {
-  anunciar('Multibola!', agora);
+  anunciar('jogo.multibola', agora);
   if (copias.length) {
     for (const c of copias) c.ate = agora + MULTIBOLA_TEMPO;
     return;
@@ -48,7 +48,7 @@ function atualizarItens(dt, agora) {
         paddleBrilhoAte = agora + 600;
       } else if (it.tipo === 'velocidade') { // todas as bolas 2x mais rápidas por um tempo
         velTodasAte = agora + ITEM_VELOCIDADE_TEMPO;
-        anunciar('Velocidade!', agora);
+        anunciar('jogo.velocidade', agora);
         paddleBrilhoAte = agora + 600;
       } else if (it.tipo === 'menos') { // bomba preta: tira 1 ponto do streamer, sem passar de 0
         if (streamerPontua) streamerPts = Math.max(0, streamerPts - ITEM_PONTOS);

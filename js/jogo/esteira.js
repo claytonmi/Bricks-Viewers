@@ -52,7 +52,7 @@ function atualizarEsteira(dt, agora) {
     });
     chefaoCaiu = true;
     tijolosVivos++;
-    anunciar('Tijolo chefão!', agora);
+    anunciar('jogo.chefao', agora);
   }
 }
 

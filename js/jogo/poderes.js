@@ -41,8 +41,8 @@ function faltaBatidas(b, cmd) {
 function avisarFaltaBatidas(b, cmd, agora) {
   const falta = Math.max(1, faltaBatidas(b, cmd));
   b.aviso = falta === 1
-    ? `Falta 1 batida para ${b.nome} usar ${cmd}`
-    : `Faltam ${falta} batidas para ${b.nome} usar ${cmd}`;
+    ? { chave: 'jogo.avisoFalta1', valores: { nome: b.nome, cmd } }
+    : { chave: 'jogo.avisoFaltaN', valores: { n: falta, nome: b.nome, cmd } };
   b.avisoAte = agora + AVISO_TEMPO + AVISO_SOME;
 }
 

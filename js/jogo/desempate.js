@@ -263,9 +263,10 @@ function desenharDesempate(agora) {
   if (!d || estado !== 'desempate') return;
   const aviso = d.fase === 'aviso';
   const segundos = Math.max(0, Math.ceil(((aviso ? d.comecaEm : d.fimEm) - agora) / 1000));
-  const titulo = aviso ? `Desempate: ${textoDoGrupo()}` : `Mata-mata: ${textoDoGrupo()}`;
-  const sub = aviso ? `começa em ${segundos} s`
-    : `tijolo com ${d.etapa.vida} de vida · ${Math.floor(segundos / 60)}:${String(segundos % 60).padStart(2, '0')} restantes`;
+  const grupo = textoDoGrupo();
+  const titulo = aviso ? t('desempate.aviso', { grupo }) : t('desempate.mataMata', { grupo });
+  const sub = aviso ? t('desempate.comeca', { s: segundos })
+    : t('desempate.subVida', { vida: d.etapa.vida, tempo: `${Math.floor(segundos / 60)}:${String(segundos % 60).padStart(2, '0')}` });
   ctx.save();
   ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
   ctx.fillRect(0, 0, W, 70);

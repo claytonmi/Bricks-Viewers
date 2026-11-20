@@ -129,13 +129,13 @@ function voltarMenu() {
 // Contagem regressiva ao clicar em Pronto (modo intervalo: sozinha, com o nome da fase)
 function iniciarContagem() {
   if (viewers.length === 0) {
-    aviso = 'Espera pelo menos 1 viewer digitar !entrar';
+    aviso = { chave: 'jogo.esperaViewer' };
     avisoAte = agoraJogo() + 3000;
     return;
   }
   estado = 'contagem';
-  const titulo = modoIntervalo ? FASES[faseIndex].nome : 'Iniciando jogo...';
-  contagemFila = [[titulo, 1200], ['3', 800], ['2', 800], ['1', 800], ['Valendo..', 700]];
+  // 'titulo' (nome da fase ou "Iniciando jogo...") e 'valendo' viram texto só ao desenhar, no idioma de então
+  contagemFila = [['titulo', 1200], ['3', 800], ['2', 800], ['1', 800], ['valendo', 700]];
   contagemIdx = 0;
   contagemTexto = contagemFila[0][0];
   contagemFim = agoraJogo() + contagemFila[0][1];
