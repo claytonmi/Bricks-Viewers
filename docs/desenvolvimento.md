@@ -33,7 +33,8 @@ Bricks-Viewers/
     │   └── estado.js       variáveis do jogo
     ├── dados/
     │   ├── fases.js        fases: tijolos, paredes, cores e fundos
-    │   └── arquivos.js     imagens carregadas ao abrir
+    │   ├── arquivos.js     imagens carregadas ao abrir
+    │   └── textos.js       textos em português e inglês
     ├── servicos/
     │   ├── audio.js        música e botão de som
     │   ├── twitch.js       conexão com o chat
@@ -67,6 +68,19 @@ Bricks-Viewers/
     │   └── simulador.js    modo simulação (testes sem a Twitch)
     └── main.js             loop principal (sempre o último)
 ```
+
+## Idiomas
+
+Todos os textos do jogo ficam em `js/dados/textos.js`, numa tabela com uma coluna por idioma (`pt` e `en`).
+
+Para acrescentar uma frase:
+
+1. Crie a chave nova em `pt` e em `en`.
+2. No HTML, use `data-t="chave"` no elemento (há também `data-t-html`, `data-t-title`, `data-t-placeholder`, `data-t-aria` e `data-t-alt`). No JS, use `t('chave')` ou `t('chave', { valor })`. A chave precisa estar escrita como texto entre aspas simples, para ser encontrada na busca.
+
+Se uma chave faltar em inglês, o jogo mostra o texto em português. O idioma fica salvo no navegador (`bricksIdioma`) e as bandeiras do menu e da pausa trocam na hora.
+
+Para um terceiro idioma: acrescente uma coluna nova em `textos.js` com todas as chaves e uma bandeira nova no menu e na pausa.
 
 ## Decisões de arquitetura
 

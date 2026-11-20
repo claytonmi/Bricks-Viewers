@@ -12,7 +12,7 @@ A página se ajusta ao tamanho da tela: "Como jogar" à esquerda, o jogo no meio
 **Tela de "já volto", sem clicar em nada:** no menu, conecte o canal, marque **Modo intervalo** e escolha a fase. Com isso, o botão **Copiar link para o OBS** é liberado. O link fica assim:
 
 ```
-https://claytonmi.github.io/Bricks-Viewers/?canal=seu_canal&modo=intervalo&fase=1&vagas=75
+https://claytonmi.github.io/Bricks-Viewers/?canal=seu_canal&modo=intervalo&fase=1&vagas=75&idioma=pt
 ```
 
 1. No OBS, crie uma cena de "já volto" e adicione uma fonte Navegador com esse link, no tamanho da sua transmissão (1280×720 ou 1920×1080).
@@ -22,6 +22,8 @@ https://claytonmi.github.io/Bricks-Viewers/?canal=seu_canal&modo=intervalo&fase=
 5. Ao abrir a cena de novo, o ranking aparece com uma contagem de 30 s, e depois começa um intervalo novo: a pontuação zera e o chat digita `!entrar` de novo. Sair de cena durante a contagem cancela a contagem, e ela recomeça quando a cena voltar. Sem nenhum jogador, o jogo novo abre direto.
 6. Para começar na hora, digite `!recomecar` no chat na tela do ranking (streamer ou moderador).
 7. Fechar o OBS apaga tudo: a próxima live começa do zero.
+
+O `&idioma=pt` (ou `&idioma=en`) define o idioma do jogo na cena; o link copiado pelo jogo já leva o idioma que está escolhido no menu.
 
 Aberto por esse link, o jogo não mostra botões, porque no OBS não dá para clicar: tudo é feito pelos comandos no chat.
 

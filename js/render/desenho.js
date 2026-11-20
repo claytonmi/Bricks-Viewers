@@ -748,8 +748,14 @@ function desenharRankingPausa(agora) {
   ctx.fillRect(x + 40, y + 46, (caixaW - 80) * f, 6);
 
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 24px sans-serif';
-  ctx.fillText(t('jogo.faseConcluida', { fase: nomeFase(FASES[faseIndex]) }), cx, y + 88);
+  const tituloFase = t('jogo.faseConcluida', { fase: nomeFase(FASES[faseIndex]) });
+  let tituloPx = 24;
+  ctx.font = `bold ${tituloPx}px sans-serif`;
+  while (tituloPx > 16 && ctx.measureText(tituloFase).width > caixaW - 40) {
+    tituloPx -= 1;
+    ctx.font = `bold ${tituloPx}px sans-serif`;
+  }
+  ctx.fillText(tituloFase, cx, y + 88);
 
   // top 10: 1º ouro, 2º prata, 3º bronze
   const CORES_PODIO = ['#facc15', '#e2e8f0', '#f59e0b'];
