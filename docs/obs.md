@@ -9,6 +9,8 @@ A página se ajusta ao tamanho da tela: "Como jogar" à esquerda, o jogo no meio
 
 **Partida normal, com a raquete:** o streamer precisa do mouse ou do teclado, então o mais simples é jogar no navegador e usar a **Captura de janela**. O botão do link não serve para esse caso.
 
+![Como colocar o jogo no OBS: copiar o link no menu e colar numa fonte Navegador](como-usar-no-obs.gif)
+
 **Tela de "já volto", sem clicar em nada:** no menu, conecte o canal, marque **Modo intervalo** e escolha a fase. Com isso, o botão **Copiar link para o OBS** é liberado. O link fica assim:
 
 ```
