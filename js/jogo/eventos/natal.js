@@ -30,7 +30,8 @@ function resetarNatal() {
 }
 
 // ----- Imagens da fase (assets/imagens/natal/) -----
-// rena-treno.png, papai-noel-saco.png, bengala-doce.png e presente-<cor>.png. Dá para editar à vontade:
+// rena-treno.png, papai-noel-saco.png e presente-<cor>.png (a bengala vem do servidor, como a skin Bengala Doce).
+// Dá para editar à vontade:
 // cada imagem é encaixada no tamanho que a coisa tem no jogo, sem distorcer. Enquanto a imagem não carrega,
 // ou se ela faltar, o jogo usa o desenho do próprio código.
 const PRESENTE_IMAGEM = {

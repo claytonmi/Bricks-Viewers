@@ -132,14 +132,6 @@ const SPRITE_ESCAMA = [
 const PAL_ESCAMA_A = { o: '#7f1d1d', y: '#facc15', r: '#dc2626' };
 const PAL_ESCAMA_B = { o: '#7f1d1d', y: '#dc2626', r: '#facc15' };
 
-const SPRITE_ENVELOPE_MINI = [
-  'oooooooo',
-  'orrrrrro',
-  'orrddrro',
-  'orrrrrro',
-  'oooooooo'
-];
-const PAL_ENVELOPE_MINI = { o: '#facc15', r: '#b91c1c', d: '#dc2626' };
 
 const SPRITE_MOEDA = [
   '.oooo.',

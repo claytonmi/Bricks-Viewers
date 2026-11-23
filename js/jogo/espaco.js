@@ -95,20 +95,9 @@ function carregarImagensEspaco() {
   }
 }
 
-// Outras imagens da pasta (ex: a raquete). null enquanto não carregou ou se faltar.
-function imagemEspaco(nome) {
-  if (!imagensMeteoro.has(nome)) {
-    const img = new Image();
-    img.src = 'assets/imagens/espaco/' + nome + '.png';
-    imagensMeteoro.set(nome, img);
-  }
-  const img = imagensMeteoro.get(nome);
-  return img.complete && img.naturalWidth > 0 ? img : null;
-}
-
 // ----- Raquete da Fase 6: disco voador -----
-// raquete-disco.png ocupa 150 x 36 no jogo; a linha que rebate (topo da raquete) fica 10 px abaixo do topo dela,
-// então a cúpula aparece um pouco acima. Correndo para um lado, deixa um rastro do outro (linhas e cópias apagando).
+// A imagem do disco (skin Disco Voador, vem do servidor) ocupa 150 x 36 no jogo; a linha que rebate (topo da
+// raquete) fica 10 px abaixo do topo dela, então a cúpula aparece um pouco acima. Correndo para um lado, deixa um rastro do outro (linhas e cópias apagando).
 const DISCO_TOPO = 10;
 const DISCO_ALTURA = 36;
 const DISCO_RASTRO_MS = 160;    // quanto tempo as cópias do rastro ficam
