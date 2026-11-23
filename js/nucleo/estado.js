@@ -44,6 +44,7 @@ let inicioFase = 0;          // intervalo: quando a fase atual começou
 let faseIndex = 0;            // fase que está sendo jogada
 let indiceFase = 0;           // fase escolhida no menu (setas < e >)
 let streamerPts = 0;
+let streamerPtsEm = 0;       // momento do jogo em que o streamer chegou nos pontos que tem (empate: quem chegou antes fica na frente)
 let streamerPontua = false;   // o streamer escolhe se pontua e aparece no ranking
 let itensPontosRestantes = 0; // itens de pontos que ainda podem cair nesta partida (ver ITENS_PONTOS_PARTIDA)
 let rebatidasStreamer = 0;    // rebatidas da raquete desde o último ponto do streamer

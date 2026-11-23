@@ -58,7 +58,7 @@ function loop() {
   }
 
   // Controle do streamer só começa depois do Pronto
-  if (estado === 'contagem' || estado === 'jogando' || estado === 'desempate') {
+  if (estado === 'contagem' || estado === 'jogando') {
     if (teclas.esq) paddleX -= VEL_PADDLE * dt;
     if (teclas.dir) paddleX += VEL_PADDLE * dt;
     paddleX = Math.max(PADDLE_W / 2, Math.min(W - PADDLE_W / 2, paddleX));
@@ -76,7 +76,6 @@ function loop() {
     atualizarNatal(dt, agora); // fase de Natal: saco do Papai Noel, presentinhos e rena
     atualizarJogo(dt, agora);
   }
-  if (estado === 'desempate') atualizarDesempate(dt, agora); // mini-jogo de empate no pódio (desempate.js)
   if (estado === 'pausa') atualizarPausa(agora);
   if (estado === 'fim') atualizarReinicio(agora);
 

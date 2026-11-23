@@ -5,7 +5,7 @@
 const MEDALHAS = ['🥇', '🥈', '🥉'];   // ouro, prata, bronze
 // Texto do top 3 para o streamer colar no chat (viewers e, se marcado, o streamer)
 function textoTop3() {
-  const itens = montarLinhas(); // mesma ordem do ranking, com o desempate
+  const itens = montarLinhas(); // mesma ordem do ranking (empate: quem chegou antes)
   const linhas = itens.slice(0, 3).map((j, i) => t('ranking.top3Linha', { medalha: MEDALHAS[i], nome: j.nome, pts: j.pontos }));
   return [t('ranking.top3Titulo'), ...linhas].join('\n');
 }
@@ -96,12 +96,12 @@ function atualizarRankingLateral() {
   if (!painel || !lista) return;
 
   // aparece na contagem e durante a partida; some no menu e no ranking final
-  const visivel = estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa' || estado === 'desempate';
+  const visivel = estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa';
   painel.style.visibility = visivel ? 'visible' : 'hidden';
   if (!visivel) return;
 
   // modo intervalo: a bola do streamer não entra no ranking
-  const top = montarLinhas(); // todos os jogadores, na ordem do ranking com o desempate (a lista rola se for grande)
+  const top = montarLinhas(); // todos os jogadores, na ordem do ranking (a lista rola se for grande)
 
   const chave = top.map(j => j.chave + ':' + j.pontos + ':' + j.posicao).join('|');
   if (chave === chaveRankingLateral) return;

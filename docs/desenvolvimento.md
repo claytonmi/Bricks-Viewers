@@ -52,6 +52,7 @@ Bricks-Viewers/
     │   ├── jogadores.js    entrada de viewers, pontos e avisos
     │   ├── comandos.js     comandos do chat
     │   ├── partida.js      ciclo da partida e ranking final
+    │   ├── classificacao.js ordem do ranking (empate: quem chegou antes nos pontos)
     │   ├── intervalo.js    modo intervalo
     │   └── eventos/        fases de evento
     ├── render/

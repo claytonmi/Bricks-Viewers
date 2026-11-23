@@ -50,7 +50,7 @@ canvas.addEventListener('pointermove', e => {
     volumePelaPosicao(p.x);
     return;
   }
-  if (estado !== 'contagem' && estado !== 'jogando' && estado !== 'desempate') return; // a raquete também joga no desempate
+  if (estado !== 'contagem' && estado !== 'jogando') return;
   paddleX = p.x;
 });
 

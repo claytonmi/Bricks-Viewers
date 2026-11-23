@@ -34,8 +34,6 @@ function processarComando(usuario, mensagem, autoridade = false, login = usuario
     mostrarAvisoLateral('ranking.vagas', { n: jogadores, max: maxViewers }, 6000);
   } else if (cmd === '!entrar') {
     // modo intervalo: entra a qualquer momento (no meio da fase, no ranking entre as fases...)
-    // no desempate ninguém entra: o mini-jogo só tem as bolas que estão disputando
-    if (estado === 'desempate') return;
     if (estado === 'lobby' || (modoIntervalo && estado !== 'menu' && estado !== 'fim')) entrar(usuario, false, login);
     else if (!modoIntervalo && (estado === 'contagem' || estado === 'jogando')) mostrarAvisoEntrada(usuario);
   } else if (corDoComando(partes)) {

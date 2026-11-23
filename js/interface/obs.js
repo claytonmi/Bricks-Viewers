@@ -77,7 +77,7 @@ function cenaMudou(ativa) {
   fonteAtiva = ativa;
   if (!ativa) {
     reinicioEm = 0;
-    if (estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa' || estado === 'desempate') finalizar();
+    if (estado === 'lobby' || estado === 'contagem' || estado === 'jogando' || estado === 'pausa') finalizar();
     pararMusica();
     return;
   }

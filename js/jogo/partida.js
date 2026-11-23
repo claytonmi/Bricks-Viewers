@@ -43,8 +43,7 @@ function iniciarPartida() {
   montarFase();
   viewers = [];
   streamerPts = 0;
-  ordensDesempate = new Map(); // partida nova: nenhum desempate decidido ainda
-  limparDesempate();           // nem desempate antigo pendurado (desempate.js)
+  streamerPtsEm = 0;
   paddleX = W / 2;
   estado = 'lobby';
   // modo intervalo: o streamer já entra como uma bola e a partida começa sozinha em 20 s
@@ -78,7 +77,7 @@ function sortearFaseIntervalo() {
 // Menu no centro com o ranking atual, Continuar e Voltar ao menu. O relógio do jogo para junto.
 function alternarPausa() {
   if (pausadoJogo) { continuarJogo(); return; }
-  if (estado !== 'lobby' && estado !== 'contagem' && estado !== 'jogando' && estado !== 'desempate') return;
+  if (estado !== 'lobby' && estado !== 'contagem' && estado !== 'jogando') return;
   pausadoJogo = true;
   pausadoEm = performance.now();
   mostrarMenuPausa();
@@ -95,7 +94,7 @@ function continuarJogo() {
 function mostrarMenuPausa() {
   const ol = document.getElementById('pausaRanking');
   ol.innerHTML = '';
-  const lista = montarLinhas().slice(0, 10); // mesma ordem do ranking (inclui o desempate)
+  const lista = montarLinhas().slice(0, 10); // mesma ordem do ranking
   if (lista.length === 0) {
     const li = document.createElement('li');
     li.textContent = t('pausa.ninguem');
@@ -113,7 +112,6 @@ function mostrarMenuPausa() {
 // Volta para a configuração (o chat continua conectado)
 function voltarMenu() {
   if (pausadoJogo) continuarJogo();
-  limparDesempate(); // voltou ao menu no meio do desempate: ele não pode continuar na próxima partida
   estado = 'menu';
   pararMusica();
   viewers = [];
@@ -174,24 +172,13 @@ function iniciarJogo(agora) {
 }
 
 // Mostra o ranking final (viewers e, se marcado, o streamer; no intervalo, sem a bola do streamer)
-// semDesempate: true quando não pode mais haver mini-jogo (trocou de cena, ou o streamer cancelou)
-function finalizar(semDesempate = false) {
-  if (estado === 'desempate') { descartarDesempate(); semDesempate = true; } // trocou de cena no meio do desempate
+function finalizar() {
   if (pausadoJogo) continuarJogo(); // o ranking final não pode ficar atrás do menu de pausa
   estado = 'fim';
-  desempateSuspenso = null;
-  esconderEscolhaDesempate();
   pararMusica();
   liberarBuracos(); // bola na espiral não fica parada no meio do caminho
   reinicioEm = 0;
-  const linhas = montarLinhas(); // pontos, ordem do desempate e posição de cada um (desempate.js)
-  // empate no pódio: o ranking aparece primeiro, com a mensagem, e depois o mini-jogo; no fim, o ranking atualizado
-  if (!semDesempate && gruposDesempate(linhas).length) {
-    mostrarRankingFinal(linhas);
-    iniciarDesempate(linhas, () => { estado = 'fim'; mostrarRankingFinal(montarLinhas()); });
-    return;
-  }
-  mostrarRankingFinal(linhas); // tela: ver ranking.js
+  mostrarRankingFinal(montarLinhas()); // tela: ver ranking.js (empate: quem chegou antes nos pontos fica na frente)
 }
 
 aoTrocarIdioma(() => {

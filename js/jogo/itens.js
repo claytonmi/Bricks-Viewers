@@ -51,9 +51,13 @@ function atualizarItens(dt, agora) {
         anunciar('jogo.velocidade', agora);
         paddleBrilhoAte = agora + 600;
       } else if (it.tipo === 'menos') { // bomba preta: tira 1 ponto do streamer, sem passar de 0
-        if (streamerPontua) streamerPts = Math.max(0, streamerPts - ITEM_PONTOS);
+        if (streamerPontua && streamerPts > 0) {
+          streamerPts = Math.max(0, streamerPts - ITEM_PONTOS);
+          streamerPtsEm = agora;
+        }
       } else if (streamerPontua) { // o ponto do item só vale quando "Streamer pontua" está marcado
         streamerPts += ITEM_PONTOS;
+        streamerPtsEm = agora;
         paddleBrilhoAte = agora + 600;
       }
       return false;

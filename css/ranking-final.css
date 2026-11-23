@@ -64,15 +64,3 @@
   font-size: 15px;
 }
 
-/* Aviso grande de desempate em cima do ranking */
-.desempate-aviso {
-  margin: 0 0 10px;
-  padding: 10px 12px;
-  font-size: 22px;
-  font-weight: bold;
-  text-align: center;
-  color: var(--ouro);
-  background: rgba(250, 204, 21, 0.1);
-  border: 1px solid var(--ouro);
-  border-radius: 12px;
-}

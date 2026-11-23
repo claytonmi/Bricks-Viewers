@@ -681,7 +681,6 @@ function desenhar(agora) {
   desenharCamposGravidade(agora);
   desenharCopias(agora);
   desenharBolas(agora);
-  desenharDesempate(agora); // tijolo que foge e cartaz do mata-mata (desempate.js)
   desenharExtrasNatal(agora);
   desenharExtrasAnoNovo(agora);
   desenharRaiosChoque();
@@ -716,7 +715,7 @@ function desenharRankingPausa(agora) {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
   ctx.fillRect(0, 0, W, H);
 
-  const lista = montarLinhas().slice(0, 10); // mesma ordem do ranking (inclui o desempate)
+  const lista = montarLinhas().slice(0, 10); // mesma ordem do ranking
   const cx = W / 2;
   const caixaW = 560;
   const linhaH = 38;

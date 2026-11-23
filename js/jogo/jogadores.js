@@ -62,11 +62,8 @@ function entrar(nome, streamer = false, login = nome) {
 // Os tijolos que ele já quebrou continuam quebrados; os pontos dele saem junto com a bola.
 function removerViewer(nome) {
   const alvo = String(nome).toLowerCase();
-  // procura também nas bolas fora do campo durante o desempate (lá só ficam as empatadas)
-  const todas = desempate ? desempate.originais : viewers;
-  const b = todas.find(v => !v.streamer && (v.login === alvo || v.nome.toLowerCase() === alvo));
+  const b = viewers.find(v => !v.streamer && (v.login === alvo || v.nome.toLowerCase() === alvo));
   if (!b) return;
-  if (desempate) desempate.originais = desempate.originais.filter(v => v !== b); // não volta ao fim do desempate
   b.estado = 'removida'; // quem ainda tiver referência a esta bola deixa de tratá-la como jogando
   b.presoEm = null;
   b.buraco = null;
@@ -81,6 +78,7 @@ function removerViewer(nome) {
 // Ponto para o viewer (modo intervalo: também guarda os pontos da fase, para a regra do ausente)
 function darPontos(b, n) {
   b.pontos += n;
+  b.pontosEm = agoraJogo(); // empate no ranking: fica na frente quem chegou antes nessa pontuação (classificacao.js)
   b.pontosFase = (b.pontosFase || 0) + n;
 }
 
