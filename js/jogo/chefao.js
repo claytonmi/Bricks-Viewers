@@ -8,7 +8,8 @@ function faseTemChefao() {
 }
 
 // ----- Fim de fase travado (todas as fases) -----
-// Com poucos tijolos e ninguém encostando neles por FIM_TRAVADO_TEMPO, uma bola ao acaso é atraída para o tijolo mais perto.
+// Ninguém encostando nos tijolos por FIM_TRAVADO_TEMPO: uma bola ao acaso sai mirando o tijolo mais perto na próxima
+// batida dela (raquete, borda, teto ou parede). Não vira no meio do ar: quem assiste vê só uma batida com um bom ângulo.
 function atualizarFimTravado(agora) {
   if (estado !== 'jogando' || chuvaRestante > 0) return; // na chuva ainda tem tijolo caindo
   if (tijolosVivos <= 0) return; // qualquer quantidade: na simulação, 9 tijolos no canto travaram a fase
@@ -17,18 +18,24 @@ function atualizarFimTravado(agora) {
   const bolas = viewers.filter(b => b.estado === 'jogando' && !b.streamer && !b.buraco && !b.presoEm);
   if (bolas.length === 0) return;
   const b = bolas[Math.floor(Math.random() * bolas.length)];
-  b.atraidaAte = agora + ATRACAO_TEMPO;
+  b.mirarNaBatida = true;
 }
 
-// Bola atraída: segue reto para o tijolo vivo mais perto, mantendo a velocidade (ver atualizarBola)
-function atrairParaTijolo(b) {
+// Bola marcada que acabou de bater em algo: sai reto para o tijolo vivo mais perto, mantendo a velocidade.
+// Só mira num tijolo do lado para onde a bola já está saindo da batida (senão iria contra a parede em que acabou
+// de bater); sem nenhum desse lado, espera a próxima batida. Vale uma vez só; depois segue a física normal
+// (se errar, outra bola é escolhida mais tarde).
+function mirarNoTijolo(b) {
   let alvo = null, menor = Infinity;
   for (const t of tijolos) {
     if (!t.vivo || t.circ || t.dragao || t.tipo) continue;
-    const d = Math.hypot(t.x + t.w / 2 - b.x, t.y + t.h / 2 - b.y);
+    const dx = t.x + t.w / 2 - b.x, dy = t.y + t.h / 2 - b.y;
+    if (dx * b.vx + dy * b.vy <= 0) continue; // atrás da superfície em que a bola bateu
+    const d = Math.hypot(dx, dy);
     if (d < menor) { menor = d; alvo = t; }
   }
   if (!alvo || menor < 1) return;
+  b.mirarNaBatida = false;
   const vel = Math.hypot(b.vx, b.vy) || VEL_BASE;
   b.vx = (alvo.x + alvo.w / 2 - b.x) / menor * vel;
   b.vy = (alvo.y + alvo.h / 2 - b.y) / menor * vel;

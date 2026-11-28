@@ -92,28 +92,65 @@ function xDoTijolo(t, bx) {
   return t.x + t.w > W && bx < W / 2 ? t.x - W : t.x;
 }
 
-// Bola x tijolos: quebra um tijolo por frame e dá ponto ao viewer
+// Bola x tijolos: rebate em todos que está encostando e quebra um tijolo por frame (dá ponto ao viewer)
 function baterNosTijolos(b) {
-  for (const t of tijolos) {
-    if (!t.vivo) continue;
-    if (t.circ) { if (t.dragao && b.fantasma) continue; if (baterNoMeteoro(b, t)) return; continue; }
-    const tx = xDoTijolo(t, b.x);
-    const cx = Math.max(tx, Math.min(b.x, tx + t.w));
-    const cy = Math.max(t.y, Math.min(b.y, t.y + t.h));
-    const dx = b.x - cx;
-    const dy = b.y - cy;
-    if (dx * dx + dy * dy < RAIO * RAIO) {
-      if (Math.abs(dx) > Math.abs(dy)) {
-        b.vx = -b.vx;
-        b.x = cx + Math.sign(dx || 1) * RAIO;
-      } else {
-        b.vy = -b.vy;
-        b.y = cy + Math.sign(dy || -1) * RAIO;
-      }
-      registrarBatida(b, t);
-      return; // um tijolo por frame
-    }
+  for (const t of tijolos) { // meteoros e dragão (círculos)
+    if (!t.vivo || !t.circ) continue;
+    if (t.dragao && b.fantasma) continue;
+    if (baterNoMeteoro(b, t)) return;
   }
+  const contatos = [];
+  for (const t of tijolos) {
+    if (!t.vivo || t.circ) continue;
+    const c = contatoRetangulo(b, xDoTijolo(t, b.x), t.y, t.w, t.h);
+    if (c) { c.t = t; contatos.push(c); }
+  }
+  if (contatos.length === 0) return;
+  // encostando numa face e numa quina ao mesmo tempo (vão entre dois tijolos vizinhos): vale a face, a bola
+  // rebate reto como numa parede só. Quinas só contam quando a bola encosta apenas nelas.
+  const faces = contatos.filter(c => !c.quina);
+  const usados = faces.length ? faces : contatos;
+  rebaterNosContatos(b, usados, (x, y, c) => contatoRetangulo(b, xDoTijolo(c.t, b.x), c.t.y, c.t.w, c.t.h));
+  garantirMovimento(b); // quina na diagonal pode deixar a bola quase na horizontal
+  // dano: um tijolo por frame, o que a bola mais entrou
+  registrarBatida(b, usados.reduce((a, c) => (c.entrou > a.entrou ? c : a)).t);
+}
+
+// Contato da bola com um retângulo: normal (para fora, na direção da bola), quanto a bola entrou e se foi na quina.
+// Na face a normal é reta; na quina ela sai da ponta do retângulo para a bola (rebate como numa esquina, não desliza).
+// Se o centro da bola entrou no retângulo (bola rápida), ela sai pelo lado mais perto.
+function contatoRetangulo(b, x, y, w, h) {
+  const cx = Math.max(x, Math.min(b.x, x + w));
+  const cy = Math.max(y, Math.min(b.y, y + h));
+  const dx = b.x - cx;
+  const dy = b.y - cy;
+  const d2 = dx * dx + dy * dy;
+  if (d2 >= RAIO * RAIO) return null;
+  if (d2 > 0) {
+    const d = Math.sqrt(d2);
+    return { nx: dx / d, ny: dy / d, entrou: RAIO - d, quina: dx !== 0 && dy !== 0, px: cx, py: cy };
+  }
+  const lados = [
+    { nx: -1, ny: 0, e: b.x - x }, { nx: 1, ny: 0, e: x + w - b.x },
+    { nx: 0, ny: -1, e: b.y - y }, { nx: 0, ny: 1, e: y + h - b.y }
+  ];
+  const l = lados.reduce((a, c) => (c.e < a.e ? c : a));
+  return { nx: l.nx, ny: l.ny, entrou: RAIO + l.e, quina: false, px: b.x + l.nx * l.e, py: b.y + l.ny * l.e };
+}
+
+// Tira a bola de dentro de cada contato e rebate pela normal somada deles. Só rebate se a bola está indo contra
+// a superfície: se outra batida no mesmo quadro (teto, outro tijolo) já virou a bola, ela não é jogada de volta.
+function rebaterNosContatos(b, contatos, recalcular) {
+  let nx = 0, ny = 0;
+  for (const c of contatos) { nx += c.nx * c.entrou; ny += c.ny * c.entrou; }
+  const n = Math.hypot(nx, ny);
+  if (n) { nx /= n; ny /= n; } else { nx = contatos[0].nx; ny = contatos[0].ny; }
+  for (const c of contatos) {
+    const atual = recalcular(b.x, b.y, c); // a anterior pode já ter tirado a bola deste
+    if (atual) { b.x = atual.px + atual.nx * RAIO; b.y = atual.py + atual.ny * RAIO; }
+  }
+  const vn = b.vx * nx + b.vy * ny;
+  if (vn < 0) { b.vx -= 2 * vn * nx; b.vy -= 2 * vn * ny; }
 }
 
 // Bola x meteoro (círculo): rebate pela normal, como numa parede redonda
@@ -136,6 +173,7 @@ function baterNoMeteoro(b, t) {
 // Uma batida num tijolo ou meteoro: conta para os poderes e, se quebrou, dá o ponto
 function registrarBatida(b, t) {
   ultimoToqueTijolo = agoraJogo(); // qualquer encosto em tijolo zera o contador do fim de fase travado
+  b.mirarNaBatida = false; // fim de fase travado: já encostou num tijolo, não precisa mais mirar
   // cópia do multibola não carrega poderes (só os pontos vão para o dono); a bola do streamer também não
   if (!b.dono && !b.streamer) {
     b.carga++;
@@ -170,20 +208,11 @@ function registrarBatida(b, t) {
   }
 }
 
-// Bola x retângulo (parede). Empurra a bola para fora e rebate.
+// Bola x retângulo (parede): empurra a bola para fora e rebate para longe dele (quina como quina; ver contatoRetangulo)
 function batidaRetangulo(b, r) {
-  const cx = Math.max(r.x, Math.min(b.x, r.x + r.w));
-  const cy = Math.max(r.y, Math.min(b.y, r.y + r.h));
-  const dx = b.x - cx;
-  const dy = b.y - cy;
-  if (dx * dx + dy * dy >= RAIO * RAIO) return false;
-  if (Math.abs(dx) > Math.abs(dy)) {
-    b.vx = -b.vx;
-    b.x = cx + Math.sign(dx || 1) * RAIO;
-  } else {
-    b.vy = -b.vy;
-    b.y = cy + Math.sign(dy || -1) * RAIO;
-  }
+  const c = contatoRetangulo(b, r.x, r.y, r.w, r.h);
+  if (!c) return false;
+  rebaterNosContatos(b, [c], () => contatoRetangulo(b, r.x, r.y, r.w, r.h));
   return true;
 }
 
@@ -273,9 +302,9 @@ function atualizarBola(b, dt, agora) {
   // atordoada pelo !shock anda a 1%
   const mult = (agora < b.velExtraAte || agora < velTodasAte ? MULT_SPEED : 1) * (agora < b.impulsoAte ? BOMBA_IMPULSO : 1) *
     (agora < b.atordoadaAte ? ATORDOADA_VEL : 1);
-  if (b.atraidaAte > agora) atrairParaTijolo(b); // fim de fase travado: anda para o tijolo mais perto
   b.x += b.vx * mult * dt;
   b.y += b.vy * mult * dt;
+  const vxAntes = b.vx, vyAntes = b.vy; // para saber se bateu em algo neste quadro (fim de fase travado)
 
   // paredes e teto
   if (b.x < RAIO) { b.x = RAIO; b.vx = Math.abs(b.vx); }
@@ -299,6 +328,9 @@ function atualizarBola(b, dt, agora) {
   for (const p of paredesAtuais) {
     if (colidirParede(b, p)) garantirMovimento(b);
   }
+
+  // fim de fase travado: a bola escolhida acabou de bater (raquete, borda, teto, parede) e sai mirando o tijolo mais perto
+  if (b.mirarNaBatida && (Math.sign(b.vx) !== Math.sign(vxAntes) || Math.sign(b.vy) !== Math.sign(vyAntes))) mirarNoTijolo(b);
 
   baterNosTijolos(b);
 

@@ -17,7 +17,7 @@ function atualizarJogo(dt, agora) {
   atualizarItens(dt, agora);
   atualizarEspaco(dt, agora); // fase 6: meteoros novos e buraco de minhoca
   atualizarAnoNovo(dt, agora); // Ano Novo: dragão, moedas da sorte e fogos do chão
-  atualizarFimTravado(agora); // fim de fase parado: uma bola é atraída para os últimos tijolos (chefao.js)
+  atualizarFimTravado(agora); // fim de fase parado: uma bola sai mirando os últimos tijolos na próxima batida (chefao.js)
 
   // na chuva, só acaba depois do último tijolo e do chefão
   const chefaoFalta = faseTemChefao() && !chefaoCaiu;

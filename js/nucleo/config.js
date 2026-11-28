@@ -82,10 +82,9 @@ const CHEFAO_H = 54;             // altura de 2 linhas de tijolos (largura de 2 
 const CHEFAO_ESTEIRA_Y = 40;     // esteira: altura onde o chefão para de descer e começa a ir e voltar
 const CHEFAO_ESTEIRA_VEL = 60;   // esteira: velocidade do chefão com a vida cheia (até 3x quando quase quebrando)
 
-// Fim de fase travado (todas as fases): com poucos tijolos e nenhuma bola encostando neles, uma bola é atraída para eles
-// (fim de fase travado vale com qualquer quantidade de tijolos: ver atualizarFimTravado em chefao.js)
-const FIM_TRAVADO_TEMPO = 10000; // ms sem encostar em tijolo antes de atrair uma bola
-const ATRACAO_TEMPO = 3000;      // quanto tempo a bola fica atraída para o tijolo mais perto (ms)
+// Fim de fase travado (todas as fases): nenhuma bola encostando nos tijolos, uma bola sai mirando o tijolo mais perto
+// na próxima batida dela (vale com qualquer quantidade de tijolos: ver atualizarFimTravado em chefao.js)
+const FIM_TRAVADO_TEMPO = 10000; // ms sem encostar em tijolo antes de escolher uma bola para mirar
 
 // Fase de Natal (ver natal.js)
 const SACO_W = 110;              // chefão saco do Papai Noel
